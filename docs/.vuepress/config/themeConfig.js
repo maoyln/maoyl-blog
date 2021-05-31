@@ -52,8 +52,8 @@ module.exports = {
   },
   blogger: {
     // 博主信息，显示在首页侧边栏
-    avatar: 'https://cdn.jsdelivr.net/gh/xugaoyi/image_store/blog/20200103123203.jpg',
-    name: 'Evan Xu',
+    avatar: '/img/my-head.jpeg',
+    name: 'maoyln',
     slogan: '前端界的小学生',
   },
   social: {
@@ -63,7 +63,7 @@ module.exports = {
       {
         iconClass: 'icon-youjian',
         title: '发邮件',
-        link: 'mailto:894072666@qq.com',
+        link: 'mailto:maoyl_yx@163.com',
       },
       {
         iconClass: 'icon-github',
@@ -81,7 +81,7 @@ module.exports = {
     // 页脚信息
     createYear: 2019, // 博客创建年份
     copyrightInfo:
-      'Evan Xu | <a href="https://github.com/maoyln/vuepress-theme-vdoing/blob/master/LICENSE" target="_blank">MIT License</a>', // 博客版权信息，支持a标签
+      'maoyln | <a href="https://github.com/maoyln/maoyl-bolg/blob/master/LICENSE" target="_blank">MIT License</a>', // 博客版权信息，支持a标签
   },
   htmlModules // 插入hmtl(广告)模块
 }
