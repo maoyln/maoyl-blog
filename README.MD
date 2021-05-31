@@ -1,4 +1,4 @@
-<p align="center"><a href="https://maoyln.vercel.app/" target="_blank" rel="noopener noreferrer"><img width="180" src="https://cdn.jsdelivr.net/gh/xugaoyi/image_store/blog/20200409124835.png" alt="logo"></a></p>
+<p align="center"><a href="https://maoyln.vercel.app/" target="_blank" rel="noopener noreferrer"><img width="180" src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20200409124835.png" alt="logo"></a></p>
 
 <p align="center">
   <a href="https://github.com/xugaoyi/vuepress-theme-vdoing/actions?query=workflow%3ACI"><img src="https://github.com/xugaoyi/vuepress-theme-vdoing/workflows/CI/badge.svg" alt="CI"></a>
@@ -88,12 +88,12 @@ npm run dev # or yarn dev
 
 :heart:感谢为这个项目贡献代码的朋友 → [Contributors](https://github.com/maoyln/maoyl-bolg/graphs/contributors)
 
-## Vdoing官方交流群
-群号：694387113
+## 博客交流群
+Q号：245253560
 
-<img src="https://cdn.jsdelivr.net/gh/xugaoyi/image_store/blog/20200712122307.jpg" alt="群号：694387113" width="200">
+<img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/48194645.jpeg" alt="Q号：245253560" width="200">
 
 ## 许可证
-[MIT](https://github.com/xugaoyi/vuepress-theme-vdoing/blob/master/LICENSE)
+[MIT](https://github.com/maoyln/maoyl-blog/blob/master/LICENSE)
 
 Copyright (c) 2019-present maoyln
