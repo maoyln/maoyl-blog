@@ -2,6 +2,7 @@
 module.exports = [
   // 注入到页面<head> 中的标签，格式[tagName, { attrName: attrValue }, innerHTML?]
   ['link', { rel: 'icon', href: '/img/favicon.ico' }], //favicons，资源放在public文件夹
+  ['link', { href: '/baidu_verify_code-4axo0NWIC9.html' }], //favicons，资源放在public文件夹
   [
     'meta',
     {
