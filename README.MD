@@ -1,21 +1,9 @@
 <p align="center"><a href="https://maoyln.vercel.app/" target="_blank" rel="noopener noreferrer"><img width="180" src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20200409124835.png" alt="logo"></a></p>
 
-<p align="center">
-  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing/actions?query=workflow%3ACI"><img src="https://github.com/xugaoyi/vuepress-theme-vdoing/workflows/CI/badge.svg" alt="CI"></a>
-  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing/actions?query=workflow%3AbaiduPush"><img src="https://github.com/xugaoyi/vuepress-theme-vdoing/workflows/baiduPush/badge.svg" alt="baiduPush"></a>
-  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing/blob/master/LICENSE"><img src="https://img.shields.io/github/license/xugaoyi/vuepress-theme-vdoing
-" alt="License"></a>
-  <a href="https://www.npmjs.com/package/vuepress-theme-vdoing"><img alt="npm" src="https://img.shields.io/npm/v/vuepress-theme-vdoing"></a>
-  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing/stargazers"><img src="https://img.shields.io/github/stars/xugaoyi/vuepress-theme-vdoing?logo=ReverbNation&logoColor=rgba(255,255,255,.6)" alt="GitHub stars"></a>
-
-
-
-</p>
-
 <h2 align="center">vuepress-theme-vdoing</h2>
 
-* [文档 (国内源)](https://doc.xugaoyi.com/)
-* [文档 (github源)](https://xugaoyi.github.io/vuepress-theme-vdoing-doc/)
+* [文档 (国内源)](https://maoyln.vercel.app/)
+* [文档 (github源)](https://github.com/maoyln/maoyl-bolg)
 * [效果：Maoyl's blog](https://maoyln.vercel.app/)
 
 
@@ -29,10 +17,7 @@
 
 ## 这个主题可以做什么？
 * 案例1：[知识库兼博客站](https://maoyln.vercel.app/)
-* 案例2：[仅博客站](https://xugaoyi.github.io/vdoing-demo-blog/)
-* 案例3：[仅知识库](https://xugaoyi.github.io/vdoing-demo-repository/)
-* 案例4：[文档站](https://xugaoyi.github.io/vuepress-theme-vdoing-doc/)
-
+* 案例2：[仅博客站](https://maoyln.vercel.app/)
 
 ## 快速上手
 
@@ -76,12 +61,6 @@ npm run dev # or yarn dev
 4. 通过以下二维码 一次性捐款。 我多半会买一杯 ~~咖啡~~ 茶。:tea:
 
 谢谢！ :heart:
-
-| 微信赞赏 | 微信 | 支付宝 |
-| :---: | :---: | :---: |
-| <img src="" alt="赞赏码" width=150> | <img src="" alt="Wechat QRcode" width=150>| <img src="" alt="Alipay QRcode" width=150> |
-
-二维码没有正常显示？点 [这里😎](https://doc.xugaoyi.com/pages/1b12ed/)
 
 ## 致谢
 :heart:感谢支持这个项目的朋友
