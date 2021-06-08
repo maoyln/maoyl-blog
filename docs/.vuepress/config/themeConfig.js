@@ -54,7 +54,7 @@ module.exports = {
     // 博主信息，显示在首页侧边栏
     avatar: '/img/my-head.jpeg',
     name: 'maoyln',
-    slogan: '前端界的小学生',
+    slogan: '日日行，不怕千万里',
   },
   social: {
     // 社交图标，显示于博主信息栏和页脚栏
