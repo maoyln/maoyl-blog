@@ -1,6 +1,6 @@
 <p align="center"><a href="https://maoyln.vercel.app/" target="_blank" rel="noopener noreferrer"><img width="180" src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20200409124835.png" alt="logo"></a></p>
 
-<h2 align="center">vuepress-theme-vdoing</h2>
+<h2 align="center">maoyl-bolg</h2>
 
 * [文档 (国内源)](https://maoyln.vercel.app/)
 * [文档 (github源)](https://github.com/maoyln/maoyl-bolg)
@@ -26,7 +26,7 @@
 git clone https://github.com/maoyln/maoyl-bolg.git
 
 # enter the project directory
-cd vuepress-theme-vdoing
+cd maoyl-bolg
 
 # install dependency
 npm install # or yarn install
