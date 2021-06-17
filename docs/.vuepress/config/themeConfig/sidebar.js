@@ -2,34 +2,25 @@
 
 // 侧边栏
 module.exports = {
-  '/01.前端/': [
-    {
-      title: 'JavaScript',
-      collapsable: false, //是否可折叠，可选的，默认true
-      children: [
-        ['01.JavaScript/01.JavaScript中的名词概念','JavaScript中的名词概念'],
-        ['01.JavaScript/02.数据类型转换','数据类型转换'],
-        ['01.JavaScript/03.ES5面向对象','ES5面向对象'],
-        ['01.JavaScript/04.ES6面向对象','ES6面向对象'],
-        ['01.JavaScript/05.new命令原理','new命令原理'],
-        ['01.JavaScript/06.多种数组去重性能对比','多种数组去重性能对比'],
-      ]
-    },
-  ],
-  '/02.页面/': [
+  // '/01.前端/': [
+  //   {
+  //     title: 'JavaScript',
+  //     collapsable: false, //是否可折叠，可选的，默认true
+  //     children: [
+  //       ['01.JavaScript/01.JavaScript中的名词概念','JavaScript中的名词概念'],
+  //       ['01.JavaScript/02.数据类型转换','数据类型转换'],
+  //       ['01.JavaScript/03.ES5面向对象','ES5面向对象'],
+  //       ['01.JavaScript/04.ES6面向对象','ES6面向对象'],
+  //       ['01.JavaScript/05.new命令原理','new命令原理'],
+  //       ['01.JavaScript/06.多种数组去重性能对比','多种数组去重性能对比'],
+  //     ]
+  //   },
+  // ],
+  '/02.serve/': [
     {
       title: 'html-css',
       collapsable: false,
-      children: [
-        ['01.html-css/00.flex布局语法','flex布局语法'],
-        ['01.html-css/01.flex布局案例-基础','flex布局案例-基础'],
-        ['01.html-css/02.flex布局案例-骰子','flex布局案例-骰子'],
-        ['01.html-css/03.flex布局案例-网格布局','flex布局案例-网格布局'],
-        ['01.html-css/04.flex布局案例-圣杯布局','flex布局案例-圣杯布局'],
-        ['01.html-css/05.flex布局案例-输入框布局','flex布局案例-输入框布局'],
-        ['01.html-css/06.CSS3之transform过渡','CSS3之transform过渡'],
-        ['01.html-css/07.CSS3之animation动画','CSS3之animation动画'],
-      ]
+      children: []
     },
   ],
   '/03.技术杂谈/': [

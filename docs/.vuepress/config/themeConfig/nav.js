@@ -7,10 +7,12 @@ module.exports = [
     items: [
       // 说明：以下所有link的值只是在相应md文件定义的永久链接（不是什么特殊生成的编码）。另外，注意结尾是有斜杠的
       {
-        text: '前端文章',
+        text: '前端基础',
         items: [
+          { text: 'HTML', link: '/pages/8309a5b876fc95e3/' },
+          { text: 'CSS', link: '/pages/0a83b083bdf257cb/' },
+          { text: 'stylus', link: '/pages/9f15c1a281d8bedb/' },
           { text: 'JavaScript', link: '/pages/8143cc480faf9a11/' },
-          { text: 'Vue', link: '/pages/5d463fbdb172d43b/' },
         ],
       },
       {
@@ -19,15 +21,9 @@ module.exports = [
           { text: '《JavaScript教程》笔记', link: '/note/javascript/' },
           { text: '《JavaScript高级程序设计》笔记', link: '/note/js/' },
           { text: '《ES6 教程》笔记', link: '/note/es6/' },
-          { text: '《Vue》笔记', link: '/note/vue/' },
-          { text: '《React》笔记', link: '/note/react/' },
           {
             text: '《TypeScript 从零实现 axios》',
             link: '/note/typescript-axios/',
-          },
-          {
-            text: '《Git》学习笔记',
-            link: '/note/git/',
           },
           {
             text: 'TypeScript笔记',
@@ -42,11 +38,42 @@ module.exports = [
     ],
   },
   {
-    text: '页面',
-    link: '/ui/',
+    text: '框架',
+    link: '/framework/',
     items: [
-      { text: 'HTML', link: '/pages/8309a5b876fc95e3/' },
-      { text: 'CSS', link: '/pages/0a83b083bdf257cb/' },
+      {
+        text: '前端框架',
+        items: [
+          { text: 'Vue相关', link: '/pages/vuejs/' },
+        ]
+      },
+      {
+        text: '学习笔记', 
+        items: [
+          { text: '《Vue》笔记', link: '/note/vue/' },
+          { text: '《React》笔记', link: '/note/react/' },
+          {
+            text: '小程序学习笔记',
+            link: '/note/wx-miniprogram/'
+          },
+        ]
+      }
+    ],
+  },
+  {
+    text: '后端',
+    link: '/serve/',
+    items: [
+      {
+        text: '后端基础',
+        items: [
+          { text: 'Nodejs', link: '/pages/117708e0af7f0bd9/' },
+        ],
+      },
+      {
+        text: '学习笔记',
+        items: [],
+      },
     ],
   },
   {
@@ -55,8 +82,16 @@ module.exports = [
     items: [
       { text: '技术文档', link: '/pages/9a7ee40fc232253e/' },
       { text: 'GitHub技巧', link: '/pages/4c778760be26d8b3/' },
-      { text: 'Nodejs', link: '/pages/117708e0af7f0bd9/' },
       { text: '博客搭建', link: '/pages/41f87d890d0a02af/' },
+      {
+        text: '学习笔记', 
+        items: [
+          {
+            text: '《Git》学习笔记',
+            link: '/note/git/',
+          },
+        ]
+      }
     ],
   },
   {
