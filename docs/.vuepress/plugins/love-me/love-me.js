@@ -32,7 +32,7 @@ export default () => {
                 y: e.clientY - 5,
                 scale: 1,
                 alpha: 1,
-                color: COLOR
+                color: c()
             }),
             t.body.appendChild(a)
         }
@@ -46,9 +46,9 @@ export default () => {
             }
             t.getElementsByTagName("head")[0].appendChild(a)
         }
-        // function c() {
-        //     return "rgb(" + ~~ (255 * Math.random()) + "," + ~~ (255 * Math.random()) + "," + ~~ (255 * Math.random()) + ")"
-        // }
+        function c() {
+            return "rgb(" + ~~ (255 * Math.random()) + "," + ~~ (255 * Math.random()) + "," + ~~ (255 * Math.random()) + ")"
+        }
         var s = [];
         e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame ||
         function(e) {
