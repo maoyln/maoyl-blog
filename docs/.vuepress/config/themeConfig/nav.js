@@ -45,6 +45,7 @@ module.exports = [
         text: '前端框架',
         items: [
           { text: 'Vue相关', link: '/pages/vuejs/' },
+          { text: 'React相关', link: '/pages/react/' },
         ]
       },
       {
