@@ -11,8 +11,9 @@ module.exports = [
         items: [
           { text: 'HTML', link: '/pages/8309a5b876fc95e3/' },
           { text: 'CSS', link: '/pages/0a83b083bdf257cb/' },
+          { text: 'CSS动画', link: '/pages/979248/' },
+          { text: 'JavaScript文章', link: '/pages/8143cc480faf9a11/' },
           { text: 'stylus', link: '/pages/9f15c1a281d8bedb/' },
-          { text: 'JavaScript', link: '/pages/8143cc480faf9a11/' },
         ],
       },
       {
