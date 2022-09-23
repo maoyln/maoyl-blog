@@ -1,10 +1,10 @@
-<p align="center"><a href="https://maoyln.vercel.app/" target="_blank" rel="noopener noreferrer"><img width="180" src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20200409124835.png" alt="logo"></a></p>
+<p align="center"><a href="https://maoyl.netlify.app/" target="_blank" rel="noopener noreferrer"><img width="180" src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20200409124835.png" alt="logo"></a></p>
 
 <h2 align="center">maoyl-bolg</h2>
 
-* [文档 (国内源)](https://maoyln.vercel.app/)
+* [文档 (国内源)](https://maoyl.netlify.app/)
 * [文档 (github源)](https://github.com/maoyln/maoyl-bolg)
-* [效果：Maoyl's blog](https://maoyln.vercel.app/)
+* [效果：Maoyl's blog](https://maoyl.netlify.app/)
 
 
 ## 介绍
@@ -16,8 +16,8 @@
 [**更新日志**](https://github.com/maoyln/maoyl-bolg/releases)
 
 ## 这个主题可以做什么？
-* 案例1：[知识库兼博客站](https://maoyln.vercel.app/)
-* 案例2：[仅博客站](https://maoyln.vercel.app/)
+* 案例1：[知识库兼博客站](https://maoyl.netlify.app/)
+* 案例2：[仅博客站](https://maoyl.netlify.app/)
 
 ## 快速上手
 
