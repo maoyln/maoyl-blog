@@ -51,6 +51,12 @@ module.exports = [
         ]
       },
       {
+        text: '前端监控', 
+        items: [
+          { text: '前端监控简介', link: '/monitoring/profile/' },
+        ]
+      },
+      {
         text: '学习笔记', 
         items: [
           { text: '《Vue》笔记', link: '/note/vue/' },
