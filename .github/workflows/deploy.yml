@@ -1,0 +1,19 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - main  # 指定触发工作流的分支
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest  # 运行环境
+    steps:
+    - uses: actions/checkout@v2  # 检出代码
+    - name: Install dependencies
+      run: npm install  # 安装依赖，如果有的话
+    - name: Build
+      run: npm run build  # 构建项目，如果需要的话
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}  # 使用GitHub为每个仓库自动生成的令牌
+        publish_dir: ./build  # 指定构建产物的目录
