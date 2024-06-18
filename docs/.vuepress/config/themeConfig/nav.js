@@ -79,10 +79,12 @@ module.exports = [
           { text: 'Nodejs', link: '/pages/117708e0af7f0bd9/' },
         ],
       },
-      // {
-      //   text: '学习笔记',
-      //   items: [],
-      // },
+      {
+        text: '学习笔记', 
+        items: [
+          { text: '数据结构', link: '/note/DataStructure/' },
+        ]
+      },
     ],
   },
   {
