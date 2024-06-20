@@ -19,14 +19,10 @@ jobs:
         node-version: '16'  # 使用 Node.js 16 版本
 
     - name: Install dependencies
-      run: |
-        export NODE_OPTIONS=--openssl-legacy-provider
-        npm install  # 安装依赖
+      run: npm install  # 安装依赖
 
     - name: Build
-      run: |
-        export NODE_OPTIONS=--openssl-legacy-provider
-        npm run build  # 构建项目
+      run: npm run build  # 构建项目
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
