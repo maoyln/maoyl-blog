@@ -1,0 +1,105 @@
+<h1 id="headers-模块单元测试">headers 模块单元测试</h1>
+
+<p>之前我们测试了 <code class="language-plaintext highlighter-rouge">headers</code> 的基础方法模块，接下来我们会从业务角度测试 <code class="language-plaintext highlighter-rouge">headers</code> 的相关业务逻辑。</p>
+
+<h2 id="测试代码编写">测试代码编写</h2>
+
+<p><code class="language-plaintext highlighter-rouge">test/headers.spec.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../src/index</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">getAjaxRequest</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./helper</span><span class="dl">'</span>
+
+<span class="kd">function</span> <span class="nx">testHeaderValue</span><span class="p">(</span><span class="nx">headers</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">val</span><span class="p">?:</span> <span class="kr">string</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">found</span> <span class="o">=</span> <span class="kc">false</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">headers</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">===</span> <span class="nx">key</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">())</span> <span class="p">{</span>
+      <span class="nx">found</span> <span class="o">=</span> <span class="kc">true</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">headers</span><span class="p">[</span><span class="nx">k</span><span class="p">]).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+      <span class="k">break</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">found</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">val</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">undefined</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">headers</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">)).</span><span class="nx">toBeFalsy</span><span class="p">()</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">key</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> was not found in headers</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">headers</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">install</span><span class="p">()</span>
+  <span class="p">})</span>
+
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">uninstall</span><span class="p">()</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should use default common headers</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">common</span>
+
+    <span class="nx">axios</span><span class="p">(</span><span class="dl">'</span><span class="s1">/foo</span><span class="dl">'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nx">getAjaxRequest</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">request</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">headers</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">headers</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">expect</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">requestHeaders</span><span class="p">[</span><span class="nx">key</span><span class="p">]).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">headers</span><span class="p">[</span><span class="nx">key</span><span class="p">])</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should add extra headers for post</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/foo</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">fizz=buzz</span><span class="dl">'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nx">getAjaxRequest</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">request</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">testHeaderValue</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">requestHeaders</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">application/x-www-form-urlencoded</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should use application/json when posting an object</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/foo/bar</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">firstName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">lastName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span>
+    <span class="p">})</span>
+
+    <span class="k">return</span> <span class="nx">getAjaxRequest</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">request</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">testHeaderValue</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">requestHeaders</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">application/json;charset=utf-8</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should remove content-type if data is empty</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/foo</span><span class="dl">'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nx">getAjaxRequest</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">request</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">testHeaderValue</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">requestHeaders</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should preserve content-type if data is false</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/foo</span><span class="dl">'</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nx">getAjaxRequest</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">request</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">testHeaderValue</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">requestHeaders</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">application/x-www-form-urlencoded</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should remove content-type if data is FormData</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">()</span>
+    <span class="nx">data</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">)</span>
+
+    <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/foo</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nx">getAjaxRequest</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">request</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">testHeaderValue</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">requestHeaders</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>内部定义了 <code class="language-plaintext highlighter-rouge">testHeaderValue</code> 辅助函数，用于测试 <code class="language-plaintext highlighter-rouge">headers</code> 是否存在某个 <code class="language-plaintext highlighter-rouge">header name</code> 下的某个值。</p>
+
+<p>至此我们完成了 <code class="language-plaintext highlighter-rouge">ts-axios</code> 库 <code class="language-plaintext highlighter-rouge">headers</code> 模块相关业务逻辑的测试，下一节课我们会对 <code class="language-plaintext highlighter-rouge">Axios</code> 的实例做测试。</p>

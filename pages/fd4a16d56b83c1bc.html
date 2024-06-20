@@ -1,0 +1,72 @@
+<h1 id="比typeof运算符更准确的类型判断">比typeof运算符更准确的类型判断</h1>
+
+<p>不同数据类型的<code class="language-plaintext highlighter-rouge">Object.prototype.toString</code>方法返回值如下。</p>
+
+<ul>
+  <li>数值：返回<code class="language-plaintext highlighter-rouge">[object Number]</code>。</li>
+  <li>字符串：返回<code class="language-plaintext highlighter-rouge">[object String]</code>。</li>
+  <li>布尔值：返回<code class="language-plaintext highlighter-rouge">[object Boolean]</code>。</li>
+  <li>undefined：返回<code class="language-plaintext highlighter-rouge">[object Undefined]</code>。</li>
+  <li>null：返回<code class="language-plaintext highlighter-rouge">[object Null]</code>。</li>
+  <li>数组：返回<code class="language-plaintext highlighter-rouge">[object Array]</code>。</li>
+  <li>arguments 对象：返回<code class="language-plaintext highlighter-rouge">[object Arguments]</code>。</li>
+  <li>函数：返回<code class="language-plaintext highlighter-rouge">[object Function]</code>。</li>
+  <li>Error 对象：返回<code class="language-plaintext highlighter-rouge">[object Error]</code>。</li>
+  <li>Date 对象：返回<code class="language-plaintext highlighter-rouge">[object Date]</code>。</li>
+  <li>RegExp 对象：返回<code class="language-plaintext highlighter-rouge">[object RegExp]</code>。</li>
+  <li>其他对象：返回<code class="language-plaintext highlighter-rouge">[object Object]</code>。</li>
+</ul>
+
+<p>这就是说，<code class="language-plaintext highlighter-rouge">Object.prototype.toString</code>可以看出一个值到底是什么类型。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1">// "[object Number]"</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="dl">''</span><span class="p">)</span> <span class="c1">// "[object String]"</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="c1">// "[object Boolean]"</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="kc">undefined</span><span class="p">)</span> <span class="c1">// "[object Undefined]"</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span> <span class="c1">// "[object Null]"</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nb">Math</span><span class="p">)</span> <span class="c1">// "[object Math]"</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">({})</span> <span class="c1">// "[object Object]"</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">([])</span> <span class="c1">// "[object Array]"</span>
+</code></pre></div></div>
+
+<p>利用这个特性，可以写出一个比<code class="language-plaintext highlighter-rouge">typeof</code>运算符更准确的类型判断函数。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">type</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">o</span><span class="p">){</span>
+    <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/</span><span class="se">\[</span><span class="sr">object </span><span class="se">(</span><span class="sr">.*</span><span class="se">?)\]</span><span class="sr">/</span><span class="p">)[</span><span class="mi">1</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="nx">type</span><span class="p">({});</span> <span class="c1">// "object"</span>
+<span class="nx">type</span><span class="p">([]);</span> <span class="c1">// "array"</span>
+<span class="nx">type</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">// "number"</span>
+<span class="nx">type</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span> <span class="c1">// "null"</span>
+<span class="nx">type</span><span class="p">();</span> <span class="c1">// "undefined"</span>
+<span class="nx">type</span><span class="p">(</span><span class="sr">/abcd/</span><span class="p">);</span> <span class="c1">// "regex"</span>
+<span class="nx">type</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">());</span> <span class="c1">// "date"</span>
+</code></pre></div></div>
+
+<p>在上面这个<code class="language-plaintext highlighter-rouge">type</code>函数的基础上，还可以加上专门判断某种类型数据的方法。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">type</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">o</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/</span><span class="se">\[</span><span class="sr">object </span><span class="se">(</span><span class="sr">.*</span><span class="se">?)\]</span><span class="sr">/</span><span class="p">)[</span><span class="mi">1</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="p">[</span><span class="dl">'</span><span class="s1">Null</span><span class="dl">'</span><span class="p">,</span>
+ <span class="dl">'</span><span class="s1">Undefined</span><span class="dl">'</span><span class="p">,</span>
+ <span class="dl">'</span><span class="s1">Object</span><span class="dl">'</span><span class="p">,</span>
+ <span class="dl">'</span><span class="s1">Array</span><span class="dl">'</span><span class="p">,</span>
+ <span class="dl">'</span><span class="s1">String</span><span class="dl">'</span><span class="p">,</span>
+ <span class="dl">'</span><span class="s1">Number</span><span class="dl">'</span><span class="p">,</span>
+ <span class="dl">'</span><span class="s1">Boolean</span><span class="dl">'</span><span class="p">,</span>
+ <span class="dl">'</span><span class="s1">Function</span><span class="dl">'</span><span class="p">,</span>
+ <span class="dl">'</span><span class="s1">RegExp</span><span class="dl">'</span>
+<span class="p">].</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">type</span><span class="p">[</span><span class="dl">'</span><span class="s1">is</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">t</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">type</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="o">===</span> <span class="nx">t</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
+  <span class="p">};</span>
+<span class="p">});</span>
+
+<span class="nx">type</span><span class="p">.</span><span class="nx">isObject</span><span class="p">({})</span> <span class="c1">// true</span>
+<span class="nx">type</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span><span class="kc">NaN</span><span class="p">)</span> <span class="c1">// true</span>
+<span class="nx">type</span><span class="p">.</span><span class="nx">isRegExp</span><span class="p">(</span><span class="sr">/abc/</span><span class="p">)</span> <span class="c1">// true</span>
+</code></pre></div></div>

@@ -1,0 +1,316 @@
+<h1 id="处理请求-url-参数">处理请求 url 参数</h1>
+
+<h2 id="需求分析">需求分析</h2>
+
+<p>还记得我们上节课遗留了一个问题，再来看这个例子：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>我们希望最终请求的 <code class="language-plaintext highlighter-rouge">url</code> 是 <code class="language-plaintext highlighter-rouge">/base/get?a=1&amp;b=2</code>，这样服务端就可以通过请求的 url 解析到我们传来的参数数据了。实际上就是把 <code class="language-plaintext highlighter-rouge">params</code> 对象的 key 和 value 拼接到 <code class="language-plaintext highlighter-rouge">url</code> 上。</p>
+
+<p>再来看几个更复杂的例子。</p>
+
+<h3 id="参数值为数组">参数值为数组</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">baz</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>最终请求的 <code class="language-plaintext highlighter-rouge">url</code> 是 <code class="language-plaintext highlighter-rouge">/base/get?foo[]=bar&amp;foo[]=baz'</code>。</p>
+
+<h3 id="参数值为对象">参数值为对象</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">baz</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>最终请求的 <code class="language-plaintext highlighter-rouge">url</code> 是 <code class="language-plaintext highlighter-rouge">/base/get?foo=%7B%22bar%22:%22baz%22%7D</code>，<code class="language-plaintext highlighter-rouge">foo</code> 后面拼接的是 <code class="language-plaintext highlighter-rouge">{"bar":"baz"}</code> encode 后的结果。</p>
+
+<h3 id="参数值为-date-类型">参数值为 Date 类型</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nx">date</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>最终请求的 <code class="language-plaintext highlighter-rouge">url</code> 是 <code class="language-plaintext highlighter-rouge">/base/get?date=2019-04-01T05:55:39.030Z</code>，<code class="language-plaintext highlighter-rouge">date</code> 后面拼接的是 <code class="language-plaintext highlighter-rouge">date.toISOString()</code> 的结果。</p>
+
+<h3 id="特殊字符支持">特殊字符支持</h3>
+
+<p>对于字符 <code class="language-plaintext highlighter-rouge">@</code>、<code class="language-plaintext highlighter-rouge">:</code>、<code class="language-plaintext highlighter-rouge">$</code>、<code class="language-plaintext highlighter-rouge">,</code>、<code class="language-plaintext highlighter-rouge"> </code>、<code class="language-plaintext highlighter-rouge">[</code>、<code class="language-plaintext highlighter-rouge">]</code>，我们是允许出现在 <code class="language-plaintext highlighter-rouge">url</code> 中的，不希望被 encode。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">@:$, </span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>最终请求的 <code class="language-plaintext highlighter-rouge">url</code> 是 <code class="language-plaintext highlighter-rouge">/base/get?foo=@:$+</code>，注意，我们会把空格 ` ` 转换成 <code class="language-plaintext highlighter-rouge">+</code>。</p>
+
+<h3 id="空值忽略">空值忽略</h3>
+
+<p>对于值为 <code class="language-plaintext highlighter-rouge">null</code> 或者 <code class="language-plaintext highlighter-rouge">undefined</code> 的属性，我们是不会添加到 url 参数中的。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">baz</span><span class="p">:</span> <span class="kc">null</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>最终请求的 <code class="language-plaintext highlighter-rouge">url</code> 是 <code class="language-plaintext highlighter-rouge">/base/get?foo=bar</code>。</p>
+
+<h3 id="丢弃-url-中的哈希标记">丢弃 url 中的哈希标记</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get#hash</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>最终请求的 <code class="language-plaintext highlighter-rouge">url</code> 是 <code class="language-plaintext highlighter-rouge">/base/get?foo=bar</code></p>
+
+<h3 id="保留-url-中已存在的参数">保留 url 中已存在的参数</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get?foo=bar</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">baz</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>最终请求的 <code class="language-plaintext highlighter-rouge">url</code> 是 <code class="language-plaintext highlighter-rouge">/base/get?foo=bar&amp;bar=baz</code></p>
+
+<h2 id="buildurl-函数实现">buildURL 函数实现</h2>
+
+<p>根据我们之前的需求分析，我们要实现一个工具函数，把 <code class="language-plaintext highlighter-rouge">params</code> 拼接到 <code class="language-plaintext highlighter-rouge">url</code> 上。我们希望把项目中的一些工具函数、辅助方法独立管理，于是我们创建一个 <code class="language-plaintext highlighter-rouge">helpers</code> 目录，在这个目录下创建 <code class="language-plaintext highlighter-rouge">url.ts</code> 文件，未来会把处理 <code class="language-plaintext highlighter-rouge">url</code> 相关的工具函数都放在该文件中。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/url.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">isDate</span><span class="p">,</span> <span class="nx">isObject</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./util</span><span class="dl">'</span>
+
+<span class="kd">function</span> <span class="nx">encode</span> <span class="p">(</span><span class="nx">val</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%40/g</span><span class="p">,</span> <span class="dl">'</span><span class="s1">@</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%3A/gi</span><span class="p">,</span> <span class="dl">'</span><span class="s1">:</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%24/g</span><span class="p">,</span> <span class="dl">'</span><span class="s1">$</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%2C/gi</span><span class="p">,</span> <span class="dl">'</span><span class="s1">,</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%20/g</span><span class="p">,</span> <span class="dl">'</span><span class="s1">+</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%5B/gi</span><span class="p">,</span> <span class="dl">'</span><span class="s1">[</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%5D/gi</span><span class="p">,</span> <span class="dl">'</span><span class="s1">]</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">bulidURL</span> <span class="p">(</span><span class="nx">url</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">params</span><span class="p">?:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">url</span>
+  <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="nx">parts</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span>
+
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">params</span><span class="p">).</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">key</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">params</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">val</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">||</span> <span class="k">typeof</span> <span class="nx">val</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">undefined</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="kd">let</span> <span class="na">values</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">values</span> <span class="o">=</span> <span class="nx">val</span>
+      <span class="nx">key</span> <span class="o">+=</span> <span class="dl">'</span><span class="s1">[]</span><span class="dl">'</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">values</span> <span class="o">=</span> <span class="p">[</span><span class="nx">val</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="nx">values</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">val</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">isDate</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">val</span> <span class="o">=</span> <span class="nx">val</span><span class="p">.</span><span class="nx">toISOString</span><span class="p">()</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">val</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nx">parts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">encode</span><span class="p">(</span><span class="nx">key</span><span class="p">)}</span><span class="s2">=</span><span class="p">${</span><span class="nx">encode</span><span class="p">(</span><span class="nx">val</span><span class="p">)}</span><span class="s2">`</span><span class="p">)</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="kd">let</span> <span class="nx">serializedParams</span> <span class="o">=</span> <span class="nx">parts</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">&amp;</span><span class="dl">'</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">serializedParams</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">markIndex</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">'</span><span class="s1">#</span><span class="dl">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">markIndex</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">markIndex</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">url</span> <span class="o">+=</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">'</span><span class="s1">?</span><span class="dl">'</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">?</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">&amp;</span><span class="dl">'</span><span class="p">)</span> <span class="o">+</span> <span class="nx">serializedParams</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">url</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/util.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">toString</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">isDate</span> <span class="p">(</span><span class="nx">val</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nx">val</span> <span class="k">is</span> <span class="nb">Date</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">[object Date]</span><span class="dl">'</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">isObject</span> <span class="p">(</span><span class="nx">val</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nx">val</span> <span class="k">is</span> <span class="nb">Object</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">val</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="nx">val</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h2 id="实现-url-参数处理逻辑">实现 url 参数处理逻辑</h2>
+
+<p>我们已经实现了 <code class="language-plaintext highlighter-rouge">buildURL</code> 函数，接下来我们来利用它实现 <code class="language-plaintext highlighter-rouge">url</code> 参数的处理逻辑。</p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">index.ts</code> 文件中添加如下代码：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">axios</span> <span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="nx">processConfig</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span>
+  <span class="nx">xhr</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">processConfig</span> <span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="nx">config</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">transformUrl</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">transformUrl</span> <span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">params</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">config</span>
+  <span class="k">return</span> <span class="nx">bulidURL</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">params</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>在执行 <code class="language-plaintext highlighter-rouge">xhr</code> 函数前，我们先执行 <code class="language-plaintext highlighter-rouge">processConfig</code> 方法，对 <code class="language-plaintext highlighter-rouge">config</code> 中的数据做处理，除了对 <code class="language-plaintext highlighter-rouge">url</code> 和 <code class="language-plaintext highlighter-rouge">params</code> 处理之外，未来还会处理其它属性。</p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">processConfig</code> 函数内部，我们通过执行 <code class="language-plaintext highlighter-rouge">transformUrl</code> 函数修改了 <code class="language-plaintext highlighter-rouge">config.url</code>，该函数内部调用了 <code class="language-plaintext highlighter-rouge">buildURL</code>。</p>
+
+<p>那么至此，我们对 <code class="language-plaintext highlighter-rouge">url</code> 参数处理逻辑就实现完了，接下来我们就开始编写 demo 了。</p>
+
+<h2 id="demo-编写">demo 编写</h2>
+
+<p>在 <code class="language-plaintext highlighter-rouge">examples</code> 目录下创建 <code class="language-plaintext highlighter-rouge">base</code> 目录，在 <code class="language-plaintext highlighter-rouge">base</code> 目录下创建 <code class="language-plaintext highlighter-rouge">index.html</code>:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Base example<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/__build__/base.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>接着创建 <code class="language-plaintext highlighter-rouge">app.ts</code> 作为入口文件：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../src/index</span><span class="dl">'</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">baz</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">baz</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="kd">const</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nx">date</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">@:$, </span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">baz</span><span class="p">:</span> <span class="kc">null</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get#hash</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/get?foo=bar</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">baz</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>接着在 <code class="language-plaintext highlighter-rouge">server.js</code> 添加新的接口路由：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">router</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/base/get</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>然后在命令行运行 <code class="language-plaintext highlighter-rouge">npm run dev</code>，接着打开 chrome 浏览器，访问 <code class="language-plaintext highlighter-rouge">http://localhost:8080/</code> 即可访问我们的 demo 了，我们点到 <code class="language-plaintext highlighter-rouge">Base</code> 目录下，通过开发者工具的 network 部分我们可以看到成功发送的多条请求，并可以观察它们最终请求的 url，已经如期添加了请求参数。</p>
+
+<p>那么至此我们的请求 <code class="language-plaintext highlighter-rouge">url</code> 参数处理编写完了，下一小节我们会对 <code class="language-plaintext highlighter-rouge">request body</code> 数据做处理。</p>

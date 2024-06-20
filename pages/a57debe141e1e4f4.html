@@ -1,0 +1,146 @@
+<h1 id="获取响应数据">获取响应数据</h1>
+
+<h2 id="需求分析">需求分析</h2>
+
+<p>在前面的章节中，我们发送的请求都可以从网络层面接收到服务端返回的数据，但是代码层面并没有做任何关于返回数据的处理。我们希望能处理服务端响应的数据，并支持 Promise 链式调用的方式，如下：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>我们可以拿到 <code class="language-plaintext highlighter-rouge">res</code> 对象，并且我们希望该对象包括：服务端返回的数据 <code class="language-plaintext highlighter-rouge">data</code>，HTTP 状态码<code class="language-plaintext highlighter-rouge">status</code>，状态消息 <code class="language-plaintext highlighter-rouge">statusText</code>，响应头 <code class="language-plaintext highlighter-rouge">headers</code>、请求配置对象 <code class="language-plaintext highlighter-rouge">config</code> 以及请求的 <code class="language-plaintext highlighter-rouge">XMLHttpRequest</code> 对象实例 <code class="language-plaintext highlighter-rouge">request</code>。</p>
+
+<h2 id="定义接口类型">定义接口类型</h2>
+
+<p>根据需求，我们可以定义一个 <code class="language-plaintext highlighter-rouge">AxiosResponse</code> 接口类型，如下：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AxiosResponse</span> <span class="p">{</span>
+  <span class="nl">data</span><span class="p">:</span> <span class="kr">any</span>
+  <span class="nx">status</span><span class="p">:</span> <span class="kr">number</span>
+  <span class="nx">statusText</span><span class="p">:</span> <span class="kr">string</span>
+  <span class="nx">headers</span><span class="p">:</span> <span class="kr">any</span>
+  <span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span>
+  <span class="nx">request</span><span class="p">:</span> <span class="kr">any</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>另外，<code class="language-plaintext highlighter-rouge">axios</code> 函数返回的是一个 <code class="language-plaintext highlighter-rouge">Promise</code> 对象，我们可以定义一个 <code class="language-plaintext highlighter-rouge">AxiosPromise</code> 接口，它继承于 <code class="language-plaintext highlighter-rouge">Promise&lt;AxiosResponse&gt;</code> 这个泛型接口：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AxiosPromise</span> <span class="kd">extends</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AxiosResponse</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这样的话，当 <code class="language-plaintext highlighter-rouge">axios</code> 返回的是 <code class="language-plaintext highlighter-rouge">AxiosPromise</code> 类型，那么 <code class="language-plaintext highlighter-rouge">resolve</code> 函数中的参数就是一个 <code class="language-plaintext highlighter-rouge">AxiosResponse</code> 类型。</p>
+
+<p>对于一个 AJAX 请求的 <code class="language-plaintext highlighter-rouge">response</code>，我们是可以指定它的响应的数据类型的，通过设置 <code class="language-plaintext highlighter-rouge">XMLHttpRequest</code> 对象的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType"><code class="language-plaintext highlighter-rouge">responseType</code></a> 属性，于是我们可以给 <code class="language-plaintext highlighter-rouge">AxiosRequestConfig</code> 类型添加一个可选属性：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AxiosRequestConfig</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="nl">responseType</span><span class="p">?:</span> <span class="nx">XMLHttpRequestResponseType</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">responseType</code> 的类型是一个 <code class="language-plaintext highlighter-rouge">XMLHttpRequestResponseType</code> 类型，它的定义是 <code class="language-plaintext highlighter-rouge">"" | "arraybuffer" | "blob" | "document" | "json" | "text"</code> 字符串字面量类型。</p>
+
+<h2 id="实现获取响应数据逻辑">实现获取响应数据逻辑</h2>
+
+<p>首先我们要在 <code class="language-plaintext highlighter-rouge">xhr</code> 函数添加 <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/onreadystatechange"><code class="language-plaintext highlighter-rouge">onreadystatechange</code></a> 事件处理函数，并且让 <code class="language-plaintext highlighter-rouge">xhr</code> 函数返回的是 <code class="language-plaintext highlighter-rouge">AxiosPromise</code> 类型。</p>
+
+<p><code class="language-plaintext highlighter-rouge">xhr.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">xhr</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="nx">AxiosPromise</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">responseType</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">config</span>
+
+    <span class="kd">const</span> <span class="nx">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">responseType</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">request</span><span class="p">.</span><span class="nx">responseType</span> <span class="o">=</span> <span class="nx">responseType</span>
+    <span class="p">}</span>
+
+    <span class="nx">request</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">method</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">(),</span> <span class="nx">url</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+
+    <span class="nx">request</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">handleLoad</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">!==</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span>
+      <span class="p">}</span>
+
+      <span class="kd">const</span> <span class="nx">responseHeaders</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">getAllResponseHeaders</span><span class="p">()</span>
+      <span class="kd">const</span> <span class="nx">responseData</span> <span class="o">=</span> <span class="nx">responseType</span> <span class="o">&amp;&amp;</span> <span class="nx">responseType</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span> <span class="p">?</span> <span class="nx">request</span><span class="p">.</span><span class="nx">response</span> <span class="p">:</span> <span class="nx">request</span><span class="p">.</span><span class="nx">responseText</span>
+      <span class="kd">const</span> <span class="na">response</span><span class="p">:</span> <span class="nx">AxiosResponse</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">data</span><span class="p">:</span> <span class="nx">responseData</span><span class="p">,</span>
+        <span class="na">status</span><span class="p">:</span> <span class="nx">request</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span>
+        <span class="na">statusText</span><span class="p">:</span> <span class="nx">request</span><span class="p">.</span><span class="nx">statusText</span><span class="p">,</span>
+        <span class="na">headers</span><span class="p">:</span> <span class="nx">responseHeaders</span><span class="p">,</span>
+        <span class="nx">config</span><span class="p">,</span>
+        <span class="nx">request</span>
+      <span class="p">}</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">headers</span><span class="p">).</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">name</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">data</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">name</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">content-type</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="nx">headers</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">headers</span><span class="p">[</span><span class="nx">name</span><span class="p">])</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+
+    <span class="nx">request</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>注意，我们这里还判断了如果 <code class="language-plaintext highlighter-rouge">config</code> 中配置了 <code class="language-plaintext highlighter-rouge">responseType</code>，我们把它设置到 <code class="language-plaintext highlighter-rouge">request.responseType</code> 中。在 <code class="language-plaintext highlighter-rouge">onreadystatechange</code> 事件函数中，我们构造了 <code class="language-plaintext highlighter-rouge">AxiosResponse</code> 类型的 <code class="language-plaintext highlighter-rouge">reponse</code> 对象，并把它 <code class="language-plaintext highlighter-rouge">resolve</code> 出去。</p>
+
+<p>修改了 <code class="language-plaintext highlighter-rouge">xhr</code> 函数，我们同样也要对应修改 <code class="language-plaintext highlighter-rouge">axios</code> 函数：</p>
+
+<p><code class="language-plaintext highlighter-rouge">index.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">axios</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="nx">AxiosPromise</span> <span class="p">{</span>
+  <span class="nx">processConfig</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span>
+  <span class="k">return</span> <span class="nx">xhr</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这样我们就实现了 <code class="language-plaintext highlighter-rouge">axios</code> 函数的 Promise 化。</p>
+
+<h2 id="demo-编写">demo 编写</h2>
+
+<p>我们在 <code class="language-plaintext highlighter-rouge">examples/base/app.ts</code> 文件中添加 2 段代码：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">responseType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">json</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">4</span>
+  <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>我们打开浏览器运行 demo，看一下结果，发现我们可以正常 log 出这个 <code class="language-plaintext highlighter-rouge">res</code> 变量，它包含 <code class="language-plaintext highlighter-rouge">AxiosResponse</code> 类型中定义的那些属性，不过我们发现 2 个小问题：第一个是 <code class="language-plaintext highlighter-rouge">headers</code> 属性是一个字符串，我们需要把它解析成对象类型；第二个是在第一个请求中，得到的数据是一个 JSON 字符串，我们也需要把它转换成对象类型。</p>
+
+<p>那么下一小节，我们将来解决第一个问题，对于响应的 <code class="language-plaintext highlighter-rouge">header</code> 做处理。</p>

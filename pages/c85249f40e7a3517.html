@@ -1,0 +1,127 @@
+<h1 id="编写第一个-typescript-程序">编写第一个 TypeScript 程序</h1>
+
+<p>在编辑器，将下面的代码输入到 greeter.ts 文件里：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">greeter</span> <span class="p">(</span><span class="nx">person</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="dl">'</span><span class="s1">Hello, </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">person</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Yee</span><span class="dl">'</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">greeter</span><span class="p">(</span><span class="nx">user</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="编译代码">编译代码</h2>
+
+<p>我们使用了 <code class="language-plaintext highlighter-rouge">.ts</code> 扩展名，但是这段代码仅仅是 JavaScript 而已。</p>
+
+<p>在命令行上，运行 TypeScript 编译器：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tsc greeter.ts
+</code></pre></div></div>
+
+<p>输出结果为一个 <code class="language-plaintext highlighter-rouge">greeter.js</code> 文件，它包含了和输入文件中相同的 JavsScript 代码。</p>
+
+<p>在命令行上，通过 Node.js 运行这段代码：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>node greeter.js
+</code></pre></div></div>
+
+<p>控制台输出：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello, Yee
+</code></pre></div></div>
+
+<h2 id="类型注解">类型注解</h2>
+
+<p>接下来让我们看看 TypeScript 工具带来的高级功能。 给  <code class="language-plaintext highlighter-rouge">person</code> 函数的参数添加 <code class="language-plaintext highlighter-rouge">: string</code> 类型注解，如下：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">greeter</span> <span class="p">(</span><span class="nx">person</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="dl">'</span><span class="s1">Hello, </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">person</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Yee</span><span class="dl">'</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">greeter</span><span class="p">(</span><span class="nx">user</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>TypeScript 里的类型注解是一种轻量级的为函数或变量添加约束的方式。 在这个例子里，我们希望 <code class="language-plaintext highlighter-rouge">greeter</code> 函数接收一个字符串参数。 然后尝试把 <code class="language-plaintext highlighter-rouge">greeter</code> 的调用改成传入一个数组：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">greeter</span> <span class="p">(</span><span class="nx">person</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="dl">'</span><span class="s1">Hello, </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">person</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">greeter</span><span class="p">(</span><span class="nx">user</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>重新编译，你会看到产生了一个错误：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error TS2345: Argument of type 'number[]' is not assignable to parameter of type 'string'.
+</code></pre></div></div>
+
+<p>类似地，尝试删除 <code class="language-plaintext highlighter-rouge">greeter</code> 调用的所有参数。 TypeScript 会告诉你使用了非期望个数的参数调用了这个函数。 在这两种情况中，TypeScript提供了静态的代码分析，它可以分析代码结构和提供的类型注解。</p>
+
+<p>要注意的是尽管有错误，<code class="language-plaintext highlighter-rouge">greeter.js</code> 文件还是被创建了。 就算你的代码里有错误，你仍然可以使用 TypeScript。但在这种情况下，TypeScript 会警告你代码可能不会按预期执行。</p>
+
+<h2 id="接口">接口</h2>
+
+<p>让我们继续扩展这个示例应用。这里我们使用接口来描述一个拥有 <code class="language-plaintext highlighter-rouge">firstName</code> 和 <code class="language-plaintext highlighter-rouge">lastName</code> 字段的对象。 在 <code class="language-plaintext highlighter-rouge">TypeScript</code> 里，只在两个类型内部的结构兼容，那么这两个类型就是兼容的。 这就允许我们在实现接口时候只要保证包含了接口要求的结构就可以，而不必明确地使用 <code class="language-plaintext highlighter-rouge">implements</code> 语句。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="nl">firstName</span><span class="p">:</span> <span class="kr">string</span>
+  <span class="nx">lastName</span><span class="p">:</span> <span class="kr">string</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">greeter</span> <span class="p">(</span><span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="dl">'</span><span class="s1">Hello, </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">person</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">person</span><span class="p">.</span><span class="nx">lastName</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">firstName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Yee</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">lastName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Huang</span><span class="dl">'</span>
+<span class="p">}</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">greeter</span><span class="p">(</span><span class="nx">user</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="类">类</h2>
+
+<p>最后，让我们使用类来改写这个例子。 TypeScript 支持 JavaScript 的新特性，比如支持基于类的面向对象编程。</p>
+
+<p>让我们创建一个 <code class="language-plaintext highlighter-rouge">User</code> 类，它带有一个构造函数和一些公共字段。因为类的字段包含了接口所需要的字段，所以他们能很好的兼容。</p>
+
+<p>还要注意的是，我在类的声明上会注明所有的成员变量，这样比较一目了然。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">User</span> <span class="p">{</span>
+  <span class="nl">fullName</span><span class="p">:</span> <span class="kr">string</span>
+  <span class="nx">firstName</span><span class="p">:</span> <span class="kr">string</span>
+  <span class="nx">lastName</span><span class="p">:</span> <span class="kr">string</span>
+
+  <span class="kd">constructor</span> <span class="p">(</span><span class="nx">firstName</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">lastName</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="nx">firstName</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="nx">lastName</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">fullName</span> <span class="o">=</span> <span class="nx">firstName</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">lastName</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">interface</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="nl">firstName</span><span class="p">:</span> <span class="kr">string</span>
+  <span class="nx">lastName</span><span class="p">:</span> <span class="kr">string</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">greeter</span> <span class="p">(</span><span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="dl">'</span><span class="s1">Hello, </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">person</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">person</span><span class="p">.</span><span class="nx">lastName</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">User</span><span class="p">(</span><span class="dl">'</span><span class="s1">Yee</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Huang</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">greeter</span><span class="p">(</span><span class="nx">user</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>重新运行 <code class="language-plaintext highlighter-rouge">tsc greeter.ts</code>，你会看到 TypeScript 里的类只是一个语法糖，本质上还是 <code class="language-plaintext highlighter-rouge">JavaScript</code> 函数的实现。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>到这里，你已经对 TypeScript 有了一个大致的印象，那么下一章让我们来一起学习 TypeScript 的一些常用语法吧。</p>

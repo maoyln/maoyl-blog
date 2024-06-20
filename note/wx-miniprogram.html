@@ -1,0 +1,2250 @@
+<h1 id="小程序笔记">小程序笔记</h1>
+
+<h2 id="基础课程部分">基础课程部分</h2>
+
+<h4 id="微信公众平台">微信公众平台</h4>
+
+<p><a href="https://mp.weixin.qq.com/">https://mp.weixin.qq.com/</a></p>
+
+<p>注册时可选择类型：订阅号、服务号、小程序、企业微信</p>
+
+<p><strong>每个邮箱仅能注册一个小程序。</strong></p>
+
+<p>个人类型小程序：无法使用微信支付、无法使用卡包功能</p>
+
+<h5 id="小程序文档api">小程序文档API</h5>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/quickstart/">小程序开发文档</a></p>
+
+<h5 id="微信开放社区">微信开放社区</h5>
+
+<p><a href="https://developers.weixin.qq.com/community/develop/question">微信开发社区</a></p>
+
+<h4 id="目录说明">目录说明</h4>
+
+<p><strong>默认目录</strong></p>
+
+<p>pages———————–页面相关</p>
+
+<p>​	index  —————– 首页文件夹</p>
+
+<p>​		index.js ————首页js</p>
+
+<p>​		index.json———首页配置</p>
+
+<p>​		index.wxml——-首页html</p>
+
+<p>​		index.wxss——–首页css</p>
+
+<p>utils————————工具相关</p>
+
+<p>app.js ———————-项目总js</p>
+
+<p>app.json——————-全局配置( 页面路由以及头部、底部导航的配置等)</p>
+
+<p>app.wxss —————–项目总样式css</p>
+
+<p>project.config.json —-项目配置</p>
+
+<p><strong>代码构成</strong></p>
+
+<p>.json ：配置文件，以json格式存储配置</p>
+
+<p>​			 项目中有三种配置：项目配置（project.config.json）、全局配置（app.json）、页面配置（index.json）</p>
+
+<p>.wxml: 相当于html文件</p>
+
+<p>.wxss: 相当于css</p>
+
+<p>.js : 就是js</p>
+
+<h4 id="文件说明">文件说明</h4>
+
+<p><strong>project.config.json项目配置 部分代码说明</strong></p>
+
+<p>setting：{</p>
+
+<p>urlCheck 是否检测安全的域名</p>
+
+<p>es6  是否把es6转es5</p>
+
+<p>postcss 是否把css样式自动补全</p>
+
+<p>minified 是否压缩</p>
+
+<p>}</p>
+
+<p><strong>app.json 全局配置</strong></p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/reference/configuration/app.html">全局配置API</a></p>
+
+<p><strong>wxml 相关介绍</strong></p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/">wxmlAPI</a></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;view&gt;&lt;/view&gt;</span>
+
+循环渲染
+<span class="nt">&lt;view</span> <span class="na">wx:for=</span><span class="s">""</span> <span class="na">wx:key=</span><span class="s">""</span><span class="nt">&gt;</span>
+       
+<span class="nt">&lt;/view&gt;</span>
+
+改变for循环item和index的名称
+<span class="nt">&lt;block</span> <span class="na">wx:for=</span><span class="s">""</span> <span class="na">wx:for-item=</span><span class="s">"data"</span> <span class="na">wx:for-index=</span><span class="s">"inx"</span><span class="nt">&gt;</span>
+	 
+<span class="nt">&lt;/block&gt;</span>
+
+条件渲染 (类似vue的v-if、v-else)
+<span class="nt">&lt;view</span> <span class="na">wx:if=</span><span class="s">""</span><span class="nt">&gt;</span>已登录<span class="nt">&lt;/view&gt;</span>
+<span class="nt">&lt;view</span> <span class="na">wx:else</span><span class="nt">&gt;</span>请登录<span class="nt">&lt;/view&gt;</span>
+
+条件显示（类似vue的v-show）
+<span class="nt">&lt;view</span> <span class="na">hidden=</span><span class="s">""</span><span class="nt">&gt;</span>显示内容<span class="nt">&lt;/view&gt;</span>
+
+绑定点击事件
+<span class="nt">&lt;button</span> <span class="na">bindtap=</span><span class="s">“tapName”</span><span class="nt">&gt;</span>按钮<span class="nt">&lt;/button&gt;</span>
+
+Page({
+  tapName: function(event) {
+    console.log(event)
+  }
+})
+...
+
+</code></pre></div></div>
+
+<p><strong>wxss 相关介绍</strong></p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxss.html">wxssAPI</a></p>
+
+<p>尺寸单位：rpx，根据屏幕宽度自适应。</p>
+
+<p>引入外部wxss：@import ’…‘</p>
+
+<p><strong>js相关介绍</strong></p>
+
+<p>WXS（WeiXin Script）是小程序的一套脚本语言</p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxs/">wxsAPI</a></p>
+
+<p>绑定点击事件</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;button</span> <span class="na">bindtap=</span><span class="s">“onTapHandler”</span><span class="nt">&gt;</span>点我+1<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;view&gt;</span>8<span class="nt">&lt;/view&gt;</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Page</span><span class="p">({</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">count</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="p">},</span>
+  <span class="na">onTapHandler</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  	<span class="k">this</span><span class="p">.</span><span class="nx">setData</span><span class="p">({</span>
+  		<span class="na">count</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span>
+  	<span class="p">})</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h5 id="阻止事件冒泡">阻止事件冒泡</h5>
+
+<p>把绑定方式 bindtap 换成 catchtap 即可。</p>
+
+<h4 id="第三方库">第三方库</h4>
+
+<p><strong>WeUI</strong></p>
+
+<p>weUI是一套同微信原生视觉体验一致的基础样式库</p>
+
+<p><strong>iView Weapp</strong></p>
+
+<p>一套高质量的微信小程序UI组件库</p>
+
+<p><strong>Vant Weapp</strong></p>
+
+<p>轻量、可靠的小程序UI组件库</p>
+
+<h4 id="云开发">云开发</h4>
+
+<p><strong>小程序传统开发模式</strong></p>
+
+<p>客户端  —–&gt; 服务端（后端代码、数据库）——&gt; 运维（DB维护、文件存储、内容加速、网络防护、容器服务、负载均衡、安全加固等…）</p>
+
+<p><strong>小程序云开发模式</strong></p>
+
+<p>客户端 —–&gt; 云开发（云函数、云数据库、云存储）</p>
+
+<p><strong>传统开发 VS 云开发</strong></p>
+
+<p>开发效率低         Serverless（无服务）</p>
+
+<p>运维成本高         开发者更关注业务逻辑</p>
+
+<p><strong>无服务（Serverless）开发是未来的发展趋势</strong></p>
+
+<h5 id="云开发三大基础能力"><strong>云开发三大基础能力</strong></h5>
+
+<h5 id="云函数">云函数</h5>
+
+<p>（相当于传统开发中的后台接口）</p>
+
+<p>获取appid、获取openid、生成分享图、调用腾讯云SDK …</p>
+
+<h5 id="云数据库">云数据库</h5>
+
+<p>数据的增、删、改、查 …</p>
+
+<h5 id="云存储">云存储</h5>
+
+<p>管理文件、上传文件、下载文件、分享文件 …</p>
+
+<p><strong>每个小程序账号可免费创建两个环境，建议：开发环境、生成环境</strong></p>
+
+<h4 id="云数据库能力">云数据库能力</h4>
+
+<p>云开发提供了一个json数据库，提供2GB免费存储空间。</p>
+
+<h4 id="数据类型">数据类型</h4>
+
+<p>String 字符串</p>
+
+<p>Number 数字</p>
+
+<p>Object 对象</p>
+
+<p>Array 数组</p>
+
+<p>Boolean 布尔值</p>
+
+<p>GeoPoint 地理位置点</p>
+
+<p>Date 时间 （精确到毫秒ms，客户端时间）</p>
+
+<p>Null 空</p>
+
+<h4 id="操作云数据库">操作云数据库</h4>
+
+<p>小程序控制（读写数据库受权限限制）</p>
+
+<p>云函数控制（拥有所有读写数据库的权限）</p>
+
+<p>控制台控制（拥有所有读写数据库的权限）</p>
+
+<h4 id="云数据库权限管理">云数据库权限管理</h4>
+
+<p>仅创建者可写，所有人可读 （适合于文章）</p>
+
+<p>仅创建者可读写 (适用于私密内容)</p>
+
+<p>仅管理端可写，所有人可读（适用于商品信息）</p>
+
+<p>仅管理端可读写（适用于后台敏感数据）</p>
+
+<h4 id="操作云数据库-1">操作云数据库</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//初始化数据库</span>
+<span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">wx</span><span class="p">.</span><span class="nx">cloud</span><span class="p">.</span><span class="nx">database</span><span class="p">()</span> <span class="c1">// 小程序端初始化数据库，如果在云函数端不需要加wx</span>
+
+<span class="c1">//切换环境(开发环境/生产环境)</span>
+<span class="kd">const</span> <span class="nx">testDB</span> <span class="o">=</span> <span class="nx">wx</span><span class="p">.</span><span class="nx">cloud</span><span class="p">.</span><span class="nx">database</span><span class="p">({</span>
+	<span class="na">env</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h2 id="实战课程部分">实战课程部分</h2>
+
+<h4 id="serverless无服务">serverless（无服务）</h4>
+
+<p>概念：函数即服务，当需要后端服务的时候，不需要关心后端的IP地址、域名，只需要像调用普通函数一样既可以实现调用。</p>
+
+<h4 id="云开发优势">云开发优势</h4>
+
+<p>快速上线、专注核心业务、独立开发一个完整的微信小程序、不需要学习新的语言，只需要会javascript、无需运维， 节约成本、数据安全、</p>
+
+<h4 id="云开发提供能力">云开发提供能力</h4>
+
+<p>云函数：在云端运行的代码，微信私有协议天然鉴权 （理解：相当于后端部分）</p>
+
+<p>云数据库：一个既可以在小程序端操作又可以在云函数中操作的JSON数据库</p>
+
+<p>云存储：在云端存储文件，可以在云端控制台可视化管理</p>
+
+<p>云调用：基于云函数免鉴权使用小程序开放接口的能力（比如说给用户推送消息等）</p>
+
+<p>HTTP API：使用HTTP API开发者可在已有服务器上访问云资源，实现与云开发的互通（作用：对原有传统模式下开发的小程序，可以与云开发进行互通）</p>
+
+<h4 id="appid">appID</h4>
+
+<p>每个小程序唯一的id</p>
+
+<h4 id="云开发项目默认目录结构">云开发项目默认目录结构</h4>
+
+<p>cloudfunctions —————————-云函数</p>
+
+<p>​	callback ———————————- 回调函数</p>
+
+<p>​		config.json —————————</p>
+
+<p>​		index.js ——————————–</p>
+
+<p>​		package.json ————————</p>
+
+<p>​	echo —————————————-</p>
+
+<p>​	login —————————————-</p>
+
+<p>​	openapi ———————————–</p>
+
+<p>miniprogram ——————————- 小程序</p>
+
+<p>​	images ————————————- 图片</p>
+
+<p>​	pages ————————————— 页面</p>
+
+<p>​	style —————————————– 样式</p>
+
+<p>​	app.js ————————————— 项目js</p>
+
+<p>​	app.json ———————————– 全局配置</p>
+
+<p>​	app.wxss ———————————- 项目样式</p>
+
+<p>​	sitemap.json —————————–  （小程序SEO相关）</p>
+
+<p>project.config.json ———————– 项目配置</p>
+
+<h4 id="云开发环境">云开发环境</h4>
+
+<p>云开发可创建两个环境，建议一个为开发环境，一个为生产环境</p>
+
+<h4 id="开发前的准备">开发前的准备</h4>
+
+<p>开发工具 &gt; 右上角详情 &gt; 本地设置 &gt; 调试基础库  设置为最新版本</p>
+
+<p>app.js &gt; wx.cloud.init &gt; env 设置环境ID</p>
+
+<h4 id="projectconfigjson-文件说明">project.config.json 文件说明</h4>
+
+<p>miniprogramRoot 小程序前端代码目录</p>
+
+<p>cloudfunctionRoot 云函数代码目录</p>
+
+<h4 id="appjson">app.json</h4>
+
+<p>pages  设置页面 ，设置后会自动在pages目录下生成相应的目录和文件</p>
+
+<p>设置底部导航按钮：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"tabBar"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#474747"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">文字颜色</span><span class="w">
+    </span><span class="nl">"selectedColor"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#d43c43"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">文字选中颜色</span><span class="w">
+    </span><span class="nl">"list"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">按钮列表，</span><span class="mi">2-5</span><span class="err">项</span><span class="w">
+      </span><span class="nl">"pagePath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pages/playlist/playlist"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">按钮对应页面</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"音乐"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">文字</span><span class="w">
+      </span><span class="nl">"iconPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/music.png"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">图标路径</span><span class="w">
+      </span><span class="nl">"selectedIconPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/music-actived.png"</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">选中图标的路径</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"pagePath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pages/blog/blog"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"发现"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"iconPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/blog.png"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"selectedIconPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/blog-actived.png"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"pagePath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pages/profile/profile"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"我的"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"iconPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/profile.png"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"selectedIconPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/profile-actived.png"</span><span class="w">
+    </span><span class="p">}]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>图标来自于 <a href="https://www.iconfont.cn">https://www.iconfont.cn</a></p>
+
+  <p>阿里巴巴图标库，包含矢量图标、字体图标、字体等</p>
+</blockquote>
+
+<h4 id="代码规范">代码规范</h4>
+
+<p>很多公司借鉴的代码规范：<a href="https://github.com/airbnb/javascript">https://github.com/airbnb/javascript</a></p>
+
+<h4 id="音乐页面开发">《音乐》页面开发</h4>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c">&lt;!-- 轮播图组件 参数：indicator-dots 小圆点，autoplay 自动播放, interval 间隔时间，duration 动画时长 --&gt;</span>
+<span class="nt">&lt;swiper</span> <span class="na">indicator-dots=</span><span class="s">"true"</span> <span class="na">circular=</span><span class="s">"true"</span> <span class="na">interval=</span><span class="s">"3000"</span> <span class="na">duration=</span><span class="s">"500"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;block</span> <span class="na">wx:for=</span><span class="s">""</span> <span class="na">wx:key=</span><span class="s">""</span><span class="nt">&gt;</span> <span class="c">&lt;!-- 空节点 --&gt;</span>
+    <span class="nt">&lt;swiper-item&gt;</span>
+      <span class="nt">&lt;image</span> <span class="na">src=</span><span class="s">""</span> <span class="na">mode=</span><span class="s">"widthFix"</span> <span class="na">class=</span><span class="s">"img"</span><span class="nt">&gt;&lt;/image&gt;</span>
+    <span class="nt">&lt;/swiper-item&gt;</span>
+  <span class="nt">&lt;/block&gt;</span>
+<span class="nt">&lt;/swiper&gt;</span>
+
+</code></pre></div></div>
+
+<h4 id="自定义组件">自定义组件</h4>
+
+<p><strong>创建组件</strong></p>
+
+<p>创建目录 components &gt; 组件目录名称 &gt; 右键 <code class="language-plaintext highlighter-rouge">新建Component</code></p>
+
+<h5 id="引入组件"><strong>引入组件</strong></h5>
+
+<p>在page的json文件中：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"usingComponents"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"x-playlist"</span><span class="p">:</span><span class="s2">"/components/playlist/playlist"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>在page的wxml中：</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;x-playlist&gt;</span> <span class="nt">&lt;/x-playlist&gt;</span>
+</code></pre></div></div>
+
+<p><strong>页面引入组件以及组件内部在引用子组件的方法是一样的，同样需要设置json文件。</strong></p>
+
+<h5 id="组件传值"><strong>组件传值</strong></h5>
+
+<p>父组件中：在引入组件的时候自定义属性名称，并把数据传入子组件</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- 参数：playlist 自定义名称，传入组件的数据 --&gt;</span>
+<span class="nt">&lt;x-playlist</span> <span class="na">playlist=</span><span class="s">""</span><span class="nt">&gt;&lt;/x-playlist&gt;</span>
+</code></pre></div></div>
+
+<p>子组件中：
+子组件的js文件：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="cm">/**
+   * 组件的属性列表
+   */</span>
+  <span class="nx">properties</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">playlist</span><span class="p">:{</span> <span class="c1">// 接收父组件传输的数据</span>
+      <span class="na">type</span><span class="p">:</span> <span class="nb">Object</span> <span class="c1">// 数据类型</span>
+    <span class="p">}</span>
+   <span class="p">},</span>
+
+ <span class="c1">//子组件的wxml文件可直接引入数据</span>
+</code></pre></div></div>
+
+<h4 id="wxkey-的使用">wx:key 的使用</h4>
+
+<p>key的值不建议使用index，因为当数据发生变化会dom结构产生变化时，使用index的地方不会随之变化。</p>
+
+<p>可以使用数据内部每项不一样的一个数值，如id</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;block</span> <span class="na">wx:for=</span><span class="s">""</span> <span class="na">wx:key=</span><span class="s">"url"</span><span class="nt">&gt;</span> 这里url不需要双大括号，如使用index则需要
+    <span class="nt">&lt;view&gt;</span>
+      <span class="nt">&lt;image</span> <span class="na">src=</span><span class="s">""</span> <span class="na">mode=</span><span class="s">"widthFix"</span> <span class="na">class=</span><span class="s">"img"</span><span class="nt">&gt;&lt;/image&gt;</span>
+    <span class="nt">&lt;/view&gt;</span>
+<span class="nt">&lt;/block&gt;</span>
+
+<span class="nt">&lt;view</span> <span class="na">class=</span><span class="s">"playlist-container"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;block</span> <span class="na">wx:for=</span><span class="s">""</span> <span class="na">wx:key=</span><span class="s">"_id"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- 参数：playlist 自定义名称，传入组件的数据 --&gt;</span>
+    <span class="nt">&lt;x-playlist</span> <span class="na">playlist=</span><span class="s">""</span><span class="nt">&gt;&lt;/x-playlist&gt;</span>
+  <span class="nt">&lt;/block&gt;</span>
+<span class="nt">&lt;/view&gt;</span>
+
+</code></pre></div></div>
+
+<h4 id="asyncawait-语法">async/await 语法</h4>
+
+<p>目前，在云函数里，由于 Node 版本最低是 8.9，因此是天然支持 async/await 语法的。而在小程序端则不然。在微信开发者工具里，以及 Android 端手机（浏览器内核是 QQ浏览器的 X5），async/await是天然支持的，但 iOS 端手机在较低版本则不支持，因此需要引入额外的 文件。</p>
+
+<p>可把这个 <a href="https://github.com/xiecheng328/miniprogram/blob/master/regenerator/runtime.js">runtime.js</a> 文件引用到有使用 async/await 的文件当中。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 注意，必须命名为 regeneratorRuntime</span>
+<span class="k">import</span> <span class="nx">regeneratorRuntime</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../utils/runtime.js</span><span class="dl">'</span>
+</code></pre></div></div>
+
+<h4 id="云函数的使用">云函数的使用</h4>
+
+<p>cloudfunctions目录 右键 <code class="language-plaintext highlighter-rouge">新建 Node.js 云函数</code>  &gt; 输入目录名 <code class="language-plaintext highlighter-rouge">getPlaylist</code></p>
+
+<p>在云函数中向第三方服务器发送请求要依赖第三方库</p>
+
+<p><strong>安装依赖包</strong></p>
+
+<p>云函数目录  <code class="language-plaintext highlighter-rouge">getPlaylist</code> 右键 <code class="language-plaintext highlighter-rouge">在终端打开</code> 打开命令行  输入命令：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install</span> <span class="nt">--save</span> request
+npm <span class="nb">install</span> <span class="nt">--save</span> request-promise
+</code></pre></div></div>
+
+<p>github request-promise：<a href="https://github.com/request/request-promise">https://github.com/request/request-promise</a></p>
+
+<p>然后写相应代码</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 云函数入口文件</span>
+<span class="kd">const</span> <span class="nx">cloud</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">wx-server-sdk</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">cloud</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+
+<span class="kd">const</span> <span class="nx">rp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">request-promise</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// 需安装依赖包</span>
+
+<span class="kd">const</span> <span class="nx">URL</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">http://musicapi.xiecheng.live/personalized</span><span class="dl">'</span>
+
+<span class="c1">// 云函数入口函数</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">main</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">playlist</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">rp</span><span class="p">(</span><span class="nx">URL</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">res</span><span class="p">).</span><span class="nx">result</span>
+  <span class="p">})</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">playlist</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>写完代码，云函数目录  <code class="language-plaintext highlighter-rouge">getPlaylist</code> 右键 <code class="language-plaintext highlighter-rouge">上传并部署：云端安装依赖（不上传node_modules）</code> 进行上传部署代码到云端，等待上传成功，打开云开发控制台即可看到已经上传的云函数，并可对云函数进行测试。</p>
+
+<h5 id="数据库操作">数据库操作</h5>
+
+<p>数据库&gt; 创建集合 &gt; playlist</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 云函数入口文件</span>
+<span class="kd">const</span> <span class="nx">cloud</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">wx-server-sdk</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">cloud</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+
+<span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">cloud</span><span class="p">.</span><span class="nx">database</span><span class="p">()</span> <span class="c1">// 初始化数据库,如果在小程序端初始化数据库需要在前面加wx.</span>
+
+<span class="kd">const</span> <span class="nx">rp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">request-promise</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// 需安装依赖包</span>
+
+<span class="kd">const</span> <span class="nx">URL</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">http://musicapi.xiecheng.live/personalized</span><span class="dl">'</span> <span class="c1">// 第三方服务器地址（老师从网易云获取的数据部署在其服务器，每天的数据会更新）</span>
+
+<span class="kd">const</span> <span class="nx">playlistCollection</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="dl">'</span><span class="s1">playlist</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// 获取到数据库playlist集合</span>
+
+<span class="kd">const</span> <span class="nx">MAX_LIMIT</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1">// 定义常量，获取数据库条数最大的限制</span>
+
+<span class="c1">// 云函数入口函数</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">main</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="cm">/**
+   * 注：
+   * - 关于数据库的操作都是异步操作，都需添加await关键字
+   * - console.log 打印在云开发控制台 云函数测试内查看
+   * - 单次获取数据库数据有条数限制，云函数端最多获取100条，小程序端最多获取20条
+   */</span>
+
+  <span class="c1">// const list = await playlistCollection.get() // 获取数据库集合的数据 （因为有条数限制，不直接用此方法）</span>
+
+  <span class="c1">// 突破条数限制 （为了读取到全部数据然后与第三方服务器获取的数据进行对比去重）</span>
+  <span class="kd">const</span> <span class="nx">countResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">playlistCollection</span><span class="p">.</span><span class="nx">count</span><span class="p">()</span> <span class="c1">// 获取数据总条数 返回为对象</span>
+  <span class="kd">const</span> <span class="nx">total</span> <span class="o">=</span> <span class="nx">countResult</span><span class="p">.</span><span class="nx">total</span> <span class="c1">// 取得总条数</span>
+  <span class="kd">const</span> <span class="nx">batchTimes</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">total</span> <span class="o">/</span> <span class="nx">MAX_LIMIT</span><span class="p">)</span>
+  <span class="kd">const</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">batchTimes</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">playlistCollection</span><span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="nx">i</span> <span class="o">*</span> <span class="nx">MAX_LIMIT</span><span class="p">).</span><span class="nx">limit</span><span class="p">(</span><span class="nx">MAX_LIMIT</span><span class="p">).</span><span class="kd">get</span><span class="p">()</span> <span class="c1">// 从第 skip 条开始取，最多取 limit 条数据</span>
+    <span class="nx">tasks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">promise</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="kd">let</span> <span class="nx">list</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">data</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">tasks</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">list</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">tasks</span><span class="p">)).</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">cur</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// reduce数组方法 累积拼接</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="na">data</span><span class="p">:</span> <span class="nx">acc</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">cur</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 获取第三方服务器端数据</span>
+  <span class="kd">const</span> <span class="nx">playlist</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">rp</span><span class="p">(</span><span class="nx">URL</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">res</span><span class="p">).</span><span class="nx">result</span>
+  <span class="p">})</span>
+
+  <span class="c1">// 数据库与服务器数据对比去重（数据已存在数据库的无需再重复添加）</span>
+  <span class="kd">const</span> <span class="nx">newData</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">len1</span> <span class="o">=</span> <span class="nx">playlist</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len1</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">flag</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">len2</span> <span class="o">=</span> <span class="nx">list</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">len2</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">playlist</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">list</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">j</span><span class="p">].</span><span class="nx">id</span><span class="p">){</span>
+        <span class="nx">flag</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="k">break</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">flag</span><span class="p">){</span>
+      <span class="nx">newData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">playlist</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 把数据插入数据库，需要单条插入</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">newData</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">playlistCollection</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span> <span class="c1">// 给数据库集合添加数据</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span><span class="nx">newData</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span>
+        <span class="na">createTime</span><span class="p">:</span> <span class="nx">db</span><span class="p">.</span><span class="nx">serverDate</span><span class="p">(),</span> <span class="c1">// db.serverDate() 获取服务器时间</span>
+      <span class="p">}</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 数据添加成功</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">数据添加成功</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 失败</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">newData</span><span class="p">.</span><span class="nx">length</span> <span class="c1">// 插入多少条数据</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h5 id="查询数据库">查询数据库</h5>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//云函数中查询数据库的例子：</span>
+
+<span class="c1">// 云函数入口文件</span>
+<span class="kd">const</span> <span class="nx">cloud</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">wx-server-sdk</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">cloud</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+
+<span class="kd">const</span> <span class="nx">TcbRouter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">tcb-router</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">cloud</span><span class="p">.</span><span class="nx">database</span><span class="p">()</span> <span class="c1">// 初始化数据库</span>
+<span class="kd">const</span> <span class="nx">blogCollection</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="dl">'</span><span class="s1">blog</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// 博客的数据库集合</span>
+
+<span class="c1">// 云函数入口函数</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">main</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TcbRouter</span><span class="p">({</span> <span class="nx">event</span> <span class="p">})</span> <span class="c1">// 初始化TcbRouter</span>
+
+  <span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">(</span><span class="dl">'</span><span class="s1">list</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// skip 从第几条开始查，limit 查几条数据，orderBy(排序字段，排序方式) 排序，排序方式desc降序/asc升序</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span>  <span class="k">await</span> <span class="nx">blogCollection</span><span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">start</span><span class="p">).</span><span class="nx">limit</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">count</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">orderBy</span><span class="p">(</span><span class="dl">'</span><span class="s1">createTime</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">desc</span><span class="dl">'</span><span class="p">).</span><span class="kd">get</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">data</span>
+    <span class="p">})</span>
+
+  <span class="p">})</span>
+
+
+  <span class="k">return</span> <span class="nx">app</span><span class="p">.</span><span class="nx">serve</span><span class="p">()</span> <span class="c1">// 必需返回</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h5 id="云函数调试">云函数调试</h5>
+
+<p>云控制台中可会云函数进行云端测试</p>
+
+<p>在小程序调用云函数后，可查看云函数<strong>日志</strong></p>
+
+<h4 id="定时触发云函数">定时触发云函数</h4>
+
+<p>如果云函数需要定时 / 定期执行，也就是定时触发，我们可以使用云函数定时触发器。配置了定时触发器的云函数，会在相应时间点被自动触发，函数的返回结果不会返回给调用方</p>
+
+<p>云函数目录下新建 config.json</p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/wxcloud/guide/functions/triggers.html">API</a></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"triggers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"myTriggers"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"timer"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"config"</span><span class="p">:</span><span class="s2">"0 0 10,14,16,20 * * * *"</span><span class="w"> </span><span class="err">//表示每天的</span><span class="mi">10</span><span class="err">点、</span><span class="mi">14</span><span class="err">点、</span><span class="mi">16</span><span class="err">点、</span><span class="mi">20</span><span class="err">点触发一次</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>编辑好触发器之后，要在云函数目录 &gt; 右键 &gt; <code class="language-plaintext highlighter-rouge">上传触发器</code></p>
+
+<h4 id="配置云函数超时时间">配置云函数超时时间</h4>
+
+<p>当云函数比较复杂的时候，默认的超时时间3秒可能不能够满足需求，可以适当的设置更为合理的时间</p>
+
+<p>云开发控制台 &gt; 云函数 &gt; 配置 &gt; 超时时间</p>
+
+<h4 id="上拉加载与下拉刷新">上拉加载与下拉刷新</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">page页面json中</span><span class="err">：</span>
+<span class="dl">"</span><span class="s2">enablePullDownRefresh</span><span class="dl">"</span><span class="p">:</span> <span class="kc">true</span>
+
+
+<span class="nx">page页面js中有这两个函数</span><span class="err">：</span>
+
+ <span class="cm">/**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */</span>
+  <span class="nx">onPullDownRefresh</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+	 <span class="k">this</span><span class="p">.</span><span class="nx">setData</span><span class="p">({</span>
+      <span class="na">playlist</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">})</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_getPlaylist</span><span class="p">()</span>
+  <span class="p">},</span>
+
+  <span class="cm">/**
+   * 页面上拉触底事件的处理函数
+   */</span>
+  <span class="nx">onReachBottom</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_getPlaylist</span><span class="p">()</span>
+  <span class="p">},</span>
+
+
+
+ <span class="nx">下拉刷新请求完数据后</span>
+ <span class="nx">wx</span><span class="p">.</span><span class="nx">stopPullDownRefresh</span><span class="p">()</span> <span class="c1">// 停止下拉刷新动画</span>
+</code></pre></div></div>
+
+<h4 id="云函数路由优化tcb-router">云函数路由优化tcb-router</h4>
+
+<p>一个用户在一个云环境只能创建50个云函数</p>
+
+<p>假如小程序非常复杂，50个云函数不能够满足业务需求怎么办？</p>
+
+<p>相似的请求归类到同一个云函数处理</p>
+
+<p>tcb-router是一个koa风格的云函数路由库</p>
+
+<p>通俗理解就是可以把很多个接口归类到同一个云函数内。</p>
+
+<p>github-tcb-router:  <a href="https://github.com/TencentCloudBase/tcb-router">https://github.com/TencentCloudBase/tcb-router</a></p>
+
+<p>koa洋葱模型…</p>
+
+<p>安装：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>在使用到tcb-router的云函数目录下打开命令行，输入命令进行安装
+npm <span class="nb">install</span> <span class="nt">--save</span> tcb-router
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 云函数的 index.js</span>
+<span class="kd">const</span> <span class="nx">TcbRouter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">router</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// 必需</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">main</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TcbRouter</span><span class="p">({</span> <span class="nx">event</span> <span class="p">});</span><span class="c1">// 必需</span>
+
+    <span class="c1">// app.use 表示该中间件会适用于所有的路由(全局中间件) 非必需</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 这个中间件表示所有路由都会调用到，而路由中间件为单独调用</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="p">{};</span> <span class="c1">// 获取要传给小程序端的数据</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">openId</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">userInfo</span><span class="p">.</span><span class="nx">openId</span> <span class="c1">// 这里获取到的openId将分布到所有路由</span>
+        <span class="k">await</span> <span class="nx">next</span><span class="p">();</span> <span class="c1">// 执行下一中间件</span>
+    <span class="p">});</span>
+
+    <span class="c1">// 路由为数组表示，该中间件适用于 user 和 timer 两个路由</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">([</span><span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">timer</span><span class="dl">'</span><span class="p">],</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">company</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Tencent</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// 这里获取到的数据将分布到 user 和 timer 两个路由</span>
+        <span class="k">await</span> <span class="nx">next</span><span class="p">();</span> <span class="c1">// 执行下一中间件</span>
+    <span class="p">});</span>
+
+    <span class="c1">// 路由为字符串，该中间件只适用于 user 路由</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">(</span><span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">heyli</span><span class="dl">'</span><span class="p">;</span>  <span class="c1">// 获取要传给小程序端的数据</span>
+        <span class="k">await</span> <span class="nx">next</span><span class="p">();</span> <span class="c1">// 执行下一中间件</span>
+    <span class="p">},</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">sex</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">male</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// 获取要传给小程序端的数据</span>
+        <span class="k">await</span> <span class="nx">next</span><span class="p">();</span> <span class="c1">// 执行下一中间件</span>
+    <span class="p">},</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">city</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Foshan</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// 获取要传给小程序端的数据</span>
+        <span class="c1">// ctx.body 返回数据到小程序端</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="p">{</span> <span class="na">code</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">data</span><span class="p">:</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span><span class="p">};</span>  <span class="c1">// 要传给小程序端的数据</span>
+    <span class="p">});</span>
+
+    <span class="c1">// 路由为字符串，该中间件只适用于 timer 路由</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">(</span><span class="dl">'</span><span class="s1">timer</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">flytam</span><span class="dl">'</span><span class="p">;</span>
+        <span class="k">await</span> <span class="nx">next</span><span class="p">();</span> <span class="c1">// 执行下一中间件</span>
+    <span class="p">},</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">sex</span> <span class="o">=</span> <span class="k">await</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// 等待500ms，再执行下一中间件</span>
+        <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">resolve</span><span class="p">(</span><span class="dl">'</span><span class="s1">male</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">},</span> <span class="mi">500</span><span class="p">);</span>
+        <span class="p">});</span>
+        <span class="k">await</span> <span class="nx">next</span><span class="p">();</span> <span class="c1">// 执行下一中间件</span>
+    <span class="p">},</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">)</span><span class="o">=&gt;</span>  <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">city</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Taishan</span><span class="dl">'</span><span class="p">;</span>
+
+        <span class="c1">// ctx.body 返回数据到小程序端</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="p">{</span> <span class="na">code</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">data</span><span class="p">:</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">data</span> <span class="p">};</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">app</span><span class="p">.</span><span class="nx">serve</span><span class="p">();</span> <span class="c1">// 必需</span>
+
+<span class="p">}</span>
+
+
+<span class="nx">小程序端</span><span class="err">：</span>
+
+<span class="c1">// 调用名为 router 的云函数，路由名为 user</span>
+<span class="nx">wx</span><span class="p">.</span><span class="nx">cloud</span><span class="p">.</span><span class="nx">callFunction</span><span class="p">({</span>
+    <span class="c1">// 要调用的云函数名称</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">router</span><span class="dl">"</span><span class="p">,</span>
+    <span class="c1">// 传递给云函数的参数</span>
+    <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">$url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">user</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// 要调用的路由的路径，传入准确路径或者通配符*</span>
+        <span class="na">other</span><span class="p">:</span> <span class="dl">"</span><span class="s2">xxx</span><span class="dl">"</span>
+    <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>上面tcb-router代码会按照洋葱模型执行，即先从上往下逐个进入中间件，再从下往上逐个退出中间件。</p>
+
+<h4 id="本地存储缓存">本地存储（缓存）</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 存储：</span>
+<span class="nx">wx</span><span class="p">.</span><span class="nx">setStorageSync</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="c1">// 同步存储（存储成功再继续下一步操作）</span>
+<span class="nx">wx</span><span class="p">.</span><span class="nx">setStorage</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="c1">// 异步存储（即使存储没成功也会执行下一步代码）、</span>
+
+<span class="c1">// 读取：</span>
+<span class="nx">wx</span><span class="p">.</span><span class="nx">getStorageSync</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="c1">// 同步 （读取到数据在进行下一步操作）</span>
+<span class="nx">wx</span><span class="p">.</span><span class="nx">setStorage</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="c1">// 异步</span>
+
+</code></pre></div></div>
+
+<h4 id="api设置title">api设置title</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">wx</span><span class="p">.</span><span class="nx">setNavigationBarTitle</span><span class="p">({</span>
+      <span class="na">title</span><span class="p">:</span> <span class="dl">''</span><span class="p">,</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="背景播放音">背景播放音</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.html">BackgroundAudioManager</a> 全局唯一的背景音频管理器</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">需要在app.json配置，才能使用后台音乐播放的能力</span><span class="w">
+
+</span><span class="nl">"requiredBackgroundModes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"audio"</span><span class="p">,</span><span class="w"> </span><span class="s2">"location"</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 获取全局唯一的背景音频管理器</span>
+<span class="kd">const</span> <span class="nx">backgroundAudioManager</span> <span class="o">=</span> <span class="nx">wx</span><span class="p">.</span><span class="nx">getBackgroundAudioManager</span><span class="p">()</span>
+
+
+<span class="nx">backgroundAudioManager</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">音频链接</span>
+<span class="nx">backgroundAudioManager</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="nx">音频标题</span>
+
+</code></pre></div></div>
+
+<h4 id="createselectorquery查询节点信息">createSelectorQuery查询节点信息</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createSelectorQuery.html">createSelectorQuery</a> 小程序的方法，用于查询节点等操作</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">query</span> <span class="o">=</span> <span class="nx">wx</span><span class="p">.</span><span class="nx">createSelectorQuery</span><span class="p">()</span>
+<span class="nx">query</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">#the-id</span><span class="dl">'</span><span class="p">).</span><span class="nx">boundingClientRect</span><span class="p">()</span> <span class="c1">// 节点的布局信息</span>
+<span class="nx">query</span><span class="p">.</span><span class="nx">selectViewport</span><span class="p">().</span><span class="nx">scrollOffset</span><span class="p">()</span>
+<span class="nx">query</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">res</span><span class="p">){</span>
+  <span class="nx">res</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">top</span>       <span class="c1">// #the-id节点的上边界坐标</span>
+  <span class="nx">res</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">scrollTop</span> <span class="c1">// 显示区域的竖直滚动位置</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="组件内的方法">组件内的方法</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/reference/api/Component.html">Component(Object object)</a></p>
+
+<h4 id="组件生命周期">组件生命周期</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/lifetimes.html">lifetimes</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 生命周期</span>
+<span class="nx">lifetimes</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nx">ready</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// 在组件在视图层布局完成后执行</span>
+   	 <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">},</span>
+</code></pre></div></div>
+
+<h5 id="组件所在页面的生命周期">组件所在页面的生命周期</h5>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">pageLifetimes</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">show</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// 页面被展示</span>
+    <span class="p">},</span>
+    <span class="na">hide</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// 页面被隐藏</span>
+    <span class="p">},</span>
+    <span class="na">resize</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">size</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// 页面尺寸变化</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="组件对数据的监听">组件对数据的监听</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/observer.html">observers</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">observers</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 对数据的监听(数据初次加载完成也会执行)</span>
+    <span class="nx">监听的数据对象</span><span class="p">(</span><span class="nx">newData</span><span class="p">){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">newData</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">},</span>
+</code></pre></div></div>
+
+<h4 id="子组件自定义事件传递给父组件">子组件自定义事件传递给父组件</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>子组件js：
+// 触发自定义事件 向父组件传值， 参数x（可选，传递给父组件的参数，可以是对象或其他）
+this.triggerEvent('自定义事件名', 参数x)
+
+
+父组件wxml：
+&lt;子组件标签 bind:自定义事件名="执行的事件" /&gt;
+
+父组件js：
+执行的事件(event) {
+	console.log(event.detil.参数)
+}
+</code></pre></div></div>
+
+<h4 id="父组件自定义事件传递给子组件">父组件自定义事件传递给子组件</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>父组件wxml：
+&lt;子组件标签 class="子组件类名"&gt;
+
+父组件JS：
+// 选择组件，并传入事件和参数
+this.selectComponent('.子组件类名').自定义事件名(传入参数)
+
+子组件js：
+methods: {
+	自定义事件名(参数x){
+		console.log(参数x)
+	}
+}
+
+</code></pre></div></div>
+
+<h4 id="兄弟组件间传递事件和传值">兄弟组件间传递事件和传值</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>例子：子组件1向子组件2传递参数
+
+父组件wxml中：
+&lt;子组件标签1 bind:自定义事件名1="执行的事件"&gt;
+&lt;子组件标签2 class="子组件2类名"&gt;
+
+父组件js：
+执行的事件(event) {
+	this.selectComponent('.子组件2类名').自定义事件名2(event.detil.参数x) // 向子组件2传值
+}
+
+子组件1js：
+// 触发自定义事件 向父组件传值， 参数x（可选，传递给父组件的参数，可以是对象或其他）
+this.triggerEvent('自定义事件名1', 参数x)
+
+
+
+子组件2js：
+methods: {
+	自定义事件名2(参数x){
+		console.log(参数x)  // 接收父组件传入的值
+	}
+}
+
+</code></pre></div></div>
+
+<h4 id="获取手机信息">获取手机信息</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/api/base/system/system-info/wx.getSystemInfo.html">wx.getSystemInfo(Object object)</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">wx</span><span class="p">.</span><span class="nx">getSystemInfo</span><span class="p">({</span>
+	<span class="nx">success</span><span class="p">(</span><span class="nx">res</span><span class="p">){</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="c1">//手机信息</span>
+	<span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="滚动组件">滚动组件</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/component/scroll-view.html">scroll-view</a></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;scroll-view</span> <span class="na">scroll-y</span> <span class="na">scroll-top=</span><span class="s">""</span> <span class="na">scroll-with-animation=</span><span class="s">"true"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/scroll-view&gt;</span>
+</code></pre></div></div>
+
+<h4 id="全局属性方法类似vuex">全局属性、方法（类似vuex）</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>在app.js中：
+
+onLaunch: function () {
+	this.globalData = {// 设置全局属性、方法
+		test: 0
+	}
+},
+setGlobalData(dataItem, val) { // 设置全局属性
+	this.globalData[dataItem] = val
+},
+getGlobalData(dataItem) { // 获取全局属性
+	return this.globalData[dataItem]
+}
+
+
+在需要调用的页面js中：
+const app = getApp() // 在最顶部先调用app方法
+
+// 设置全局属性
+app.setGlobalData('test', 1)
+
+// 获取全局属性
+app.getGlobalData('test')
+</code></pre></div></div>
+
+<h4 id="消息提示框">消息提示框</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showToast.html">showToast</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">wx</span><span class="p">.</span><span class="nx">showToast</span><span class="p">({</span>
+  <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">成功</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">icon</span><span class="p">:</span> <span class="dl">'</span><span class="s1">success</span><span class="dl">'</span><span class="p">,</span> <span class="c1">//图标： success 成功、loading 加载中、none 无</span>
+  <span class="na">duration</span><span class="p">:</span> <span class="mi">2000</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h2 id="发现页面">《发现》页面</h2>
+
+<h4 id="调用组件外部的样式">调用组件外部的样式</h4>
+
+<p>components内部的组件无法直接调用外部的样式。可通过以下方式调用组件外部样式：</p>
+
+<p><strong>方法一：</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>父组件wxml：
+&lt;!-- iconfont 和 icon-sousuo 是传入组件内部的样式名称，iconfont（自定义名称）="iconfont（外部样式文件中定义的样式名）"  --&gt;
+&lt;x-search iconfont="iconfont" icon-sousuo="icon-sousuo"/&gt;
+
+
+子组件js:
+// 组件外部样式
+  externalClasses: [
+    'iconfont', // 对应的是上面等号前面的名称
+    'icon-sousuo'
+  ],
+
+ 子组件wxml： 即可实现调用组件外的样式
+ &lt;i class="iconfont icon-sousuo" /&gt;
+
+
+  注意：如果想在组件内部再次修改样式，不能够引用外部传进来的class名称进行修改，可以另起一个class名称进行修改。
+</code></pre></div></div>
+
+<p><strong>方法二：</strong></p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/wxml-wxss.html#组件样式隔离">消除样式隔离</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">组件内</span><span class="p">:</span>
+<span class="nx">Component</span><span class="p">({</span>
+  <span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">styleIsolation</span><span class="p">:</span> <span class="dl">'</span><span class="s1">apply-shared</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="组件插槽slot">组件插槽slot</h4>
+
+<p><strong>单个插槽</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>父组件调用传入插槽内容:
+&lt;组件标签&gt;
+    &lt;view&gt;
+      &lt;view&gt;插槽内容&lt;/view&gt;
+      &lt;view&gt;插槽内容&lt;/view&gt;
+    &lt;/view&gt;
+&lt;/组件标签&gt;
+
+ 组件内部定义slot标签:
+ &lt;view&gt;
+    &lt;!-- slot插槽 --&gt;
+    &lt;slot&gt;&lt;/slot&gt;
+&lt;/view&gt;
+</code></pre></div></div>
+
+<p><strong>如果需要实现多个插槽</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+父组件调用传入插槽内容:
+&lt;组件标签&gt;
+    &lt;view slot="slot2"&gt;
+      &lt;view&gt;插槽1内容&lt;/view&gt;
+      &lt;view&gt;插槽1内容&lt;/view&gt;
+    &lt;/view&gt;
+
+     &lt;view slot="slot1"&gt;
+      &lt;view&gt;插槽2内容&lt;/view&gt;
+      &lt;view&gt;插槽2内容&lt;/view&gt;
+    &lt;/view&gt;
+&lt;/组件标签&gt;
+
+组件js :
+options: {// 设置
+    multipleSlots: true // 打开多个插槽功能
+},
+
+
+组件内部定义slot标签:
+&lt;view&gt;
+    &lt;!-- slot插槽 具名插槽--&gt;
+    &lt;slot name="slot1"&gt;&lt;/slot&gt;
+    &lt;slot name="slot2"&gt;&lt;/slot&gt;
+&lt;/view&gt;
+</code></pre></div></div>
+
+<h4 id="判断用户授权">判断用户授权</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/authorize.html">授权</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 判断用户是否授权</span>
+    <span class="nx">wx</span><span class="p">.</span><span class="nx">getSetting</span><span class="p">({</span>
+      <span class="na">success</span><span class="p">:</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 这里使用箭头函数可改变内部this指向为外部的this</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">authSetting</span><span class="p">[</span><span class="dl">'</span><span class="s1">scope.userInfo</span><span class="dl">'</span><span class="p">])</span> <span class="p">{</span> <span class="c1">// 已授权</span>
+         <span class="nx">wx</span><span class="p">.</span><span class="nx">getUserInfo</span><span class="p">({</span> <span class="c1">// 获取用户信息</span>
+           <span class="nx">success</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+             <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+           <span class="p">}</span>
+         <span class="p">})</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// 未授权</span>
+
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="button的开发能力获取用户信息1">button的开发能力（获取用户信息）1</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">button</span> <span class="kd">class</span><span class="o">=</span><span class="dl">"</span><span class="s2">login</span><span class="dl">"</span>
+    <span class="nx">open</span><span class="o">-</span><span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">getUserInfo</span><span class="dl">"</span>
+    <span class="nx">bindgetuserinfo</span><span class="o">=</span><span class="dl">"</span><span class="s2">onGetUserInfo</span><span class="dl">"</span>     <span class="c1">// bindgetuserinfo 为固定的</span>
+<span class="o">&gt;</span>
+	<span class="nx">获取微信授权信息</span>
+<span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>
+
+<span class="nx">bindgetuserinfo</span> <span class="nx">事件会询问用户是否同意授权</span>
+
+
+<span class="nx">js中</span><span class="err">：</span>
+    <span class="nx">onGetUserInfo</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 获取用户信息</span>
+      <span class="kd">const</span> <span class="nx">userInfo</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">detail</span><span class="p">.</span><span class="nx">userInfo</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">userInfo</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 用户允许授权</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setData</span><span class="p">({</span>
+          <span class="na">modalShow</span><span class="p">:</span> <span class="kc">false</span>
+        <span class="p">})</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">triggerEvent</span><span class="p">(</span><span class="dl">'</span><span class="s1">loginSuccess</span><span class="dl">'</span><span class="p">,</span> <span class="nx">userInfo</span><span class="p">)</span> <span class="c1">// 给父组件传用户数据</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// 用户拒绝授权</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">triggerEvent</span><span class="p">(</span><span class="dl">'</span><span class="s1">loginFail</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="原生组件">原生组件</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/component/native-component.html">原生组件</a></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+auto-focus 自动获取焦点
+
+<span class="nt">&lt;textarea</span>
+    <span class="na">class=</span><span class="s">"content"</span>
+    <span class="na">placeholder=</span><span class="s">"分享新鲜事..."</span>
+    <span class="na">maxlength=</span><span class="s">"140"</span>
+    <span class="na">auto-focus</span>
+    <span class="na">bindinput=</span><span class="s">"onInput"</span>
+    <span class="na">bindfocus=</span><span class="s">"onFocus"</span>
+    <span class="na">bindblur=</span><span class="s">"onBlur"</span>
+  <span class="nt">&gt;&lt;/textarea&gt;</span>
+</code></pre></div></div>
+
+<h4 id="选择上传图片">选择上传图片</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.chooseImage.html">上传图片</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">images</span><span class="p">.</span><span class="nx">length</span> <span class="c1">// 还能再选几张图片</span>
+<span class="nx">wx</span><span class="p">.</span><span class="nx">chooseImage</span><span class="p">({</span>
+      <span class="na">count</span><span class="p">:</span> <span class="nx">max</span><span class="p">,</span> <span class="c1">// 还能再选几张图片</span>
+      <span class="na">sizeType</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">original</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">compressed</span><span class="dl">'</span><span class="p">],</span> <span class="c1">// 初始值 and 压缩过的</span>
+      <span class="na">sourceType</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">album</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">camera</span><span class="dl">'</span><span class="p">],</span> <span class="c1">// 手机相册选择 and 拍照选择</span>
+      <span class="na">success</span><span class="p">:</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 箭头函数改变this指向</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+      <span class="p">},</span>
+    <span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="图片裁剪">图片裁剪</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/component/image.html">图片裁剪</a></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- mode 图片裁剪 aspectFill 保证短边完整显示 --&gt;</span>
+<span class="nt">&lt;image</span> <span class="na">class=</span><span class="s">"image"</span> <span class="na">src=</span><span class="s">""</span> <span class="na">mode=</span><span class="s">"aspectFill"</span><span class="nt">&gt;&lt;/image&gt;</span>
+</code></pre></div></div>
+
+<h4 id="获取标签自定义属性data--删除图片的实现">获取标签自定义属性data-* （删除图片的实现）</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- 显示图片 --&gt;
+    &lt;block wx:for="" wx:key="*this"&gt;
+      &lt;view class="image-wrap"&gt;
+        &lt;!-- mode 图片裁剪 aspectFill 保证短边完整显示 --&gt;
+        &lt;image class="image" src="" mode="aspectFill"&gt;&lt;/image&gt;
+        &lt;icon class="iconfont icon-shanchu" bindtap="onDelImage" data-index=""&gt;&lt;/icon&gt;
+      &lt;/view&gt;
+    &lt;/block&gt;
+
+
+    // 删除图片
+  onDelImage(event) {
+  	// event.target.dataset.index 获取标签属性data-index的值
+    this.data.images.splice(event.target.dataset.index, 1) // splice会改变原有数组
+    this.setData({
+      images: this.data.images
+    })
+  },
+
+</code></pre></div></div>
+
+<h4 id="全屏预览图片点击图片放大预览">全屏预览图片(点击图片放大预览)</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.previewImage.html">全屏预览图片</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 全屏预览图片</span>
+  <span class="nx">onPreviewImage</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">wx</span><span class="p">.</span><span class="nx">previewImage</span><span class="p">({</span>
+      <span class="na">urls</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">images</span><span class="p">,</span> <span class="c1">// 图片地址列表</span>
+      <span class="na">current</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">imgsrc</span> <span class="c1">// 当前预览图片地址</span>
+    <span class="p">})</span>
+  <span class="p">},</span>
+</code></pre></div></div>
+
+<h4 id="文件上传云存储发布博客例子">文件上传云存储（发布博客例子）</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-client-api/storage/uploadFile.html">文件上传云存储</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1">//  结合'发布'的例子：</span>
+  <span class="nx">send</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 验证是否输入内容</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">trim</span><span class="p">()</span> <span class="o">===</span> <span class="dl">''</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// trim() 去掉字符串空格</span>
+      <span class="nx">wx</span><span class="p">.</span><span class="nx">showToast</span><span class="p">({</span>
+        <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">请输入内容</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">icon</span><span class="p">:</span> <span class="dl">'</span><span class="s1">none</span><span class="dl">'</span>
+      <span class="p">})</span>
+      <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="nx">wx</span><span class="p">.</span><span class="nx">showLoading</span><span class="p">({</span>
+      <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">发布中</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="cm">/**
+     * 实现思路及步骤：
+     * 1、图片 -&gt; 上传 云存储  -&gt; 生成 图片fineID（云文件ID）
+     * 2、数据 -&gt; 录入 云数据库
+     *    数据包括：文字内容、图片fineID、昵称、头像、发布时间、openId(用户唯一标识，在插入数据库是系统会自动添加_openId字段，不需要另外插入)
+     */</span>
+    <span class="kd">let</span> <span class="nx">promiseArr</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="kd">let</span> <span class="nx">fileIds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1">// 图片上传云存储</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">images</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">item</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">suffix</span> <span class="o">=</span> <span class="sr">/</span><span class="se">\.\w</span><span class="sr">+$/</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">item</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">// 文件扩展名(文件后缀)</span>
+        <span class="nx">wx</span><span class="p">.</span><span class="nx">cloud</span><span class="p">.</span><span class="nx">uploadFile</span><span class="p">({</span> <span class="c1">// 每次只能上传一个文件</span>
+          <span class="cm">/**
+           * cloudPath 云路径。如果路径相同，后上传的文件会覆盖原文件
+           * 路径：blog/云存储中的文件夹 + Date.now()时间戳 + Math.random()*1000000随机数 + 文件后缀
+           */</span>
+          <span class="na">cloudPath</span><span class="p">:</span> <span class="dl">'</span><span class="s1">blog/</span><span class="dl">'</span> <span class="o">+</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">-</span><span class="dl">'</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000000</span> <span class="o">+</span> <span class="nx">suffix</span><span class="p">,</span>
+          <span class="na">filePath</span><span class="p">:</span> <span class="nx">item</span><span class="p">,</span> <span class="c1">// 文件本地临时路径</span>
+          <span class="na">success</span><span class="p">:</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">fileIds</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">fileID</span><span class="p">)</span>
+            <span class="nx">resolve</span><span class="p">()</span>
+          <span class="p">},</span>
+          <span class="na">fail</span><span class="p">:</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+            <span class="nx">reject</span><span class="p">()</span>
+          <span class="p">}</span>
+        <span class="p">})</span>
+      <span class="p">})</span>
+      <span class="nx">promiseArr</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="c1">// 存入云数据库</span>
+    <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">promiseArr</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="dl">'</span><span class="s1">blog</span><span class="dl">'</span><span class="p">).</span><span class="nx">add</span><span class="p">({</span>
+        <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+          <span class="p">...</span><span class="nx">userInfo</span><span class="p">,</span> <span class="c1">// 昵称、头像</span>
+          <span class="nx">content</span><span class="p">,</span> <span class="c1">// 内容</span>
+          <span class="na">img</span><span class="p">:</span> <span class="nx">fileIds</span><span class="p">,</span> <span class="c1">// 图片fileID列表</span>
+          <span class="na">createTime</span><span class="p">:</span> <span class="nx">db</span><span class="p">.</span><span class="nx">serverDate</span><span class="p">()</span> <span class="c1">// 创建时间，取服务端时间</span>
+        <span class="p">}</span>
+      <span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">wx</span><span class="p">.</span><span class="nx">hideLoading</span><span class="p">()</span>
+        <span class="nx">wx</span><span class="p">.</span><span class="nx">showToast</span><span class="p">({</span>
+          <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">发布成功</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="c1">// 返回博客页面，并刷新</span>
+        <span class="nx">wx</span><span class="p">.</span><span class="nx">navigateBack</span><span class="p">()</span>
+
+      <span class="p">})</span>
+    <span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">wx</span><span class="p">.</span><span class="nx">hideLoading</span><span class="p">()</span>
+      <span class="nx">wx</span><span class="p">.</span><span class="nx">showToast</span><span class="p">({</span>
+        <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">抱歉，发布失败</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">icon</span><span class="p">:</span> <span class="dl">'</span><span class="s1">none</span><span class="dl">'</span>
+      <span class="p">})</span>
+    <span class="p">})</span>
+  <span class="p">},</span>
+</code></pre></div></div>
+
+<h4 id="js模块化-时间格式化">js模块化 （时间格式化）</h4>
+
+<p>在目录utils 中新建formatTime.js文件</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 时间格式化 模块封装</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">(</span><span class="nx">date</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// date 数据格式为 date</span>
+  <span class="kd">let</span> <span class="nx">fmt</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">yyyy-MM-dd hh:mm:ss</span><span class="dl">'</span> <span class="c1">// 预定格式</span>
+  <span class="kd">const</span> <span class="nx">o</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">// + 正则中的1个或多个</span>
+    <span class="dl">'</span><span class="s1">M+</span><span class="dl">'</span><span class="p">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getMonth</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">d+</span><span class="dl">'</span><span class="p">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getDate</span><span class="p">(),</span>
+    <span class="dl">'</span><span class="s1">h+</span><span class="dl">'</span><span class="p">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getHours</span><span class="p">(),</span>
+    <span class="dl">'</span><span class="s1">m+</span><span class="dl">'</span><span class="p">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getMinutes</span><span class="p">(),</span>
+    <span class="dl">'</span><span class="s1">s+</span><span class="dl">'</span><span class="p">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getSeconds</span><span class="p">()</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="sr">/</span><span class="se">(</span><span class="sr">y+</span><span class="se">)</span><span class="sr">/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">fmt</span><span class="p">))</span> <span class="p">{</span>
+    <span class="c1">// $1 表示正则中的第一个，即(y+)</span>
+    <span class="nx">fmt</span> <span class="o">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nb">RegExp</span><span class="p">.</span><span class="nx">$1</span><span class="p">,</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getFullYear</span><span class="p">())</span> <span class="c1">// replace 替换</span>
+  <span class="p">}</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="dl">'</span><span class="s1">(</span><span class="dl">'</span><span class="o">+</span> <span class="nx">k</span> <span class="o">+</span><span class="dl">'</span><span class="s1">)</span><span class="dl">'</span><span class="p">).</span><span class="nx">test</span><span class="p">(</span><span class="nx">fmt</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">fmt</span> <span class="o">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nb">RegExp</span><span class="p">.</span><span class="nx">$1</span><span class="p">,</span> <span class="nx">o</span><span class="p">[</span><span class="nx">k</span><span class="p">].</span><span class="nx">toString</span><span class="p">().</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">1</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">0</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">o</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="p">:</span> <span class="nx">o</span><span class="p">[</span><span class="nx">k</span><span class="p">])</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">fmt</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>在组件引入js模块</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">formatTime</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../utils/formatTime.js</span><span class="dl">'</span>
+
+<span class="nx">使用</span><span class="err">：</span>
+<span class="nx">formatTime</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="dl">'</span><span class="s1">Wed Aug 28 2019 16:23:06 GMT+0800 (中国标准时间)</span><span class="dl">'</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="阻止事件冒泡-1">阻止事件冒泡</h4>
+
+<p><code class="language-plaintext highlighter-rouge">bind</code> 和 <code class="language-plaintext highlighter-rouge">catch</code> 都可以绑定事件，它们的区别是 <code class="language-plaintext highlighter-rouge">bind</code> 有事件冒泡，而 <code class="language-plaintext highlighter-rouge">catch</code> 没有</p>
+
+<h4 id="返回上一个页面并执行方法">返回上一个页面并执行方法</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.navigateBack.html">API</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1">// 返回博客页面，并刷新</span>
+ <span class="nx">wx</span><span class="p">.</span><span class="nx">navigateBack</span><span class="p">()</span>
+ <span class="kd">const</span> <span class="nx">pages</span> <span class="o">=</span> <span class="nx">getCurrentPages</span><span class="p">()</span> <span class="c1">// 获取当前页面栈</span>
+ <span class="kd">const</span> <span class="nx">prevPage</span> <span class="o">=</span> <span class="nx">pages</span><span class="p">[</span><span class="nx">pages</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1">// 取到上一个页面</span>
+ <span class="nx">prevPage</span><span class="p">.</span><span class="nx">onPullDownRefresh</span><span class="p">()</span> <span class="c1">// 执行上一个页面的方法 onPullDownRefresh</span>
+</code></pre></div></div>
+
+<h4 id="图片懒加载">图片懒加载</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/component/image.html">API</a></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>给image标签设置 lazy-load 为 true
+<span class="nt">&lt;image</span> <span class="na">class=</span><span class="s">"img"</span> <span class="na">src=</span><span class="s">""</span> <span class="na">lazy-load=</span><span class="s">"true"</span><span class="nt">&gt;&lt;/image&gt;</span>
+
+.img {
+  background: #eee;
+}
+</code></pre></div></div>
+
+<p><strong>懒加载占位图可以给image设置背景图或背景色</strong></p>
+
+<h4 id="模糊查询">模糊查询</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 获取博客列表</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">(</span><span class="dl">'</span><span class="s1">blogList</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">keyword</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">keyword</span> <span class="c1">// 搜索关键字 调用接口时传递来的数据</span>
+    <span class="kd">let</span> <span class="nx">w</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">keyword</span><span class="p">.</span><span class="nx">trim</span><span class="p">()</span> <span class="o">!=</span> <span class="dl">''</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">w</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">content</span><span class="p">:</span> <span class="nx">db</span><span class="p">.</span><span class="nb">RegExp</span><span class="p">({</span> <span class="c1">// 正则</span>
+          <span class="na">regexp</span><span class="p">:</span> <span class="nx">keyword</span><span class="p">,</span>
+          <span class="na">options</span><span class="p">:</span> <span class="dl">'</span><span class="s1">i</span><span class="dl">'</span> <span class="c1">// i表示忽略大小写</span>
+        <span class="p">})</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// where查询条件 skip 从第几条开始查，limit 查几条数据，orderBy(排序字段，排序方式) 排序，排序方式desc降序/asc升序</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span>  <span class="k">await</span> <span class="nx">blogCollection</span><span class="p">.</span><span class="nx">where</span><span class="p">(</span><span class="nx">w</span><span class="p">).</span><span class="nx">skip</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">start</span><span class="p">).</span><span class="nx">limit</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">count</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">orderBy</span><span class="p">(</span><span class="dl">'</span><span class="s1">createTime</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">desc</span><span class="dl">'</span><span class="p">).</span><span class="kd">get</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">data</span>
+    <span class="p">})</span>
+
+  <span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="提升模糊查询的效率-添加索引对数据量大的查询效果明显">提升模糊查询的效率 （添加索引，对数据量大的查询效果明显）</h4>
+
+<p>云开发控制台  &gt; 数据库相应的集合 &gt; 索引管理 &gt; 添加索引 &gt; 输入自定义索引名称、该字段的值是否唯一、被查询的字段名、升序/降序 &gt; ok</p>
+
+<h4 id="小程序端调用云数据库">小程序端调用云数据库</h4>
+
+<p>一般调用云数据库的操作都写在云函数内，其实小程序端也可以对数据库进行操作。</p>
+
+<p>小程序端一次最多只能查询20条数据，云函数端最多可查询100条数据，可使用多次查询拼接的方式突破限制。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 小程序端调用云数据库示例</span>
+    <span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">wx</span><span class="p">.</span><span class="nx">cloud</span><span class="p">.</span><span class="nx">database</span><span class="p">()</span> <span class="c1">// 初始化数据库</span>
+    <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="dl">'</span><span class="s1">blog</span><span class="dl">'</span><span class="p">).</span><span class="nx">orderBy</span><span class="p">(</span><span class="dl">'</span><span class="s1">createTime</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">deac</span><span class="dl">'</span><span class="p">).</span><span class="kd">get</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+    <span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="云数据库权限管理-1">云数据库权限管理</h4>
+
+<p><strong>注意：云控制台和服务端（云函数）始终有所有数据读写权限，</strong></p>
+
+<p><strong>但权限的管理仅对小程序端发起的请求有效。</strong></p>
+
+<ul>
+  <li>
+    <p>仅创建者可写，所有人可读 （适合于文章）</p>
+  </li>
+  <li>
+    <p>仅创建者可读写 (适用于私密内容)</p>
+  </li>
+  <li>
+    <p>仅管理端可写，所有人可读（适用于商品信息）</p>
+  </li>
+  <li>
+    <p>仅管理端可读写（适用于后台敏感数据）</p>
+  </li>
+</ul>
+
+<h4 id="数据库中1对n关系的三种设计方式">数据库中1对N关系的三种设计方式</h4>
+
+<h5 id="第一种n的数量较少-几十个以内">第一种：N的数量较少 几十个以内</h5>
+
+<p><strong>1 条记录存储 N 个子数据</strong></p>
+
+<p>​	如一条博客中，最多有9张图片，这9张图片可和其他数据放在一个记录中。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span>
+	<span class="p">{</span>
+		<span class="na">id</span><span class="p">:...</span>
+		<span class="na">img</span><span class="p">:[</span>
+		<span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span>
+		<span class="p">]</span>
+	<span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<h5 id="第二种n的数量较多--几十到几百个">第二种：N的数量较多  几十到几百个</h5>
+
+<p><strong>1 存储 每个N的 id</strong></p>
+
+<p>可分两个数据库集合，</p>
+
+<p>一个为 ‘目录’ 集合，存放 ‘详情’ 集合下的每条数据的 id 目录</p>
+
+<p>一个为 ‘详情’ 集合，每条数据对应一个单独的 id 和 详细数据</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">目录集合</span><span class="err">：</span>
+<span class="p">[</span>
+	<span class="p">{</span>
+		<span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span><span class="dl">"</span><span class="s2">11</span><span class="dl">"</span><span class="p">,</span>
+		<span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">产品1</span><span class="dl">'</span><span class="p">,</span>
+		<span class="dl">'</span><span class="s1">xqs</span><span class="dl">'</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">111</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">222</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">333</span><span class="dl">'</span><span class="p">,</span> <span class="p">...</span> <span class="p">]</span>  <span class="c1">// 存放 详情集合 中的每条数据 id</span>
+	<span class="p">}</span>
+<span class="p">]</span>
+
+
+
+<span class="nx">详情集合</span><span class="err">：</span>
+<span class="p">[</span>
+<span class="p">{</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span><span class="dl">"</span><span class="s2">111</span><span class="dl">"</span><span class="p">,</span><span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">零件1</span><span class="dl">'</span><span class="p">,</span><span class="na">title</span><span class="p">:</span><span class="dl">'</span><span class="s1">...</span><span class="dl">'</span> <span class="p">...},</span>
+<span class="p">{</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span><span class="dl">"</span><span class="s2">222</span><span class="dl">"</span><span class="p">,</span><span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">零件2</span><span class="dl">'</span><span class="p">,</span><span class="na">title</span><span class="p">:</span><span class="dl">'</span><span class="s1">...</span><span class="dl">'</span> <span class="p">...},</span>
+<span class="p">{</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span><span class="dl">"</span><span class="s2">333</span><span class="dl">"</span><span class="p">,</span><span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">零件3</span><span class="dl">'</span><span class="p">,</span><span class="na">title</span><span class="p">:</span><span class="dl">'</span><span class="s1">...</span><span class="dl">'</span> <span class="p">...},</span>
+<span class="p">...</span>
+<span class="p">]</span>
+
+
+</code></pre></div></div>
+
+<p>如歌单列表，与歌曲详情的数据组合设计。</p>
+
+<h5 id="第三种n的数量巨大--几百成千上万个">第三种：N的数量巨大  几百成千上万个</h5>
+
+<p><strong>每个 N 都存储 1 的 id</strong></p>
+
+<p>如新浪博客中的一条博客下面有几千条评论</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">一条新浪博客</span><span class="err">：</span>
+<span class="p">[{</span>
+	<span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span><span class="dl">'</span><span class="s1">11</span><span class="dl">'</span><span class="p">,</span>
+	<span class="dl">'</span><span class="s1">content</span><span class="dl">'</span><span class="p">:</span><span class="dl">'</span><span class="s1">博客内容</span><span class="dl">'</span>
+	<span class="p">...</span>
+<span class="p">}]</span>
+
+
+<span class="nx">上千条评价</span><span class="err">：</span>
+<span class="p">[</span>
+<span class="p">{</span>
+	<span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span><span class="dl">'</span><span class="s1">111111</span><span class="dl">'</span>
+	<span class="dl">'</span><span class="s1">blogId</span><span class="dl">'</span><span class="p">:</span><span class="dl">'</span><span class="s1">11</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// 这个id对应的是那一条博客的id</span>
+	<span class="dl">'</span><span class="s1">content</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">评价内容1</span><span class="dl">'</span>
+<span class="p">},</span>
+<span class="p">{</span>
+	<span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span><span class="dl">'</span><span class="s1">222222</span><span class="dl">'</span>
+	<span class="dl">'</span><span class="s1">blogId</span><span class="dl">'</span><span class="p">:</span><span class="dl">'</span><span class="s1">11</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// 这个id对应的是那一条博客的id</span>
+	<span class="dl">'</span><span class="s1">content</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">评价内容2</span><span class="dl">'</span>
+<span class="p">},</span>
+<span class="p">{</span>
+	<span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span><span class="dl">'</span><span class="s1">33333</span><span class="dl">'</span>
+	<span class="dl">'</span><span class="s1">blogId</span><span class="dl">'</span><span class="p">:</span><span class="dl">'</span><span class="s1">11</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// 这个id对应的是那一条博客的id</span>
+	<span class="dl">'</span><span class="s1">content</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">评价内容3</span><span class="dl">'</span>
+<span class="p">},</span>
+<span class="p">...</span>
+<span class="p">]</span>
+
+</code></pre></div></div>
+
+<h4 id="云调用">云调用</h4>
+
+<p>通过云函数调用服务端的开发接口</p>
+
+<p>这些接口如：模板消息推送、生成小程序码…</p>
+
+<h4 id="模板消息推送">模板消息推送</h4>
+
+<p><strong>1、使用from表单才能触发消息推送，并设置report-submit=”true”</strong></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nt">&lt;form</span> <span class="na">slot=</span><span class="s">"modal-content"</span> <span class="na">report-submit=</span><span class="s">"true"</span> <span class="na">bind:submit=</span><span class="s">"onSend"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;textarea</span> <span class="na">name=</span><span class="s">"content"</span> <span class="na">class=</span><span class="s">"comment-content"</span> <span class="na">placeholder=</span><span class="s">"写评论"</span> <span class="na">value=</span><span class="s">""</span> <span class="na">fixed=</span><span class="s">"true"</span><span class="nt">&gt;&lt;/textarea&gt;</span>
+    <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"send"</span> <span class="na">form-type=</span><span class="s">"submit"</span><span class="nt">&gt;</span>发送<span class="nt">&lt;/button&gt;</span>
+  <span class="nt">&lt;/form&gt;</span>
+</code></pre></div></div>
+
+<p><strong>2、需要到微信公众平台做相应的设置：</strong></p>
+
+<p>微信公众平台 &gt;  功能 &gt; 模板消息 &gt; 添加模板 &gt; 选择相应的模板&gt; 添加成功后会有一个模板ID</p>
+
+<p><strong>3、新建一个云函数，用于云调用。在该云函数下新建配置文件：config.json ，用于配置权限</strong></p>
+
+<p>config.json ：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"openapi"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"templateMessage.send"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>云函数设置消息推送：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 云函数入口函数</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">main</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// 获取openid</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">OPENID</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">cloud</span><span class="p">.</span><span class="nx">getWXContext</span><span class="p">()</span>
+
+  <span class="c1">// 模板推送消息</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">cloud</span><span class="p">.</span><span class="nx">openapi</span><span class="p">.</span><span class="nx">templateMessage</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+    <span class="na">touser</span><span class="p">:</span> <span class="nx">OPENID</span><span class="p">,</span>
+    <span class="na">page</span><span class="p">:</span> <span class="s2">`/pages/blog-comment/blog-comment?blogId=</span><span class="p">${</span><span class="nx">event</span><span class="p">.</span><span class="nx">blogId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="c1">// 用户点击推送消息打开的页面</span>
+    <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 模板的内容，keyword为在公众平台设置模板时对应的字段</span>
+      <span class="na">keyword1</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 评价内容</span>
+        <span class="na">value</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">context</span>
+      <span class="p">},</span>
+      <span class="na">keyword2</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 评价时间</span>
+        <span class="na">value</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">time</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="na">templateId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">LNwKMcYwlz-0HabgBhmZi6CWZrlNSBiNJ2h0SMorcxQ</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// 模板id，到公众平台模板消息上获取</span>
+    <span class="na">formId</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">formId</span> <span class="c1">// 触发消息推送的form表单的id</span>
+  <span class="p">})</span>
+
+  <span class="k">return</span> <span class="nx">result</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>4、在提交表单事件完成后调用消息推送云函数</strong></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nx">wx</span><span class="p">.</span><span class="nx">cloud</span><span class="p">.</span><span class="nx">callFunction</span><span class="p">({</span>
+          <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">sendMessage</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nx">content</span><span class="p">,</span>
+            <span class="nx">formId</span><span class="p">,</span>
+            <span class="na">blogId</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">blogId</span>
+          <span class="p">}</span>
+        <span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+        <span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="云函数多集合查询数据库">云函数多集合查询数据库</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 博客详情(博客内容、评论)</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">(</span><span class="dl">'</span><span class="s1">blogDetail</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">blogId</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">blogId</span>
+
+    <span class="c1">// 博客内容</span>
+    <span class="kd">let</span> <span class="nx">detail</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">blogCollection</span><span class="p">.</span><span class="nx">where</span><span class="p">({</span>
+      <span class="na">_id</span><span class="p">:</span> <span class="nx">blogId</span>
+    <span class="p">}).</span><span class="kd">get</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">data</span>
+    <span class="p">})</span>
+
+    <span class="c1">// 评论查询</span>
+    <span class="kd">const</span> <span class="nx">countResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">blogCollection</span><span class="p">.</span><span class="nx">count</span><span class="p">()</span>
+    <span class="kd">const</span> <span class="nx">total</span> <span class="o">=</span> <span class="nx">countResult</span><span class="p">.</span><span class="nx">total</span>
+    <span class="kd">let</span> <span class="nx">commentList</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// 突破100条限制</span>
+      <span class="kd">const</span> <span class="nx">batchTimes</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">total</span> <span class="o">/</span> <span class="nx">MAX_LIMIT</span><span class="p">)</span>
+      <span class="kd">const</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">batchTimes</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="dl">'</span><span class="s1">blog-comment</span><span class="dl">'</span><span class="p">).</span><span class="nx">skip</span><span class="p">(</span><span class="nx">i</span> <span class="o">*</span> <span class="nx">MAX_LIMIT</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="nx">MAX_LIMIT</span><span class="p">).</span><span class="nx">where</span><span class="p">({</span>
+            <span class="nx">blogId</span>
+          <span class="p">}).</span><span class="nx">orderBy</span><span class="p">(</span><span class="dl">'</span><span class="s1">createTime</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">desc</span><span class="dl">'</span><span class="p">).</span><span class="kd">get</span><span class="p">()</span>
+        <span class="nx">tasks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">promise</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">tasks</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">commentList</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">tasks</span><span class="p">)).</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">cur</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="p">{</span>
+            <span class="na">data</span><span class="p">:</span> <span class="nx">acc</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">cur</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span>
+          <span class="p">}</span>
+        <span class="p">})</span>
+      <span class="p">}</span>
+
+    <span class="p">}</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">detail</span><span class="p">,</span>
+      <span class="nx">commentList</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="分享功能">分享功能</h4>
+
+<p>分享功能需要button标签，设置open-type=”share”</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nt">&lt;button</span> <span class="na">open-type=</span><span class="s">"share"</span> <span class="na">data-blogid=</span><span class="s">""</span> <span class="na">data-blog=</span><span class="s">""</span> <span class="na">class=</span><span class="s">"share-btn"</span> <span class="na">hover-class=</span><span class="s">"share-hover"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"iconfont icon-fenxiang icon"</span><span class="nt">&gt;&lt;/i&gt;</span>
+      <span class="nt">&lt;text&gt;</span>分享<span class="nt">&lt;/text&gt;</span>
+    <span class="nt">&lt;/button&gt;</span>
+</code></pre></div></div>
+
+<p>在js中有onShareAppMessage方法，点击button会自动执行此方法</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">onShareAppMessage</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span>
+
+    <span class="c1">// 对分享卡片的设置</span>
+    <span class="kd">let</span> <span class="nx">blogObj</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">blog</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">title</span><span class="p">:</span> <span class="nx">blogObj</span><span class="p">.</span><span class="nx">content</span><span class="p">,</span>
+      <span class="na">path</span><span class="p">:</span> <span class="s2">`/pages/blog-comment/blog-comment?blogId=</span><span class="p">${</span><span class="nx">blogObj</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="c1">// imageUrl: '' // 自定义图片，不支持云存储的图片</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="不同场景获取用户信息的方式">不同场景获取用户信息的方式</h4>
+
+<h5 id="场景一只想在界面上显示自己的昵称和头像">场景一：只想在界面上显示自己的昵称和头像</h5>
+
+<p>以组件的方式：根据type类型获取不同用户数据</p>
+
+<p><strong>该方式不需要授权，只能用于在wxml显示自己的信息</strong></p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/component/open-data.html">open-data</a></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;open-data</span> <span class="na">type=</span><span class="s">"userAvatarUrl"</span><span class="nt">&gt;&lt;/open-data&gt;</span>
+<span class="nt">&lt;open-data</span> <span class="na">type=</span><span class="s">"userNickName"</span><span class="nt">&gt;&lt;/open-data&gt;</span>
+...
+</code></pre></div></div>
+
+<h5 id="场景二在js中获取用户信息">场景二：在JS中获取用户信息</h5>
+
+<p>该方式要在用户授权以后才能获取用户信息</p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserInfo.html">wx.getUserInfo</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">wx</span><span class="p">.</span><span class="nx">getUserInfo</span><span class="p">({</span>
+      <span class="na">success</span><span class="p">:</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+</code></pre></div></div>
+
+<p>在未授权的情况下需要用户先授权：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 判断用户是否授权</span>
+      <span class="nx">wx</span><span class="p">.</span><span class="nx">getSetting</span><span class="p">({</span>
+        <span class="na">success</span><span class="p">:</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 这里使用箭头函数可改变内部this指向为外部的this</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">authSetting</span><span class="p">[</span><span class="dl">'</span><span class="s1">scope.userInfo</span><span class="dl">'</span><span class="p">])</span> <span class="p">{</span> <span class="c1">// 已授权</span>
+            <span class="nx">wx</span><span class="p">.</span><span class="nx">getUserInfo</span><span class="p">({</span> <span class="c1">// 获取用户信息</span>
+              <span class="na">success</span><span class="p">:</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 这里使用箭头函数可改变内部this指向为外部的this</span>
+
+                <span class="nx">app</span><span class="p">.</span><span class="nx">setGlobalData</span><span class="p">(</span><span class="dl">'</span><span class="s1">userInfo</span><span class="dl">'</span><span class="p">,</span> <span class="nx">res</span><span class="p">.</span><span class="nx">userInfo</span><span class="p">)</span> <span class="c1">// 设置app全局属性</span>
+
+                <span class="k">this</span><span class="p">.</span><span class="nx">onLoginSuccess</span><span class="p">({</span>
+                  <span class="na">detail</span><span class="p">:</span> <span class="nx">res</span><span class="p">.</span><span class="nx">userInfo</span>
+                <span class="p">})</span>
+              <span class="p">}</span>
+            <span class="p">})</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// 未授权</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">setData</span><span class="p">({</span> <span class="c1">// 打开弹出层，显示获取用户信息按钮</span>
+              <span class="na">modalShow</span><span class="p">:</span> <span class="kc">true</span>
+            <span class="p">})</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+
+
+  <span class="nx">授权按钮</span>
+ <span class="o">&lt;</span><span class="nx">button</span> <span class="kd">class</span><span class="o">=</span><span class="dl">"</span><span class="s2">login</span><span class="dl">"</span> <span class="nx">open</span><span class="o">-</span><span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">getUserInfo</span><span class="dl">"</span> <span class="nx">bindgetuserinfo</span><span class="o">=</span><span class="dl">"</span><span class="s2">onGetUserInfo</span><span class="dl">"</span><span class="o">&gt;</span><span class="nx">获取微信授权信息</span><span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>
+
+    <span class="nx">onGetUserInfo</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 获取用户信息</span>
+      <span class="kd">const</span> <span class="nx">userInfo</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">detail</span><span class="p">.</span><span class="nx">userInfo</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">userInfo</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 用户允许授权</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setData</span><span class="p">({</span>
+          <span class="na">modalShow</span><span class="p">:</span> <span class="kc">false</span>
+        <span class="p">})</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">triggerEvent</span><span class="p">(</span><span class="dl">'</span><span class="s1">loginSuccess</span><span class="dl">'</span><span class="p">,</span> <span class="nx">userInfo</span><span class="p">)</span> <span class="c1">// 给父组件传用户数据</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// 用户拒绝授权</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">triggerEvent</span><span class="p">(</span><span class="dl">'</span><span class="s1">loginFail</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+</code></pre></div></div>
+
+<blockquote>
+  <p>注意：上面这种方式没有获取到openId</p>
+</blockquote>
+
+<h5 id="场景三获取openid">场景三：获取openId</h5>
+
+<p><strong>获取openId不需要用户授权</strong></p>
+
+<p>1、传统开发方式获取openId，后台服务器由自己开发，没使用云开发</p>
+
+<p>小程序端                 微信服务器            后端服务器</p>
+
+<p>步骤：</p>
+
+<p>小程序端 调用 wx.login 向微信服务器 获取code</p>
+
+<p>小程序端 调用 wx.request 将 code 传递给 后端服务器</p>
+
+<p>后端服务器 使用code 向微信服务器 换取openid和session_key</p>
+
+<p>后端服务器 将openid 发送给 小程序端</p>
+
+<p>2、云开发方式获取openId</p>
+
+<p>云函数login中</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 获取 WX Context (微信调用上下文)，包括 OPENID、APPID、及 UNIONID（需满足 UNIONID 获取条件）</span>
+  <span class="kd">const</span> <span class="nx">wxContext</span> <span class="o">=</span> <span class="nx">cloud</span><span class="p">.</span><span class="nx">getWXContext</span><span class="p">()</span>
+
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">,</span>
+    <span class="na">openid</span><span class="p">:</span> <span class="nx">wxContext</span><span class="p">.</span><span class="nx">OPENID</span><span class="p">,</span>
+    <span class="na">appid</span><span class="p">:</span> <span class="nx">wxContext</span><span class="p">.</span><span class="nx">APPID</span><span class="p">,</span>
+    <span class="na">unionid</span><span class="p">:</span> <span class="nx">wxContext</span><span class="p">.</span><span class="nx">UNIONID</span><span class="p">,</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">普通按钮</span>
+<span class="o">&lt;</span><span class="nx">button</span> <span class="nx">bindtap</span><span class="o">=</span><span class="dl">"</span><span class="s2">getOpenid</span><span class="dl">"</span><span class="o">&gt;</span><span class="nx">获取openid</span><span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>
+<span class="nx">getOpenid</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">wx</span><span class="p">.</span><span class="nx">cloud</span><span class="p">.</span><span class="nx">callFunction</span><span class="p">({</span>
+		<span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">login</span><span class="dl">'</span>
+	<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+	<span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>openid 在小程序和公众号下是不一样的</p>
+
+  <p>unionid 在小程序和公众号下都是一样的</p>
+</blockquote>
+
+<h2 id="我的页面">《我的》页面</h2>
+
+<p>json文件</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="dl">"</span><span class="s2">navigationBarTitleText</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">我的</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">disableScroll</span><span class="dl">"</span><span class="p">:</span> <span class="kc">true</span>  <span class="c1">// 使页面无法滚动</span>
+</code></pre></div></div>
+
+<h4 id="导航页面链接跳转">导航页面链接跳转</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/component/navigator.html">navigator</a></p>
+
+<h4 id="背景图片">背景图片</h4>
+
+<p>wxss背景图片不支持本地相对路径的图片，只支持网络图片和base64图片</p>
+
+<p>建议使用base64图片，图片文件最好不要太大。</p>
+
+<h4 id="每个页面都有的page标签">每个页面都有的page标签</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">page</span> <span class="p">{</span>
+  <span class="nx">background</span><span class="o">-</span><span class="nx">color</span><span class="p">:</span> <span class="err">#</span><span class="nx">f1f1f1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="播放历史与本地存储">播放历史与本地存储</h4>
+
+<p>方案一：播放历史存储在数据库当中，这样在不同设备访问都可查看播放历史。读取速度相对较慢</p>
+
+<p>方案二：播放历史存储在本地，仅当前设备可查看播放历史。读取速度较快</p>
+
+<p>本项目采用本地存储：</p>
+
+<p>使用openid作为本地存储的key，播放历史存入value</p>
+
+<p>在app.js中获取openid，即打开小程序就获取openid。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app.js</span>
+<span class="nx">onLaunch</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">getOpenid</span><span class="p">()</span> <span class="c1">// 获取openid并存储</span>
+<span class="p">},</span>
+<span class="nx">getOpenid</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// 获取openid并存储</span>
+    <span class="nx">wx</span><span class="p">.</span><span class="nx">cloud</span><span class="p">.</span><span class="nx">callFunction</span><span class="p">({</span>
+      <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">login</span><span class="dl">'</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">openid</span> <span class="o">=</span> <span class="nx">res</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">openid</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">globalData</span><span class="p">.</span><span class="nx">openid</span> <span class="o">=</span> <span class="nx">openid</span> <span class="c1">// 保存到全局变量</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">wx</span><span class="p">.</span><span class="nx">getStorageSync</span><span class="p">(</span><span class="nx">openid</span><span class="p">)</span> <span class="o">==</span> <span class="dl">''</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 该用户从未打开过小程序，未存储过openid在本地</span>
+        <span class="nx">wx</span><span class="p">.</span><span class="nx">setStorageSync</span><span class="p">(</span><span class="nx">openid</span><span class="p">,</span> <span class="p">[])</span> <span class="c1">// 存储openid到本地</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>歌曲播放时</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 保存播放历史到本地存储</span>
+  <span class="nx">savePlayHistory</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">currentSong</span> <span class="o">=</span> <span class="nx">musiclist</span><span class="p">[</span><span class="nx">nowPlayingIndex</span><span class="p">]</span> <span class="c1">// 当前播放歌曲</span>
+    <span class="kd">const</span> <span class="nx">openid</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">globalData</span><span class="p">.</span><span class="nx">openid</span> <span class="c1">// 从全局属性获取openid</span>
+    <span class="kd">const</span> <span class="nx">playHistory</span> <span class="o">=</span> <span class="nx">wx</span><span class="p">.</span><span class="nx">getStorageSync</span><span class="p">(</span><span class="nx">openid</span><span class="p">)</span> <span class="c1">// 从本地存储获取播放历史数组</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">playHistory</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">playHistory</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">currentSong</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 当前播放歌曲已存在播放历史中</span>
+        <span class="nx">playHistory</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">// 删除原纪录</span>
+        <span class="k">break</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nx">playHistory</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">currentSong</span><span class="p">)</span> <span class="c1">// 在数组开头插入</span>
+    <span class="nx">wx</span><span class="p">.</span><span class="nx">setStorage</span><span class="p">({</span> <span class="c1">// 存入本地</span>
+      <span class="na">key</span><span class="p">:</span> <span class="nx">openid</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="nx">playHistory</span>
+    <span class="p">})</span>
+
+  <span class="p">},</span>
+</code></pre></div></div>
+
+<p>播放历史页面获取</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">onLoad</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">const</span> <span class="nx">openid</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">globalData</span><span class="p">.</span><span class="nx">openid</span> <span class="c1">//从全局属性获取openid</span>
+    <span class="kd">const</span> <span class="nx">playHistory</span> <span class="o">=</span> <span class="nx">wx</span><span class="p">.</span><span class="nx">getStorageSync</span><span class="p">(</span><span class="nx">openid</span><span class="p">)</span> <span class="c1">// 读取本地播放历史数据</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">playHistory</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 有播放历史</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setData</span><span class="p">({</span>
+        <span class="nx">playHistory</span>
+      <span class="p">})</span>
+      <span class="nx">wx</span><span class="p">.</span><span class="nx">setStorage</span><span class="p">({</span> <span class="c1">// storage里把musiclist（播放列表）的内容换成播放历史的列表</span>
+        <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">musiclist</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="nx">playHistory</span><span class="p">,</span>
+      <span class="p">})</span>
+    <span class="p">}</span>
+
+  <span class="p">},</span>
+</code></pre></div></div>
+
+<h4 id="我的发现">我的发现</h4>
+
+<p>代码分别演示了从云函数和小程序端获取数据，从小程序端获取数据享有<strong>权限管理</strong>的能力，不需要传openid。</p>
+
+<h4 id="小程序码">小程序码</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/qr-code.html">获取小程序码</a></p>
+
+<p>本项目演示使用<a href="https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html">接口 B：适用于需要的码数量极多的业务场景</a> <code class="language-plaintext highlighter-rouge">云调用</code> 的方式。</p>
+
+<p>步骤：</p>
+
+<ul>
+  <li>
+    <p>创建云函数 gteQRCode</p>
+  </li>
+  <li>
+    <p>gteQRCode云函数下创建config.json配置权限，代码如下：</p>
+  </li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"permissions"</span><span class="p">:{</span><span class="w">
+      </span><span class="nl">"openapi"</span><span class="p">:[</span><span class="w">
+        </span><span class="s2">"wxacode.getUnlimited"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 云函数入口函数</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">main</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">wxContext</span> <span class="o">=</span> <span class="nx">cloud</span><span class="p">.</span><span class="nx">getWXContext</span><span class="p">()</span>
+
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">cloud</span><span class="p">.</span><span class="nx">openapi</span><span class="p">.</span><span class="nx">wxacode</span><span class="p">.</span><span class="nx">getUnlimited</span><span class="p">({</span>
+    <span class="na">scene</span><span class="p">:</span> <span class="nx">wxContext</span><span class="p">.</span><span class="nx">OPENID</span><span class="p">,</span> <span class="c1">// 链接参数 不一定传openid，可传其他任意数据，然后通过此数据，在别人扫码进入时就可用于判断</span>
+    <span class="c1">// page: "pages/blog/blog" // 默认进入主页</span>
+    <span class="c1">// lineColor: { // 线条颜色</span>
+    <span class="c1">//   'r': 211,</span>
+    <span class="c1">//   'g': 60,</span>
+    <span class="c1">//   'b': 57</span>
+    <span class="c1">// },</span>
+    <span class="c1">// isHyaline: true // 是否透明</span>
+  <span class="p">})</span>
+
+  <span class="c1">// result为二进制数据, 先上传到云存储</span>
+
+  <span class="c1">// 上传云存储</span>
+  <span class="kd">const</span> <span class="nx">upload</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">cloud</span><span class="p">.</span><span class="nx">uploadFile</span><span class="p">({</span>
+    <span class="na">cloudPath</span><span class="p">:</span> <span class="dl">'</span><span class="s1">qrcode/qrcode</span><span class="dl">'</span> <span class="o">+</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">.png</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">fileContent</span><span class="p">:</span> <span class="nx">result</span><span class="p">.</span><span class="nx">buffer</span>
+  <span class="p">})</span>
+
+  <span class="k">return</span> <span class="nx">upload</span><span class="p">.</span><span class="nx">fileID</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h5 id="判断是从扫码小程序码进入以及参数获取">判断是从扫码小程序码进入，以及参数获取</h5>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 在从小程序码进入的页面js，onLoad方法中，</span>
+
+<span class="nx">onLoad</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">scene</span><span class="p">)</span> <span class="c1">// 获取到小程序码进入的参数</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="版本更新检测">版本更新检测</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app.js</span>
+<span class="nx">onLaunch</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">checkUpate</span><span class="p">()</span>
+<span class="p">},</span>
+<span class="nx">checkUpate</span><span class="p">(){</span>
+    <span class="kd">const</span> <span class="nx">updateManager</span> <span class="o">=</span> <span class="nx">wx</span><span class="p">.</span><span class="nx">getUpdateManager</span><span class="p">()</span>
+    <span class="c1">// 检测版本更新</span>
+    <span class="nx">updateManager</span><span class="p">.</span><span class="nx">onCheckForUpdate</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">hasUpdate</span><span class="p">){</span>
+        <span class="nx">updateManager</span><span class="p">.</span><span class="nx">onUpdateReady</span><span class="p">(()</span><span class="o">=&gt;</span><span class="p">{</span>
+          <span class="nx">wx</span><span class="p">.</span><span class="nx">showModal</span><span class="p">({</span>
+            <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">更新提示</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">新版本已经准备好，是否重启应用</span><span class="dl">'</span><span class="p">,</span>
+            <span class="nx">success</span><span class="p">(</span><span class="nx">res</span><span class="p">){</span>
+              <span class="k">if</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">confirm</span><span class="p">){</span>
+                <span class="nx">updateManager</span><span class="p">.</span><span class="nx">applyUpdate</span><span class="p">()</span>
+              <span class="p">}</span>
+            <span class="p">}</span>
+          <span class="p">})</span>
+        <span class="p">})</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+  <span class="p">},</span>
+</code></pre></div></div>
+
+<h3 id="性能优化">性能优化</h3>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/performance/tips.html">官网文档优化建议</a></p>
+
+<p>使用开发者工具的调试器，Audits进行评分，然后根据提示针对项目进行优化。</p>
+
+<h3 id="场景值scene的作用与应用场景">场景值scene的作用与应用场景</h3>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/scene.html">场景值</a></p>
+
+<p>场景值用来描述用户进入小程序的路径。完整场景值的含义请查看<a href="https://developers.weixin.qq.com/miniprogram/dev/reference/scene-list.html">场景值列表</a>。</p>
+
+<p>可根据不同场景进入实现不同业务处理，比如一个点餐小程序，店家内贴了小程序码，用户通过扫码进入，可立即进入点餐页面，等等</p>
+
+<p>在app.js中的onLaunch(options) 、onShow(options)，options包含scene场景值</p>
+
+<p><strong>开发者工具中，切后台，可模拟进入场景。</strong></p>
+
+<h3 id="小程序的seo页面收录sitemap">小程序的”SEO”—页面收录sitemap</h3>
+
+<p>在app.js的同级目录下有sitemap.json文件，用于配置收录规则</p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/sitemap.html">stiemap配置</a></p>
+
+<p>作用：</p>
+
+<p>使小程序搜索可根据小程序的内容进行搜索到</p>
+
+<p>使用方法：</p>
+
+<p>1、在微信公众平台，小程序信息 &gt; 页面收录设置 &gt; 打开 (默认是已开启)</p>
+
+<p>2、打开sitemap.json文件，配置收录规则</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"desc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"关于本文件的更多信息，请参考文档 https://developers.weixin.qq.com/miniprogram/dev/framework/sitemap.html"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">收录规则</span><span class="w">
+  </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="err">//</span><span class="w"> </span><span class="err">是否被收录，allow允许被收录，disallow不允许</span><span class="w">
+  </span><span class="nl">"page"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">*星号表示所有页面都被收录</span><span class="w">
+  </span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"desc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"关于本文件的更多信息，请参考文档 https://developers.weixin.qq.com/miniprogram/dev/framework/sitemap.html"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">收录规则，可添加多条</span><span class="w">
+  </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">是否被收录</span><span class="w">
+  </span><span class="nl">"page"</span><span class="p">:</span><span class="s2">"pages/player/player"</span><span class="p">,</span><span class="w">  </span><span class="err">//</span><span class="w"> </span><span class="err">页面</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"musicId"</span><span class="p">,</span><span class="s2">"index"</span><span class="p">],</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">链接的动态参数</span><span class="w">
+   </span><span class="nl">"matching"</span><span class="p">:</span><span class="err">'exact'</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">表示params的参数是否要准确的匹配</span><span class="w">
+  </span><span class="p">}</span><span class="err">，</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"disallow"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">是否被收录</span><span class="w">
+  </span><span class="nl">"page"</span><span class="p">:</span><span class="s2">"*"</span><span class="p">,</span><span class="w">  </span><span class="err">/</span><span class="w">
+  </span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">//</span><span class="w"> </span><span class="err">上面配置规则表示除了player页面被收录外，其他页面不被收录</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="小程序上线审核流程">小程序上线审核流程</h3>
+
+<p>微信公众平台，版本管理&gt;把小程序上传为体验版》提交审核》上线</p>
+
+<h2 id="后台管理系统">后台管理系统</h2>
+
+<h4 id="架构示意图">架构示意图</h4>
+
+<p>​				前端                                                           后台                                                         小程序云开发</p>
+
+<p>vue-admin-template  &lt;—通过ajax–&gt; 基于Koa2；HTTP API 或 tcb-admin-node    —-&gt;云函数、云数据库、云存储</p>
+
+<p>​</p>
+
+<h4 id="vue-admin-template构建管理系统前端">vue-admin-template构建管理系统前端</h4>
+
+<p><a href="https://github.com/PanJiaChen/vue-element-admin">vue-element-admin</a> 基于element的后台管理系统模板</p>
+
+<p><a href="https://github.com/PanJiaChen/vue-admin-template">vue-admin-template</a> 是 <a href="https://github.com/PanJiaChen/vue-element-admin">vue-element-admin</a>的简化版</p>
+
+<p>使用方法查看官方文档。</p>
+
+<h4 id="koa2构建管理系统后端">Koa2构建管理系统后端</h4>
+
+<p>官网： <a href="https://koa.bootcss.com/">https://koa.bootcss.com/</a></p>
+
+<p>新建空文件夹wx-music-admin-backend，打开终端：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 生成package.json文件，-y 表示默认的配置</span>
+npm init <span class="nt">-y</span>
+
+<span class="c"># 安装koa</span>
+npm <span class="nb">install </span>koa
+
+<span class="c"># 新建app.js文件 (win10系统命令)，作为项目入口文件</span>
+<span class="nb">type </span>nul <span class="o">&gt;</span> app.js
+
+</code></pre></div></div>
+
+<p>app.js:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">Koa</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">koa</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">chalk</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">chalk</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// 使console.log打印文字有颜色的插件，需: npm i chalk</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Koa</span><span class="p">()</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Hello Wolrd</span><span class="dl">'</span>
+<span class="p">})</span>
+<span class="kd">const</span> <span class="nx">port</span> <span class="o">=</span> <span class="mi">3000</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 端口号，开启服务后的回调函数</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">chalk</span><span class="p">.</span><span class="nx">green</span><span class="p">(</span><span class="s2">`&gt; 服务已开启，访问：http://localhost:</span><span class="p">${</span><span class="nx">port</span><span class="p">}</span><span class="s2">`</span><span class="p">))</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>终端：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># node启动项目</span>
+node app.js
+
+<span class="c"># 访问：http://localhost:3000</span>
+</code></pre></div></div>
+
+<h4 id="接口调用凭证-access_token-的缓存与更新">接口调用凭证 access_token 的缓存与更新</h4>
+
+<p>access_token，微信的接口调用凭证，详情：<a href="https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html">https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html</a></p>
+
+<p>回到项目wx-music-admin-backend，打开终端：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># HTTP 请求 插件</span>
+npm i request
+npm i request-promise
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+ * 获取微信接口调用凭证
+ * 详情：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+ */</span>
+
+
+<span class="kd">const</span> <span class="nx">rp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">request-promise</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// node发送http请求的插件</span>
+<span class="kd">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">fs</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// node文件模块</span>
+<span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">path</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// node 路径模块</span>
+
+<span class="c1">//fileName = __dirname 当前文件所在目录的绝对路径, 加上 './access_token.json'</span>
+<span class="kd">const</span> <span class="nx">fileName</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">./access_token.json</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="c1">// 这两个参数的获取：微信公众平台&gt;开发&gt;开发设置</span>
+<span class="kd">const</span> <span class="nx">APPID</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">wxc4e0b2d98063b103</span><span class="dl">'</span>
+<span class="kd">const</span> <span class="nx">APPSECRET</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">xxx</span><span class="dl">'</span> <span class="c1">//小程序密钥，注意保密!</span>
+
+<span class="c1">// 微信 access_token 请求地址</span>
+<span class="kd">const</span> <span class="nx">URL</span> <span class="o">=</span> <span class="s2">`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&amp;appid=</span><span class="p">${</span><span class="nx">APPID</span><span class="p">}</span><span class="s2">&amp;secret=</span><span class="p">${</span><span class="nx">APPSECRET</span><span class="p">}</span><span class="s2">`</span>
+
+<span class="c1">// 发送请求获取AccessToken</span>
+<span class="kd">const</span> <span class="nx">updateAccessToken</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">resStr</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">rp</span><span class="p">(</span><span class="nx">URL</span><span class="p">)</span>
+  <span class="kd">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">resStr</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">access_token</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// node写文件,参数：1 文件路径，2 文件内容, 首次写文件为新建，往后为覆盖</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="nx">fileName</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="na">access_token</span><span class="p">:</span> <span class="nx">res</span><span class="p">.</span><span class="nx">access_token</span><span class="p">,</span>
+      <span class="na">createTime</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+    <span class="p">}))</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// 如获取不到，再次获取</span>
+    <span class="k">await</span> <span class="nx">updateAccessToken</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 读取access_token</span>
+<span class="kd">const</span> <span class="nx">getAccessToken</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+     <span class="c1">// node读取文件,参数：1 读取的文件，2 字符集</span>
+    <span class="kd">const</span> <span class="nx">readRes</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">fileName</span><span class="p">,</span> <span class="dl">'</span><span class="s1">utf8</span><span class="dl">'</span><span class="p">)</span>
+    <span class="kd">const</span> <span class="nx">readObj</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">readRes</span><span class="p">)</span>
+
+    <span class="c1">// 如果服务器宕机导致setInterval无法定时更新，这里需要再次判断access_token的有效性</span>
+    <span class="kd">const</span> <span class="nx">createTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">readObj</span><span class="p">.</span><span class="nx">createTime</span><span class="p">).</span><span class="nx">getTime</span><span class="p">()</span>
+    <span class="kd">const</span> <span class="nx">nowTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">()</span>
+    <span class="k">if</span><span class="p">((</span><span class="nx">nowTime</span> <span class="o">-</span> <span class="nx">createTime</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">updateAccessToken</span><span class="p">()</span>
+      <span class="k">await</span> <span class="nx">getAccessToken</span><span class="p">()</span>
+      <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">readObj</span><span class="p">.</span><span class="nx">access_token</span>
+
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//捕获异常，在未创建文件时，先创建文件</span>
+    <span class="k">await</span> <span class="nx">updateAccessToken</span><span class="p">()</span>
+    <span class="k">await</span> <span class="nx">getAccessToken</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// access_token有效期为2个小时，定时更新</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">updateAccessToken</span><span class="p">()</span>
+<span class="p">},</span> <span class="p">(</span><span class="mi">7200</span> <span class="o">-</span> <span class="mi">300</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">getAccessToken</span>
+</code></pre></div></div>
+
+<h4 id="后端代码通过http-api-触发云函数获取数据">后端代码通过HTTP API 触发云函数获取数据</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-http-api/functions/invokeCloudFunction.html">HTTP API 触发云函数</a></p>
+
+<h4 id="产生跨域和后端解决跨域问题">产生跨域和后端解决跨域问题</h4>
+
+<p>管理系统前端向管理系统后端请求数据，产生了跨域问题</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">// 产生跨域的几种情况</span>
+  <span class="c1">// http://www.a.com  https://www.a.com 协议不同</span>
+  <span class="c1">// http://www.a.com  http://www.b.com 域名不同</span>
+  <span class="c1">// http://www.a.com  http://news.a.com 主域与子域不同</span>
+  <span class="c1">// http://www.a.com:8080  http://www.a.com:3000 端口不同</span>
+
+<span class="c1">// 解决跨域的几种方法</span>
+<span class="c1">// jsonp</span>
+<span class="c1">// iframe</span>
+<span class="c1">// postMessage跨域</span>
+<span class="c1">// 跨域资源共享（CORS）</span>
+</code></pre></div></div>
+
+<p>管理系统后端，安装</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 解决跨域问题的koa包
+npm i koa2-cors
+</code></pre></div></div>
+
+<p>app.js</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//处理跨域</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cors</span><span class="p">({</span>
+  <span class="na">origin</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">http://localhost:9528</span><span class="dl">'</span><span class="p">],</span> <span class="c1">// 允许访问本服务的域</span>
+  <span class="na">credentials</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">}))</span>
+</code></pre></div></div>
+
+<h4 id="云数据库的增删改查接口">云数据库的增删改查接口</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-http-api/database/databaseQuery.html">数据库查询记录</a></p>
+
+<h4 id="后端获取前端post请求传来的数据">后端获取前端post请求传来的数据</h4>
+
+<p>get请求可以直接通过ctx.request.query获取，但是post请求需要安装koa-body</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm i koa-body
+</code></pre></div></div>
+
+<p>app.js</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">koaBody</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">koa-body</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// 对post请求前端传来的数据的获取，需要此依赖</span>
+
+<span class="c1">// 接收post参数解析</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">koaBody</span><span class="p">({</span>
+  <span class="na">multipart</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">}))</span>
+
+</code></pre></div></div>
+
+<p>接口.js</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/updatePlaylist</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="kd">const</span> <span class="nx">params</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="nx">body</span> <span class="c1">// post请求获取前端传来的数据，需安装和配置koa-body</span>
+
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="后端获取云存储图片">后端获取云存储图片</h4>
+
+<p>云存储中上传图片，云数据库中新建图片的集合，并添加数据字段，字段包含云文件的fileid。</p>
+
+<p>后端项目通过调用云数据库的方式获取数据</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">router</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/list</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// 接口中读取数据库默认最多10条数据</span>
+  <span class="kd">const</span> <span class="nx">query</span> <span class="o">=</span> <span class="s2">`db.collection('swiper').get()`</span>
+  <span class="kd">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callCloudDB</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="dl">'</span><span class="s1">databasequery</span><span class="dl">'</span><span class="p">,</span> <span class="nx">query</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>但获取到的数据为fileid，并不能用于显示图片，需要通过微信HTTP API获取云存储的接口来获取图片地址</p>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-http-api/storage/batchDownloadFile.html">获取云存储</a></p>
+
+<h4 id="后端上传图片到云存储">后端上传图片到云存储</h4>
+
+<p><a href="https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-http-api/storage/uploadFile.html">文件上传</a></p>
