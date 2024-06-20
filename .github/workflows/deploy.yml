@@ -8,10 +8,22 @@ jobs:
     runs-on: ubuntu-latest  # 运行环境
     steps:
     - uses: actions/checkout@v2  # 检出代码
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'  # 确保使用的是 Node.js 16 版本
+
     - name: Install dependencies
-      run: npm install  # 安装依赖，如果有的话
+      run: |
+        export NODE_OPTIONS=--openssl-legacy-provider
+        npm install  # 安装依赖
+
     - name: Build
-      run: npm run build  # 构建项目，如果需要的话
+      run: |
+        export NODE_OPTIONS=--openssl-legacy-provider
+        npm run build  # 构建项目
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
