@@ -1,0 +1,63 @@
+<h1 id="将一维数组按指定长度转为二维数组">将一维数组按指定长度转为二维数组</h1>
+
+<p>将一维数组按指定长度转为二维数组</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">pages</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">pages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="nx">arr</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">item</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">page</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">index</span> <span class="o">/</span> <span class="nx">len</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">pages</span><span class="p">[</span><span class="nx">page</span><span class="p">])</span> <span class="p">{</span>
+            <span class="nx">pages</span><span class="p">[</span><span class="nx">page</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="p">}</span>
+        <span class="nx">pages</span><span class="p">[</span><span class="nx">page</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="k">return</span> <span class="nx">pages</span>
+<span class="p">}</span>
+
+<span class="c1">// 使用</span>
+<span class="kd">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">pages</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c1">// [[1, 2, 3], [4, 5, 6], [7, 8, 9]]</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">pages</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span> <span class="c1">// [[1, 2, 3, 4, 5, 6, 7, 8], [9]]</span>
+</code></pre></div></div>
+
+<h2 id="应用场景示例">应用场景示例</h2>
+
+<p>如图，按需求，图标模块中的图标个数是不确定的，每页最多显示8个，超出8个的显示到第二页，实现向左滑动翻页。提供的数据是一个一维数组，这时就可以使用上面的代码按长度为8转为二维数组，再分页渲染到页面。</p>
+
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20200223142410.jpg" alt="" /></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;template&gt;</span>
+    <span class="nt">&lt;swiper&gt;</span>
+        <span class="nt">&lt;swiper-slide</span> <span class="na">v-for=</span><span class="s">"(page, index) of pages"</span> <span class="na">:key=</span><span class="s">"index"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"icon"</span> <span class="na">v-for=</span><span class="s">"item of page"</span> <span class="na">:key=</span><span class="s">"item.id"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"icon-img"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;img</span> <span class="na">:src=</span><span class="s">"item.imgUrl"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;/div&gt;</span>
+                <span class="nt">&lt;p&gt;&lt;/p&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/swiper-slide&gt;</span>
+    <span class="nt">&lt;/swiper&gt;</span>
+<span class="nt">&lt;template&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+  <span class="p">...</span>
+  <span class="nx">data</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">iconList</span><span class="p">:</span> <span class="p">[]</span> <span class="c1">// 图标数据</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nx">computed</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nx">pages</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">pages</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">iconList</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">item</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">page</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">index</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">pages</span><span class="p">[</span><span class="nx">page</span><span class="p">])</span> <span class="p">{</span>
+          <span class="nx">pages</span><span class="p">[</span><span class="nx">page</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="p">}</span>
+        <span class="nx">pages</span><span class="p">[</span><span class="nx">page</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span>
+      <span class="p">})</span>
+      <span class="k">return</span> <span class="nx">pages</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+

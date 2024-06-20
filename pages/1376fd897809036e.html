@@ -1,0 +1,346 @@
+<h1 id="上传和下载的进度监控">上传和下载的进度监控</h1>
+
+<h2 id="需求分析">需求分析</h2>
+
+<p>有些时候，当我们上传文件或者是请求一个大体积数据的时候，希望知道实时的进度，甚至可以基于此做一个进度条的展示。</p>
+
+<p>我们希望给 <code class="language-plaintext highlighter-rouge">axios</code> 的请求配置提供 <code class="language-plaintext highlighter-rouge">onDownloadProgress</code> 和 <code class="language-plaintext highlighter-rouge">onUploadProgress</code> 2 个函数属性，用户可以通过这俩函数实现对下载进度和上传进度的监控。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/get</span><span class="dl">'</span><span class="p">,{</span>
+  <span class="nx">onDownloadProgress</span><span class="p">(</span><span class="nx">progressEvent</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 监听下载进度</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/post</span><span class="dl">'</span><span class="p">,{</span>
+  <span class="nx">onUploadProgress</span><span class="p">(</span><span class="nx">progressEvent</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 监听上传进度</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">xhr</code> 对象提供了一个 <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/progress_event"><code class="language-plaintext highlighter-rouge">progress</code></a> 事件，我们可以监听此事件对数据的下载进度做监控；另外，<a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/upload"><code class="language-plaintext highlighter-rouge">xhr.uplaod</code></a> 对象也提供了 <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/progress_event"><code class="language-plaintext highlighter-rouge">progress</code></a> 事件，我们可以基于此对上传进度做监控。</p>
+
+<h2 id="代码实现">代码实现</h2>
+
+<p>首先修改一下类型定义。</p>
+
+<p><code class="language-plaintext highlighter-rouge">types/index.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AxiosRequestConfig</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="nl">onDownloadProgress</span><span class="p">?:</span> <span class="p">(</span><span class="nx">e</span><span class="p">:</span> <span class="nx">ProgressEvent</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span>
+  <span class="nx">onUploadProgress</span><span class="p">?:</span> <span class="p">(</span><span class="nx">e</span><span class="p">:</span> <span class="nx">ProgressEvent</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>接着在发送请求前，给 <code class="language-plaintext highlighter-rouge">xhr</code> 对象添加属性。</p>
+
+<p><code class="language-plaintext highlighter-rouge">core/xhr.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span>
+  <span class="cm">/*...*/</span>
+  <span class="nx">onDownloadProgress</span><span class="p">,</span>
+  <span class="nx">onUploadProgress</span>
+<span class="p">}</span> <span class="o">=</span> <span class="nx">config</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">onDownloadProgress</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">request</span><span class="p">.</span><span class="nx">onprogress</span> <span class="o">=</span> <span class="nx">onDownloadProgress</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">onUploadProgress</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">request</span><span class="p">.</span><span class="nx">upload</span><span class="p">.</span><span class="nx">onprogress</span> <span class="o">=</span> <span class="nx">onUploadProgress</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>另外，如果请求的数据是 <code class="language-plaintext highlighter-rouge">FormData</code> 类型，我们应该主动删除请求 <code class="language-plaintext highlighter-rouge">headers</code> 中的 <code class="language-plaintext highlighter-rouge">Content-Type</code> 字段，让浏览器自动根据请求数据设置 <code class="language-plaintext highlighter-rouge">Content-Type</code>。比如当我们通过 <code class="language-plaintext highlighter-rouge">FormData</code> 上传文件的时候，浏览器会把请求 <code class="language-plaintext highlighter-rouge">headers</code> 中的 <code class="language-plaintext highlighter-rouge">Content-Type</code> 设置为 <code class="language-plaintext highlighter-rouge">multipart/form-data</code>。</p>
+
+<p>我们先添加一个判断 <code class="language-plaintext highlighter-rouge">FormData</code> 的方法。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/util.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">isFormData</span><span class="p">(</span><span class="nx">val</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nx">boolean</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">typeof</span> <span class="nx">val</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">undefined</span><span class="dl">'</span> <span class="o">&amp;&amp;</span> <span class="nx">val</span> <span class="k">instanceof</span> <span class="nx">FormData</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>然后再添加相关逻辑。</p>
+
+<p><code class="language-plaintext highlighter-rouge">core/xhr.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">isFormData</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span> <span class="p">{</span>
+  <span class="k">delete</span> <span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>我们发现，<code class="language-plaintext highlighter-rouge">xhr</code> 函数内部随着需求越来越多，代码也越来越臃肿，我们可以把逻辑梳理一下，把内部代码做一层封装优化。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">xhr</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="nx">AxiosPromise</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span>
+      <span class="nx">data</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nx">url</span><span class="p">,</span>
+      <span class="nx">method</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+      <span class="nx">headers</span><span class="p">,</span>
+      <span class="nx">responseType</span><span class="p">,</span>
+      <span class="nx">timeout</span><span class="p">,</span>
+      <span class="nx">cancelToken</span><span class="p">,</span>
+      <span class="nx">withCredentials</span><span class="p">,</span>
+      <span class="nx">xsrfCookieName</span><span class="p">,</span>
+      <span class="nx">xsrfHeaderName</span><span class="p">,</span>
+      <span class="nx">onDownloadProgress</span><span class="p">,</span>
+      <span class="nx">onUploadProgress</span>
+    <span class="p">}</span> <span class="o">=</span> <span class="nx">config</span>
+
+    <span class="kd">const</span> <span class="nx">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">()</span>
+
+    <span class="nx">request</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">method</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">(),</span> <span class="nx">url</span><span class="o">!</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+
+    <span class="nx">configureRequest</span><span class="p">()</span>
+
+    <span class="nx">addEvents</span><span class="p">()</span>
+
+    <span class="nx">processHeaders</span><span class="p">()</span>
+
+    <span class="nx">processCancel</span><span class="p">()</span>
+
+    <span class="nx">request</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+
+    <span class="kd">function</span> <span class="nx">configureRequest</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">responseType</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">responseType</span> <span class="o">=</span> <span class="nx">responseType</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">timeout</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">timeout</span> <span class="o">=</span> <span class="nx">timeout</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">withCredentials</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="nx">withCredentials</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">addEvents</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+      <span class="nx">request</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">handleLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">!==</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span>
+        <span class="p">}</span>
+
+        <span class="kd">const</span> <span class="nx">responseHeaders</span> <span class="o">=</span> <span class="nx">parseHeaders</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">getAllResponseHeaders</span><span class="p">())</span>
+        <span class="kd">const</span> <span class="nx">responseData</span> <span class="o">=</span>
+          <span class="nx">responseType</span> <span class="o">&amp;&amp;</span> <span class="nx">responseType</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span> <span class="p">?</span> <span class="nx">request</span><span class="p">.</span><span class="nx">response</span> <span class="p">:</span> <span class="nx">request</span><span class="p">.</span><span class="nx">responseText</span>
+        <span class="kd">const</span> <span class="na">response</span><span class="p">:</span> <span class="nx">AxiosResponse</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="na">data</span><span class="p">:</span> <span class="nx">responseData</span><span class="p">,</span>
+          <span class="na">status</span><span class="p">:</span> <span class="nx">request</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span>
+          <span class="na">statusText</span><span class="p">:</span> <span class="nx">request</span><span class="p">.</span><span class="nx">statusText</span><span class="p">,</span>
+          <span class="na">headers</span><span class="p">:</span> <span class="nx">responseHeaders</span><span class="p">,</span>
+          <span class="nx">config</span><span class="p">,</span>
+          <span class="nx">request</span>
+        <span class="p">}</span>
+        <span class="nx">handleResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span>
+      <span class="p">}</span>
+
+      <span class="nx">request</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">handleError</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">reject</span><span class="p">(</span><span class="nx">createError</span><span class="p">(</span><span class="dl">'</span><span class="s1">Network Error</span><span class="dl">'</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">request</span><span class="p">))</span>
+      <span class="p">}</span>
+
+      <span class="nx">request</span><span class="p">.</span><span class="nx">ontimeout</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">handleTimeout</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">reject</span><span class="p">(</span>
+          <span class="nx">createError</span><span class="p">(</span><span class="s2">`Timeout of </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">timeout</span><span class="p">}</span><span class="s2"> ms exceeded`</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="dl">'</span><span class="s1">ECONNABORTED</span><span class="dl">'</span><span class="p">,</span> <span class="nx">request</span><span class="p">)</span>
+        <span class="p">)</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">onDownloadProgress</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">onprogress</span> <span class="o">=</span> <span class="nx">onDownloadProgress</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">onUploadProgress</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">upload</span><span class="p">.</span><span class="nx">onprogress</span> <span class="o">=</span> <span class="nx">onUploadProgress</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">processHeaders</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">isFormData</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">]</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">((</span><span class="nx">withCredentials</span> <span class="o">||</span> <span class="nx">isURLSameOrigin</span><span class="p">(</span><span class="nx">url</span><span class="o">!</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="nx">xsrfCookieName</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">xsrfValue</span> <span class="o">=</span> <span class="nx">cookie</span><span class="p">.</span><span class="nx">read</span><span class="p">(</span><span class="nx">xsrfCookieName</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">xsrfValue</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">headers</span><span class="p">[</span><span class="nx">xsrfHeaderName</span><span class="o">!</span><span class="p">]</span> <span class="o">=</span> <span class="nx">xsrfValue</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">headers</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">name</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">data</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">name</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">content-type</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">delete</span> <span class="nx">headers</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">request</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">headers</span><span class="p">[</span><span class="nx">name</span><span class="p">])</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">processCancel</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">cancelToken</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">cancelToken</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">reason</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">request</span><span class="p">.</span><span class="nx">abort</span><span class="p">()</span>
+          <span class="nx">reject</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span>
+        <span class="p">})</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">handleResponse</span><span class="p">(</span><span class="na">response</span><span class="p">:</span> <span class="nx">AxiosResponse</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">status</span> <span class="o">&lt;</span> <span class="mi">300</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">resolve</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">reject</span><span class="p">(</span>
+          <span class="nx">createError</span><span class="p">(</span>
+            <span class="s2">`Request failed with status code </span><span class="p">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+            <span class="nx">config</span><span class="p">,</span>
+            <span class="kc">null</span><span class="p">,</span>
+            <span class="nx">request</span><span class="p">,</span>
+            <span class="nx">response</span>
+          <span class="p">)</span>
+        <span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>我们把整个流程分为 7 步：</p>
+
+<ul>
+  <li>创建一个 <code class="language-plaintext highlighter-rouge">request</code> 实例。</li>
+  <li>执行 <code class="language-plaintext highlighter-rouge">request.open</code> 方法初始化。</li>
+  <li>执行 <code class="language-plaintext highlighter-rouge">configureRequest</code> 配置 <code class="language-plaintext highlighter-rouge">request</code> 对象。</li>
+  <li>执行 <code class="language-plaintext highlighter-rouge">addEvents</code> 给 <code class="language-plaintext highlighter-rouge">request</code> 添加事件处理函数。</li>
+  <li>执行 <code class="language-plaintext highlighter-rouge">processHeaders</code> 处理请求 <code class="language-plaintext highlighter-rouge">headers</code>。</li>
+  <li>执行 <code class="language-plaintext highlighter-rouge">processCancel</code> 处理请求取消逻辑。</li>
+  <li>执行 <code class="language-plaintext highlighter-rouge">request.send</code> 方法发送请求。</li>
+</ul>
+
+<p>这样拆分后整个流程就会显得非常清晰，未来我们再去新增需求的时候代码也不会显得越来越臃肿。</p>
+
+<h2 id="demo-编写">demo 编写</h2>
+
+<p>这节课的 demo 非常有意思，我们第一次给界面上增加了一些交互的按钮。</p>
+
+<p><code class="language-plaintext highlighter-rouge">examples/more/index.html</code></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;</span>More example<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">href=</span><span class="s">"//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;h1&gt;</span>file download<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;div&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"download"</span> <span class="na">class=</span><span class="s">"btn btn-primary"</span><span class="nt">&gt;</span>Download<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;h1&gt;</span>file upload<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;form</span> <span class="na">role=</span><span class="s">"form"</span> <span class="na">class=</span><span class="s">"form"</span> <span class="na">onsubmit=</span><span class="s">"return false;"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">"file"</span> <span class="na">type=</span><span class="s">"file"</span> <span class="na">class=</span><span class="s">"form-control"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"upload"</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">class=</span><span class="s">"btn btn-primary"</span><span class="nt">&gt;</span>Upload<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/__build__/more.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>另外，我们为了友好地展示上传和下载进度，我们引入了一个开源库 <a href="https://github.com/rstacruz/nprogress">nprogress</a>，它可以在页面的顶部展示进度条。</p>
+
+<p><code class="language-plaintext highlighter-rouge">examples/more/app.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">()</span>
+
+<span class="kd">function</span> <span class="nx">calculatePercentage</span><span class="p">(</span><span class="nx">loaded</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">total</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">loaded</span> <span class="o">*</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="nx">total</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">loadProgressBar</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">setupStartProgress</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">instance</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">config</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">NProgress</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span>
+      <span class="k">return</span> <span class="nx">config</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="nx">setupUpdateProgress</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">update</span> <span class="o">=</span> <span class="p">(</span><span class="na">e</span><span class="p">:</span> <span class="nx">ProgressEvent</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+      <span class="nx">NProgress</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">calculatePercentage</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">loaded</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">total</span><span class="p">))</span>
+    <span class="p">}</span>
+    <span class="nx">instance</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">onDownloadProgress</span> <span class="o">=</span> <span class="nx">update</span>
+    <span class="nx">instance</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">onUploadProgress</span> <span class="o">=</span> <span class="nx">update</span>
+  <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="nx">setupStopProgress</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">instance</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">response</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">NProgress</span><span class="p">.</span><span class="nx">done</span><span class="p">()</span>
+      <span class="k">return</span> <span class="nx">response</span>
+    <span class="p">},</span> <span class="nx">error</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">NProgress</span><span class="p">.</span><span class="nx">done</span><span class="p">()</span>
+      <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+
+  <span class="nx">setupStartProgress</span><span class="p">()</span>
+  <span class="nx">setupUpdateProgress</span><span class="p">()</span>
+  <span class="nx">setupStopProgress</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="nx">loadProgressBar</span><span class="p">()</span>
+
+<span class="kd">const</span> <span class="nx">downloadEl</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">download</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">downloadEl</span><span class="o">!</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="nx">e</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">instance</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://img.mukewang.com/5cc01a7b0001a33718720632.jpg</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="kd">const</span> <span class="nx">uploadEl</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">upload</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">uploadEl</span><span class="o">!</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="nx">e</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">()</span>
+  <span class="kd">const</span> <span class="nx">fileEl</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">file</span><span class="dl">'</span><span class="p">)</span> <span class="k">as</span> <span class="nx">HTMLInputElement</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">fileEl</span><span class="p">.</span><span class="nx">files</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">data</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="dl">'</span><span class="s1">file</span><span class="dl">'</span><span class="p">,</span> <span class="nx">fileEl</span><span class="p">.</span><span class="nx">files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="nx">instance</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/upload</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>对于 <code class="language-plaintext highlighter-rouge">progress</code> 事件参数 <code class="language-plaintext highlighter-rouge">e</code>，会有 <code class="language-plaintext highlighter-rouge">e.total</code> 和 <code class="language-plaintext highlighter-rouge">e.loaded</code> 属性，表示进程总体的工作量和已经执行的工作量，我们可以根据这 2 个值算出当前进度，然后通过 <code class="language-plaintext highlighter-rouge">Nprogess.set</code> 设置。另外，我们通过配置请求拦截器和响应拦截器执行 <code class="language-plaintext highlighter-rouge">NProgress.start()</code> 和 <code class="language-plaintext highlighter-rouge">NProgress.done()</code>。</p>
+
+<p>我们给下载按钮绑定了一个 <code class="language-plaintext highlighter-rouge">click</code> 事件，请求一张图片，我们可以看到实时的进度；另外我们也给上传按钮绑定了一个 <code class="language-plaintext highlighter-rouge">click</code> 事件，上传我们选择的文件，同样也能看到实时进度。</p>
+
+<p>在服务端，我们为了处理上传请求，需要下载安装一个 <code class="language-plaintext highlighter-rouge">express</code> 的中间件 <code class="language-plaintext highlighter-rouge">connect-multiparty</code>，然后使用它。</p>
+
+<p><code class="language-plaintext highlighter-rouge">example/server.js</code>：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">multipart</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">connect-multiparty</span><span class="dl">'</span><span class="p">)</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">multipart</span><span class="p">({</span>
+  <span class="na">uploadDir</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">upload-file</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">}))</span>
+
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/upload</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">files</span><span class="p">)</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="dl">'</span><span class="s1">upload success!</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>这里我们需要在 <code class="language-plaintext highlighter-rouge">examples</code> 目录下创建一个 <code class="language-plaintext highlighter-rouge">upload-file</code> 的空目录，用于存放上传的文件。</p>
+
+<p>通过这个中间件，我们就可以处理上传请求并且可以把上传的文件存储在 <code class="language-plaintext highlighter-rouge">upload-file</code> 目录下。</p>
+
+<p>为了保证代码正常运行，我们还需要在 <code class="language-plaintext highlighter-rouge">examples/webpack.config.js</code> 中添加 <code class="language-plaintext highlighter-rouge">css-loader</code> 和 <code class="language-plaintext highlighter-rouge">css-loader</code>，不要忘记先安装它们。</p>
+
+<p>至此，<code class="language-plaintext highlighter-rouge">ts-axios</code> 支持了上传下载进度事件的回调函数的配置，用户可以通过配置这俩函数实现对下载进度和上传进度的监控。下一节课我们来实现 http 的认证授权功能。</p>

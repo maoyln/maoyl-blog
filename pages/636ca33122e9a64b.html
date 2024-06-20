@@ -1,0 +1,97 @@
+<h1 id="动态组件与-v-once-指令">动态组件与 v-once 指令</h1>
+
+<h2 id="动态组件">动态组件</h2>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"root"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;component</span> <span class="na">:is=</span><span class="s">"type"</span><span class="nt">&gt;&lt;/component&gt;</span> <span class="c">&lt;!--其效果如同下面两行被注释的代码--&gt;</span>
+	<span class="c">&lt;!-- &lt;child-one v-if="type === 'child-one'"&gt;&lt;/child-one&gt;
+	    &lt;child-two v-if="type === 'child-two'"&gt;&lt;/child-two&gt; --&gt;</span>
+	<span class="nt">&lt;button</span> <span class="err">@</span><span class="na">click=</span><span class="s">"handleClick"</span><span class="nt">&gt;</span>change<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+    <span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="dl">'</span><span class="s1">child-one</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;div&gt;child-one&lt;/div&gt;</span><span class="dl">'</span>
+    <span class="p">})</span>
+    <span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="dl">'</span><span class="s1">child-two</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;div&gt;child-two&lt;/div&gt;</span><span class="dl">'</span>
+    <span class="p">})</span>
+
+    <span class="kd">var</span> <span class="nx">vm</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+        <span class="na">el</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#root</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">child-one</span><span class="dl">'</span>
+        <span class="p">},</span>
+        <span class="na">methods</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nx">handleClick</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">child-one</span><span class="dl">'</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">child-two</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">child-one</span><span class="dl">'</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p>上面代码中，点击按钮在两个组件间切换，可使用<code class="language-plaintext highlighter-rouge">&lt;component&gt;</code>标签并绑定<code class="language-plaintext highlighter-rouge">:is</code>为动态组件名。</p>
+
+<h3 id="动态组件-demo">动态组件 demo</h3>
+
+<p class="codepen" data-height="300" data-theme-id="light" data-default-tab="js,result" data-user="xugaoyi" data-slug-hash="YzXqNMO" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="动态组件">
+  <span>See the Pen <a href="https://codepen.io/xugaoyi/pen/YzXqNMO">
+  动态组件</a> by xugaoyi (<a href="https://codepen.io/xugaoyi">@xugaoyi</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async="" src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<h2 id="v-once-指令">v-once 指令</h2>
+
+<ul>
+  <li>
+    <p><strong>不需要表达式</strong></p>
+  </li>
+  <li>
+    <p><strong>详细</strong>：</p>
+
+    <p>只渲染元素和组件<strong>一次</strong>。随后的重新渲染，元素/组件及其所有的子节点将被视为静态内容并跳过。这可以用于优化更新性能。</p>
+
+    <div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- 单个元素 --&gt;</span>
+<span class="nt">&lt;span</span> <span class="na">v-once</span><span class="nt">&gt;</span>This will never change: <span class="nt">&lt;/span&gt;</span>
+<span class="c">&lt;!-- 有子元素 --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">v-once</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>comment<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;p&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="c">&lt;!-- 组件 --&gt;</span>
+<span class="nt">&lt;my-component</span> <span class="na">v-once</span> <span class="na">:comment=</span><span class="s">"msg"</span><span class="nt">&gt;&lt;/my-component&gt;</span>
+<span class="c">&lt;!-- `v-for` 指令--&gt;</span>
+<span class="nt">&lt;ul&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">v-for=</span><span class="s">"i in list"</span> <span class="na">v-once</span><span class="nt">&gt;&lt;/li&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>参考</strong>：</p>
+
+    <ul>
+      <li><a href="https://cn.vuejs.org/v2/guide/syntax.html#插值">数据绑定语法- 插值</a></li>
+      <li><a href="https://cn.vuejs.org/v2/guide/components-edge-cases.html#通过-v-once-创建低开销的静态组件">组件 - 对低开销的静态组件使用 <code class="language-plaintext highlighter-rouge">v-once</code></a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="通过-v-once-创建低开销的静态组件">通过 <code class="language-plaintext highlighter-rouge">v-once</code> 创建低开销的静态组件</h3>
+
+<p>渲染普通的 HTML 元素在 Vue 中是非常快速的，但有的时候你可能有一个组件，这个组件包含了<strong>大量</strong>静态内容。在这种情况下，你可以在根元素上添加 <code class="language-plaintext highlighter-rouge">v-once</code> attribute 以确保这些内容只计算一次然后缓存起来，就像这样：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="dl">'</span><span class="s1">terms-of-service</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;div v-once&gt;
+      &lt;h1&gt;Terms of Service&lt;/h1&gt;
+      ... a lot of static content ...
+    &lt;/div&gt;
+  `</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>:::danger
+再说一次，试着不要过度使用这个模式。当你需要渲染大量静态内容时，极少数的情况下它会给你带来便利，除非你非常留意渲染变慢了，不然它完全是没有必要的——再加上它在后期会带来很多困惑。例如，设想另一个开发者并不熟悉 <code class="language-plaintext highlighter-rouge">v-once</code> 或漏看了它在模板中，他们可能会花很多个小时去找出模板为什么无法正确更新。</p>
+
+<p>:::</p>
