@@ -1,0 +1,177 @@
+<h3 id="什么是事件委托事件代理呢">什么是事件委托（事件代理）呢？</h3>
+
+<p><code class="language-plaintext highlighter-rouge">在JavaScript高级程序设计解释:</code>
+事件委托就是利用事件冒泡，只指定一个事件处理程序，就可以管理某一类型的所有事件。</p>
+
+<h3 id="事件委托的原理">事件委托的原理</h3>
+
+<p><code class="language-plaintext highlighter-rouge">事件委托是利用事件的冒泡原理来实现的:</code>
+何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件，举个例子：页面上有这么一个节点树，div&gt;ul&gt;li&gt;a;比如给最里面的a加一个click点击事件，那么这个事件就会一层一层的往外执行，执行顺序a&gt;li&gt;ul&gt;div，有这样一个机制，那么我们给最外面的div加点击事件，那么里面的ul，li，a做点击事件的时候，都会冒泡到最外层的div上，所以都会触发，这就是事件委托，委托它们父级代为执行事件。</p>
+
+<h3 id="事件委托的优点">事件委托的优点</h3>
+<ul>
+  <li>管理的函数变少了。不需要为每个元素都添加监听函数。对于同一个父节点下面类似的子元素，可以通过委托给父元素的监听函数来处理事件</li>
+  <li>可以方便地动态添加和修改元素，不需要因为元素的改动而修改事件绑定</li>
+  <li>JavaScript和DOM节点之间的关联变少了，这样也就减少了因循环引用而带来的内存泄漏发生的概率</li>
+</ul>
+
+<h3 id="事件委托的缺点">事件委托的缺点</h3>
+<p>事件代理的常用应用应该仅限于上述需求，如果把所有事件都用事件代理，可能会出现事件误判。即本不该被触发的事件被绑定上了事件。</p>
+
+<h3 id="代码实践">代码实践</h3>
+
+<p>::: demo [vanilla]</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"ul-box"</span><span class="na">id=</span><span class="s">"ul-box"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;li&gt;</span>形成天才的决定因素应该是勤奋。郭沫若。<span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;</span>学习很多东西的诀窍是不要一次学习很多东西。洛克。<span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;</span>知道自己的鞋子在哪里。西班牙。<span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;</span>我们唯一不会纠正的缺点就是弱。拉罗什福科。<span class="nt">&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+  
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"btn-box"</span> <span class="na">id=</span><span class="s">"btn-box"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">class=</span><span class="s">"btn add-btn"</span><span class="na">id=</span><span class="s">"add"</span> <span class="na">value=</span><span class="s">"添加"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">class=</span><span class="s">"btn remove-btn"</span> <span class="na">id=</span><span class="s">"remove"</span> <span class="na">value=</span><span class="s">"删除"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;script&gt;</span>
+    <span class="kd">let</span> <span class="nx">mrmy</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="dl">'</span><span class="s1">形成天才的决定因素应该是勤奋。郭沫若。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">学习很多东西的诀窍是不要一次学习很多东西。洛克。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">知道自己的鞋子在哪里。西班牙。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">我们唯一不会纠正的缺点就是弱。拉罗什福科。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">我这个人走得很慢，但我从不退步。亚伯拉罕林肯。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">不要问成功的秘诀，尽全力做你应该做的事。美华纳。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">学而不思则无视，思而不学则危险。孔子。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">学问异常珍贵，从任何源泉吸收都不可耻。阿卜日法拉兹。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">只有在人群中间，才能认识自己。德国。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">优秀的人的一大优点是在不利和困难的遭遇中百折不饶。贝多芬。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">自己的饮食量自己知道。苏联。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">如果我们接受最坏的东西，就没有损失。卡内基。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">书到使用为止恨少，事情不难。陆游。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">书籍将我们引入最美好的社会，让我们认识每个时代的伟大智者。史美尔斯。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">熟读唐诗三百首，不作诗也会吟。孙浆。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">谁和我一样学习，谁和我一样成功。莫扎特。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">要掌握书，不要为生而读，不要为读。布尔沃。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">要知道对好事的称赞过于夸张，也会引起人们的反感蔑视和嫉妒。培根。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">工作勤奋，荒废的行为是思考，随行破坏。韩愈。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">一切节约归结为时间节约。马克思。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">意志的命运往往背道而驰，决心到最后全部推倒。莎士比亚。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">学习是劳动，是充满思想的劳动。乌申斯基。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">不可能让整个人生舒适愉快。因为人类必须有应对逆境的态度。卢梭。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">把抱怨环境的心态，化为上进的力量，才是成功的保证。罗曼罗兰。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">知者不如好者，好者不如乐者。孔子。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">勇敢、大胆、坚定的决心可以抵抗武器的精良。达芬奇。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">意志是强烈的盲人，靠着明亮的跛子肩膀。叔叔本华。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">永远躺在泥坑里的人，才不会再掉进坑里。黑格尔。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">希望的灯熄灭后，生活瞬间变成了黑暗。普利姆昌德。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">希望是人生的保姆。科策布。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">天下的事情经常陷入困境，输给奢侈。陆游。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">生命不等于呼吸，生命是活动。卢梭。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">伟大的事业，需要决心、能力、组织和责任感。易于生活。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">唯一的书是不朽的。乔。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">为中华崛起读书。周恩来。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">书不仅是生活，更是现在、过去和未来文化生活的源泉。库法耶夫。</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">生命不可能有两次，但很多人连一次都不擅长度过。吕凯特。</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">];</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+      <span class="kd">var</span> <span class="nx">addBtn</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">add</span><span class="dl">'</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">removeBtn</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">remove</span><span class="dl">'</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">oUl</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">ul-box</span><span class="dl">'</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">aLi</span> <span class="o">=</span> <span class="nx">oUl</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="dl">'</span><span class="s1">li</span><span class="dl">'</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">num</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+      
+      <span class="c1">//事件委托，添加的子元素也有事件</span>
+      <span class="nx">oUl</span><span class="p">.</span><span class="nx">onmouseover</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ev</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">ev</span> <span class="o">=</span> <span class="nx">ev</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">event</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">target</span> <span class="o">=</span> <span class="nx">ev</span><span class="p">.</span><span class="nx">target</span> <span class="o">||</span> <span class="nx">ev</span><span class="p">.</span><span class="nx">srcElement</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">target</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">li</span><span class="dl">'</span><span class="p">){</span>
+          <span class="nx">target</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">background</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">linear-gradient(45deg, #0081ff, #1cbbb4)</span><span class="dl">'</span><span class="p">;</span>
+          <span class="nx">target</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">fontSize</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">22px</span><span class="dl">'</span><span class="p">;</span>
+          <span class="nx">target</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">#9000ff</span><span class="dl">'</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+      <span class="c1">// 鼠标移出</span>
+      <span class="nx">oUl</span><span class="p">.</span><span class="nx">onmouseout</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ev</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">ev</span> <span class="o">=</span> <span class="nx">ev</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">event</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">target</span> <span class="o">=</span> <span class="nx">ev</span><span class="p">.</span><span class="nx">target</span> <span class="o">||</span> <span class="nx">ev</span><span class="p">.</span><span class="nx">srcElement</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">target</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">li</span><span class="dl">'</span><span class="p">){</span>
+          <span class="nx">target</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">background</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">rgba(0, 0, 0, 0)</span><span class="dl">'</span><span class="p">;</span>
+          <span class="nx">target</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">fontSize</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">20px</span><span class="dl">'</span><span class="p">;</span>
+          <span class="nx">target</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">#0000ff</span><span class="dl">'</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+      
+      <span class="c1">//添加新节点</span>
+      <span class="nx">addBtn</span><span class="p">.</span><span class="nx">onclick</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">num</span> <span class="o">&gt;=</span> <span class="nx">mrmy</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">就这点墨水！！！</span><span class="dl">'</span><span class="p">);</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">num</span><span class="o">++</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">oLi</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="dl">'</span><span class="s1">li</span><span class="dl">'</span><span class="p">);</span>
+        <span class="nx">oLi</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">mrmy</span><span class="p">[</span><span class="nx">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+        <span class="nx">oUl</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">oLi</span><span class="p">);</span>
+      <span class="p">};</span>
+
+      <span class="c1">//删除新节点</span>
+      <span class="nx">removeBtn</span><span class="p">.</span><span class="nx">onclick</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!!!</span><span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">删除上瘾？ 赶紧添加个个吧</span><span class="dl">'</span><span class="p">);</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">num</span><span class="o">--</span><span class="p">;</span>
+        <span class="nx">oUl</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">oUl</span><span class="p">.</span><span class="nx">lastElementChild</span><span class="p">);</span>
+      <span class="p">};</span>
+    <span class="p">}</span>
+  <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;style&gt;</span>
+    <span class="nc">.container</span> <span class="p">{</span>
+      <span class="nl">background</span><span class="p">:</span> <span class="sx">url('/img/e54589e7c44a801219c7729e.jpeg')</span><span class="p">;</span>
+      <span class="nl">background-size</span><span class="p">:</span> <span class="n">cover</span><span class="p">;</span>
+      <span class="nl">background-attachment</span><span class="p">:</span> <span class="nb">fixed</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nc">.ul-box</span> <span class="p">{</span>
+      <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+      <span class="nl">background</span><span class="p">:</span> <span class="n">rgba</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nc">.ul-box</span> <span class="o">&gt;</span> <span class="nt">li</span> <span class="p">{</span>
+      <span class="nl">list-style-type</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+      <span class="nl">box-sizing</span><span class="p">:</span> <span class="n">border-box</span><span class="p">;</span>
+      <span class="nl">color</span><span class="p">:</span> <span class="m">#0000ff</span><span class="p">;</span>
+      <span class="nl">text-shadow</span><span class="p">:</span> <span class="m">#6739b6</span> <span class="m">3px</span> <span class="m">4px</span> <span class="m">5px</span><span class="p">;</span>
+      <span class="nl">font-size</span><span class="p">:</span> <span class="m">20px</span><span class="p">;</span>
+      <span class="nl">line-height</span><span class="p">:</span> <span class="m">1.1em</span><span class="p">;</span>
+      <span class="nl">letter-spacing</span><span class="p">:</span> <span class="m">3px</span><span class="p">;</span>
+      <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+      <span class="nl">padding</span><span class="p">:</span> <span class="m">5px</span><span class="p">;</span>
+      <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span> <span class="m">25px</span> <span class="m">0</span> <span class="m">-10px</span><span class="p">;</span>
+      <span class="nl">border-radius</span><span class="p">:</span> <span class="m">20px</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nc">.btn-box</span> <span class="p">{</span>
+      <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+      <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nc">.btn-box</span> <span class="nc">.btn</span> <span class="p">{</span>
+      <span class="nl">color</span><span class="p">:</span> <span class="m">#fff</span><span class="p">;</span>
+      <span class="nl">border-color</span><span class="p">:</span> <span class="m">#1890ff</span><span class="p">;</span>
+      <span class="nl">background</span><span class="p">:</span> <span class="m">#1890ff</span><span class="p">;</span>
+      <span class="nl">text-shadow</span><span class="p">:</span> <span class="m">0</span> <span class="m">-1px</span> <span class="m">0</span> <span class="nb">rgb</span><span class="p">(</span><span class="m">0</span> <span class="m">0</span> <span class="m">0</span> <span class="p">/</span> <span class="m">12%</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nc">.btn-box</span> <span class="nc">.add-btn</span> <span class="p">{</span>
+      <span class="nl">border-color</span><span class="p">:</span> <span class="m">#1890ff</span><span class="p">;</span>
+      <span class="nl">background</span><span class="p">:</span> <span class="m">#1890ff</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nc">.btn-box</span> <span class="nc">.remove-btn</span> <span class="p">{</span>
+      <span class="nl">border-color</span><span class="p">:</span> <span class="m">#ff4d4f</span><span class="p">;</span>
+      <span class="nl">background</span><span class="p">:</span> <span class="m">#ff4d4f</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<p>:::</p>

@@ -1,0 +1,54 @@
+<h1 id="公共滚动条样式继承">公共滚动条样式(继承)</h1>
+
+<p>项目中很多需要滚动条的地方，为了样式统一、代码简洁。所以对滚动条进行了封装，使用的时候用集成的方式</p>
+
+<h3 id="代码">代码</h3>
+
+<h6 id="封装">封装</h6>
+<div class="language-scss highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// scrollbar.scss</span>
+
+<span class="nv">$theme_main</span><span class="p">:</span> <span class="mh">#2b79ff</span><span class="p">;</span>
+<span class="nv">$scroll_bg</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+<span class="nv">$scroll_width</span><span class="p">:</span> <span class="m">6px</span><span class="p">;</span>
+
+<span class="cm">/* 整个滚动条 */</span>
+<span class="err">.</span><span class="na">scrollbar</span><span class="p">:</span><span class="o">:-</span><span class="n">webkit-scrollbar</span> <span class="p">{</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="nv">$scroll_width</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="nv">$scroll_width</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/* 滚动条轨道 */</span>
+<span class="err">.</span><span class="na">scrollbar</span><span class="p">:</span><span class="o">:-</span><span class="n">webkit-scrollbar-track</span> <span class="p">{</span>
+  <span class="na">-webkit-box-shadow</span><span class="p">:</span> <span class="nb">inset</span> <span class="m">0</span> <span class="m">0</span> <span class="nv">$scroll_width</span> <span class="nv">$scroll_bg</span><span class="p">;</span>
+  <span class="nl">box-shadow</span><span class="p">:</span> <span class="nb">inset</span> <span class="m">0</span> <span class="m">0</span> <span class="nv">$scroll_width</span> <span class="nv">$scroll_bg</span><span class="p">;</span>
+  <span class="na">-webkit-border-radius</span><span class="p">:</span> <span class="nv">$scroll_width</span><span class="p">;</span>
+  <span class="nl">border-radius</span><span class="p">:</span> <span class="nv">$scroll_width</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/* 滚动条上的滚动滑块 */</span>
+<span class="err">.</span><span class="na">scrollbar</span><span class="p">:</span><span class="o">:-</span><span class="n">webkit-scrollbar-thumb</span> <span class="p">{</span>
+  <span class="nl">background</span><span class="p">:</span> <span class="nf">rgba</span><span class="p">(</span><span class="nv">$theme_main</span><span class="o">,</span> <span class="m">0</span><span class="mi">.5</span><span class="p">);</span>
+  <span class="nl">border-radius</span><span class="p">:</span> <span class="nv">$scroll_width</span><span class="p">;</span>
+  <span class="k">&amp;</span><span class="nd">:hover</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nf">rgba</span><span class="p">(</span><span class="nv">$theme_main</span><span class="o">,</span> <span class="m">0</span><span class="mi">.8</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="cm">/* 滚动条上的按钮 (上下箭头) */</span>
+<span class="err">.</span><span class="na">scrollbar</span><span class="p">:</span><span class="o">:-</span><span class="n">webkit-scrollbar-button</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/* 当同时有垂直滚动条和水平滚动条时交汇的部分 */</span>
+<span class="err">.</span><span class="na">scrollbar</span><span class="p">:</span><span class="o">:-</span><span class="n">webkit-scrollbar-corner</span> <span class="p">{</span>
+  <span class="nl">background</span><span class="p">:</span> <span class="nv">$scroll_bg</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h6 id="使用">使用</h6>
+
+<pre><code class="language-less">@import '../../../../assets/styles/scrollbar.scss';
+.custom-item-box-body {
+  margin-top: 34px;
+  width: 100%;
+  height: calc(100% - 34px);
+  overflow: auto;
+  @extend .scrollbar;
+}
+</code></pre>

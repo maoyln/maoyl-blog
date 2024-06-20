@@ -1,0 +1,311 @@
+<h1 id="常用git命令清单">常用Git命令清单</h1>
+
+<p>一般来说，日常使用只要记住下图6个命令，就可以了。但是熟练使用，恐怕要记住60～100个命令。</p>
+
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015120901.png" alt="img" /></p>
+
+<p>下面是我整理的常用 Git 命令清单。几个专用名词的译名如下。</p>
+
+<blockquote>
+  <ul>
+    <li>Workspace：工作区</li>
+    <li>Index / Stage：暂存区</li>
+    <li>Repository：仓库区（或本地仓库）</li>
+    <li>Remote：远程仓库</li>
+  </ul>
+</blockquote>
+
+<h2 id="一新建代码库">一、新建代码库</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 在当前目录新建一个Git代码库</span>
+<span class="nv">$ </span>git init
+
+<span class="c"># 新建一个目录，将其初始化为Git代码库</span>
+<span class="nv">$ </span>git init <span class="o">[</span>project-name]
+
+<span class="c"># 下载一个项目和它的整个代码历史</span>
+<span class="nv">$ </span>git clone <span class="o">[</span>url]
+</code></pre></div></div>
+
+<h2 id="二配置">二、配置</h2>
+
+<p>Git的设置文件为<code class="language-plaintext highlighter-rouge">.gitconfig</code>，它可以在用户主目录下（全局配置），也可以在项目目录下（项目配置）。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 显示当前的Git配置</span>
+<span class="nv">$ </span>git config <span class="nt">--list</span>
+
+<span class="c"># 编辑Git配置文件</span>
+<span class="nv">$ </span>git config <span class="nt">-e</span> <span class="o">[</span><span class="nt">--global</span><span class="o">]</span>
+
+<span class="c"># 设置提交代码时的用户信息</span>
+<span class="nv">$ </span>git config <span class="o">[</span><span class="nt">--global</span><span class="o">]</span> user.name <span class="s2">"[name]"</span>
+<span class="nv">$ </span>git config <span class="o">[</span><span class="nt">--global</span><span class="o">]</span> user.email <span class="s2">"[email address]"</span>
+</code></pre></div></div>
+
+<h2 id="三增加删除文件">三、增加/删除文件</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 添加指定文件到暂存区</span>
+<span class="nv">$ </span>git add <span class="o">[</span>file1] <span class="o">[</span>file2] ...
+
+<span class="c"># 添加指定目录到暂存区，包括子目录</span>
+<span class="nv">$ </span>git add <span class="o">[</span><span class="nb">dir</span><span class="o">]</span>
+
+<span class="c"># 添加当前目录的所有文件到暂存区</span>
+<span class="nv">$ </span>git add <span class="nb">.</span>
+
+<span class="c"># 添加每个变化前，都会要求确认</span>
+<span class="c"># 对于同一个文件的多处变化，可以实现分次提交</span>
+<span class="nv">$ </span>git add <span class="nt">-p</span>
+
+<span class="c"># 删除工作区文件，并且将这次删除放入暂存区</span>
+<span class="nv">$ </span>git <span class="nb">rm</span> <span class="o">[</span>file1] <span class="o">[</span>file2] ...
+
+<span class="c"># 停止追踪指定文件，但该文件会保留在工作区</span>
+<span class="nv">$ </span>git <span class="nb">rm</span> <span class="nt">--cached</span> <span class="o">[</span>file]
+
+<span class="c"># 改名文件，并且将这个改名放入暂存区</span>
+<span class="nv">$ </span>git <span class="nb">mv</span> <span class="o">[</span>file-original] <span class="o">[</span>file-renamed]
+</code></pre></div></div>
+
+<h2 id="四代码提交">四、代码提交</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 提交暂存区到仓库区</span>
+<span class="nv">$ </span>git commit <span class="nt">-m</span> <span class="o">[</span>message]
+
+<span class="c"># 提交暂存区的指定文件到仓库区</span>
+<span class="nv">$ </span>git commit <span class="o">[</span>file1] <span class="o">[</span>file2] ... <span class="nt">-m</span> <span class="o">[</span>message]
+
+<span class="c"># 提交工作区自上次commit之后的变化，直接到仓库区</span>
+<span class="nv">$ </span>git commit <span class="nt">-a</span>
+
+<span class="c"># 提交时显示所有diff信息</span>
+<span class="nv">$ </span>git commit <span class="nt">-v</span>
+
+<span class="c"># 使用一次新的commit，替代上一次提交</span>
+<span class="c"># 如果代码没有任何新变化，则用来改写上一次commit的提交信息</span>
+<span class="nv">$ </span>git commit <span class="nt">--amend</span> <span class="nt">-m</span> <span class="o">[</span>message]
+
+<span class="c"># 重做上一次commit，并包括指定文件的新变化</span>
+<span class="nv">$ </span>git commit <span class="nt">--amend</span> <span class="o">[</span>file1] <span class="o">[</span>file2] ...
+</code></pre></div></div>
+
+<h2 id="五分支">五、分支</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 列出所有本地分支</span>
+<span class="nv">$ </span>git branch
+
+<span class="c"># 列出所有远程分支</span>
+<span class="nv">$ </span>git branch <span class="nt">-r</span>
+
+<span class="c"># 列出所有本地分支和远程分支</span>
+<span class="nv">$ </span>git branch <span class="nt">-a</span>
+
+<span class="c"># 新建一个分支，但依然停留在当前分支</span>
+<span class="nv">$ </span>git branch <span class="o">[</span>branch-name]
+
+<span class="c"># 新建一个分支，并切换到该分支</span>
+<span class="nv">$ </span>git checkout <span class="nt">-b</span> <span class="o">[</span>branch]
+
+<span class="c"># 新建一个分支，指向指定commit</span>
+<span class="nv">$ </span>git branch <span class="o">[</span>branch] <span class="o">[</span>commit]
+
+<span class="c"># 新建一个分支，与指定的远程分支建立追踪关系</span>
+<span class="nv">$ </span>git branch <span class="nt">--track</span> <span class="o">[</span>branch] <span class="o">[</span>remote-branch]
+
+<span class="c"># 切换到指定分支，并更新工作区</span>
+<span class="nv">$ </span>git checkout <span class="o">[</span>branch-name]
+
+<span class="c"># 切换到上一个分支</span>
+<span class="nv">$ </span>git checkout -
+
+<span class="c"># 建立追踪关系，在现有分支与指定的远程分支之间</span>
+<span class="nv">$ </span>git branch <span class="nt">--set-upstream</span> <span class="o">[</span>branch] <span class="o">[</span>remote-branch]
+
+<span class="c"># 合并指定分支到当前分支</span>
+<span class="nv">$ </span>git merge <span class="o">[</span>branch]
+
+<span class="c"># 选择一个commit，合并进当前分支</span>
+<span class="nv">$ </span>git cherry-pick <span class="o">[</span>commit]
+
+<span class="c"># 删除分支</span>
+<span class="nv">$ </span>git branch <span class="nt">-d</span> <span class="o">[</span>branch-name]
+
+<span class="c"># 删除远程分支</span>
+<span class="nv">$ </span>git push origin <span class="nt">--delete</span> <span class="o">[</span>branch-name]
+<span class="nv">$ </span>git branch <span class="nt">-dr</span> <span class="o">[</span>remote/branch]
+</code></pre></div></div>
+
+<h2 id="六标签">六、标签</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 列出所有tag</span>
+<span class="nv">$ </span>git tag
+
+<span class="c"># 新建一个tag在当前commit</span>
+<span class="nv">$ </span>git tag <span class="o">[</span>tag]
+
+<span class="c"># 新建一个tag在指定commit</span>
+<span class="nv">$ </span>git tag <span class="o">[</span>tag] <span class="o">[</span>commit]
+
+<span class="c"># 删除本地tag</span>
+<span class="nv">$ </span>git tag <span class="nt">-d</span> <span class="o">[</span>tag]
+
+<span class="c"># 删除远程tag</span>
+<span class="nv">$ </span>git push origin :refs/tags/[tagName]
+
+<span class="c"># 查看tag信息</span>
+<span class="nv">$ </span>git show <span class="o">[</span>tag]
+
+<span class="c"># 提交指定tag</span>
+<span class="nv">$ </span>git push <span class="o">[</span>remote] <span class="o">[</span>tag]
+
+<span class="c"># 提交所有tag</span>
+<span class="nv">$ </span>git push <span class="o">[</span>remote] <span class="nt">--tags</span>
+
+<span class="c"># 新建一个分支，指向某个tag</span>
+<span class="nv">$ </span>git checkout <span class="nt">-b</span> <span class="o">[</span>branch] <span class="o">[</span>tag]
+</code></pre></div></div>
+
+<h2 id="七查看信息">七、查看信息</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 显示有变更的文件</span>
+<span class="nv">$ </span>git status
+
+<span class="c"># 显示当前分支的版本历史</span>
+<span class="nv">$ </span>git log
+
+<span class="c"># 显示commit历史，以及每次commit发生变更的文件</span>
+<span class="nv">$ </span>git log <span class="nt">--stat</span>
+
+<span class="c"># 搜索提交历史，根据关键词</span>
+<span class="nv">$ </span>git log <span class="nt">-S</span> <span class="o">[</span>keyword]
+
+<span class="c"># 显示某个commit之后的所有变动，每个commit占据一行</span>
+<span class="nv">$ </span>git log <span class="o">[</span>tag] HEAD <span class="nt">--pretty</span><span class="o">=</span>format:%s
+
+<span class="c"># 显示某个commit之后的所有变动，其"提交说明"必须符合搜索条件</span>
+<span class="nv">$ </span>git log <span class="o">[</span>tag] HEAD <span class="nt">--grep</span> feature
+
+<span class="c"># 显示某个文件的版本历史，包括文件改名</span>
+<span class="nv">$ </span>git log <span class="nt">--follow</span> <span class="o">[</span>file]
+<span class="nv">$ </span>git whatchanged <span class="o">[</span>file]
+
+<span class="c"># 显示指定文件相关的每一次diff</span>
+<span class="nv">$ </span>git log <span class="nt">-p</span> <span class="o">[</span>file]
+
+<span class="c"># 显示过去5次提交</span>
+<span class="nv">$ </span>git log <span class="nt">-5</span> <span class="nt">--pretty</span> <span class="nt">--oneline</span>
+
+<span class="c"># 显示所有提交过的用户，按提交次数排序</span>
+<span class="nv">$ </span>git shortlog <span class="nt">-sn</span>
+
+<span class="c"># 显示指定文件是什么人在什么时间修改过</span>
+<span class="nv">$ </span>git blame <span class="o">[</span>file]
+
+<span class="c"># 显示暂存区和工作区的差异</span>
+<span class="nv">$ </span>git diff
+
+<span class="c"># 显示暂存区和上一个commit的差异</span>
+<span class="nv">$ </span>git diff <span class="nt">--cached</span> <span class="o">[</span>file]
+
+<span class="c"># 显示工作区与当前分支最新commit之间的差异</span>
+<span class="nv">$ </span>git diff HEAD
+
+<span class="c"># 显示两次提交之间的差异</span>
+<span class="nv">$ </span>git diff <span class="o">[</span>first-branch]...[second-branch]
+
+<span class="c"># 显示今天你写了多少行代码</span>
+<span class="nv">$ </span>git diff <span class="nt">--shortstat</span> <span class="s2">"@{0 day ago}"</span>
+
+<span class="c"># 显示某次提交的元数据和内容变化</span>
+<span class="nv">$ </span>git show <span class="o">[</span>commit]
+
+<span class="c"># 显示某次提交发生变化的文件</span>
+<span class="nv">$ </span>git show <span class="nt">--name-only</span> <span class="o">[</span>commit]
+
+<span class="c"># 显示某次提交时，某个文件的内容</span>
+<span class="nv">$ </span>git show <span class="o">[</span>commit]:[filename]
+
+<span class="c"># 显示当前分支的最近几次提交</span>
+<span class="nv">$ </span>git reflog
+</code></pre></div></div>
+
+<h2 id="八远程同步">八、远程同步</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 下载远程仓库的所有变动</span>
+<span class="nv">$ </span>git fetch <span class="o">[</span>remote]
+
+<span class="c"># 显示所有远程仓库</span>
+<span class="nv">$ </span>git remote <span class="nt">-v</span>
+
+<span class="c"># 显示某个远程仓库的信息</span>
+<span class="nv">$ </span>git remote show <span class="o">[</span>remote]
+
+<span class="c"># 增加一个新的远程仓库，并命名</span>
+<span class="nv">$ </span>git remote add <span class="o">[</span>shortname] <span class="o">[</span>url]
+
+<span class="c"># 取回远程仓库的变化，并与本地分支合并</span>
+<span class="nv">$ </span>git pull <span class="o">[</span>remote] <span class="o">[</span>branch]
+
+<span class="c"># 上传本地指定分支到远程仓库</span>
+<span class="nv">$ </span>git push <span class="o">[</span>remote] <span class="o">[</span>branch]
+
+<span class="c"># 强行推送当前分支到远程仓库，即使有冲突</span>
+<span class="nv">$ </span>git push <span class="o">[</span>remote] <span class="nt">--force</span>
+
+<span class="c"># 推送所有分支到远程仓库</span>
+<span class="nv">$ </span>git push <span class="o">[</span>remote] <span class="nt">--all</span>
+</code></pre></div></div>
+
+<h2 id="九撤销">九、撤销</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 恢复暂存区的指定文件到工作区</span>
+<span class="nv">$ </span>git checkout <span class="o">[</span>file]
+
+<span class="c"># 恢复某个commit的指定文件到暂存区和工作区</span>
+<span class="nv">$ </span>git checkout <span class="o">[</span>commit] <span class="o">[</span>file]
+
+<span class="c"># 恢复暂存区的所有文件到工作区</span>
+<span class="nv">$ </span>git checkout <span class="nb">.</span>
+
+<span class="c"># 重置暂存区的指定文件，与上一次commit保持一致，但工作区不变</span>
+<span class="nv">$ </span>git reset <span class="o">[</span>file]
+
+<span class="c"># 重置暂存区与工作区，与上一次commit保持一致</span>
+<span class="nv">$ </span>git reset <span class="nt">--hard</span>
+
+<span class="c"># 重置当前分支的指针为指定commit，同时重置暂存区，但工作区不变</span>
+<span class="nv">$ </span>git reset <span class="o">[</span>commit]
+
+<span class="c"># 重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致</span>
+<span class="nv">$ </span>git reset <span class="nt">--hard</span> <span class="o">[</span>commit]
+
+<span class="c"># 重置当前HEAD为指定commit，但保持暂存区和工作区不变</span>
+<span class="nv">$ </span>git reset <span class="nt">--keep</span> <span class="o">[</span>commit]
+
+<span class="c"># 新建一个commit，用来撤销指定commit</span>
+<span class="c"># 后者的所有变化都将被前者抵消，并且应用到当前分支</span>
+<span class="nv">$ </span>git revert <span class="o">[</span>commit]
+
+<span class="c"># 暂时将未提交的变化移除，稍后再移入</span>
+<span class="nv">$ </span>git stash
+<span class="nv">$ </span>git stash pop
+</code></pre></div></div>
+
+<h2 id="十常用操作组合">十、常用操作组合</h2>
+
+<h3 id="1-修改本地分支名和远程分支名">1. 修改本地分支名和远程分支名</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git branch <span class="nt">-m</span> old_branch new_branch <span class="c"># 重命名本地分支</span>
+git push origin :old_branch <span class="c"># 删除远程旧分支（分支名前有冒号）</span>
+git push <span class="nt">--set-upstream</span> origin new_branch <span class="c"># 推送新的分支，并设置本地分支跟踪新的远程分支</span>
+</code></pre></div></div>
+
+<p><strong>相关文章：</strong></p>
+
+<p><a href="http://www.ruanyifeng.com/blog/2019/12/git-undo.html">《如何撤销 Git 操作？》</a></p>
+
+<p><a href="http://www.ruanyifeng.com/blog/2020/04/git-cherry-pick.html">《git cherry-pick 教程》</a> 复制某分支上的部分提交到另一个分支上（相对于可以选择指定提交的 rebase 操作）。</p>
+
+<blockquote>
+  <p>命令清单来源：https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html</p>
+</blockquote>

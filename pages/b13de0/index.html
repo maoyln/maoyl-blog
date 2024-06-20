@@ -1,0 +1,79 @@
+<h1 id="开发利器快速删除一个函数">开发利器：快速删除一个函数</h1>
+
+<p>在之前的练习中，我们曾学习过 <code class="language-plaintext highlighter-rouge">p</code> 这个代指段落的文本对象，所以想到要删除一个函数我们可能会先想到用它来实现，比如 <code class="language-plaintext highlighter-rouge">dap</code> 如此这般；但因为段落的定义是空行之间的内容为不同段落，这在一些情况下无法满足我们删除一个函数的需求，如：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">test</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+  <span class="nx">a</span> <span class="o">=</span> <span class="mi">2</span>
+  
+  <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+  <span class="p">},</span> <span class="mi">500</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>我们可以注意到，在函数内部有一个空行，这时我们在空行的上方或者下方使用 <code class="language-plaintext highlighter-rouge">dap</code>，则只会删除一半的函数。那有没有更好的方法呢？那肯定是有的，不过我们要先来了解一下 <code class="language-plaintext highlighter-rouge">%</code> 命令和 vim-indent-object。</p>
+
+<h2 id="---匹配括号"><code class="language-plaintext highlighter-rouge">%</code> - 匹配括号</h2>
+
+<p>在 vim 中，我们可以通过 <code class="language-plaintext highlighter-rouge">%</code> 来匹配括号，即括号 <code class="language-plaintext highlighter-rouge">()</code>、中括号 <code class="language-plaintext highlighter-rouge">[]</code>、大括号 <code class="language-plaintext highlighter-rouge">{}</code>，当我们的光标在括号上时，我们使用 <code class="language-plaintext highlighter-rouge">%</code> 可以跳到与当前括号成对的另外一个括号上。</p>
+
+<h2 id="vim-indent-object---vim-缩进对象">vim-indent-object - vim 缩进对象</h2>
+
+<p>这个是 vim 自带的一个扩展插件，该插件基于缩进级别定义了一个新的文本对象 <code class="language-plaintext highlighter-rouge">i</code>；即我们可以使用它来基于缩进进行一些操作，如 <code class="language-plaintext highlighter-rouge">&gt;ii</code> 可以把同一个缩进级别的内容全部往右移动一个缩进（中间的 <code class="language-plaintext highlighter-rouge">i</code> 是指 <a href="./06.什么是文本对象.md"><code class="language-plaintext highlighter-rouge">inner</code></a>）。</p>
+
+<h2 id="删除函数">删除函数</h2>
+
+<p>通过我们上面提到的两个指令，我们就可以来研究一下怎么删除一下函数了；对于大部分使用缩进的来规范语法结构的语言如 Python 、JavaScript 等，它们的函数也是有着明显的缩进规律的，这时，我们可以使用 <code class="language-plaintext highlighter-rouge">daI</code> 来实现删除函数，但前提是光标在函数的内部；但如果如下面这种情况：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">const</span> <span class="nx">test1</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+    <span class="nx">a</span> <span class="o">=</span> <span class="mi">11</span>
+    
+    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+    <span class="p">},</span> <span class="mi">500</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="nx">test2</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+    <span class="nx">a</span> <span class="o">=</span> <span class="mi">22</span>
+    
+    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+    <span class="p">},</span> <span class="mi">500</span><span class="p">);</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>如果光标在 test1 或 test2 函数名那一行并使用 <code class="language-plaintext highlighter-rouge">daI</code>，则会把两个函数都删除；因为对于这两个函数来说，它们有同样的缩进级别。当然，在大部分情况下，<code class="language-plaintext highlighter-rouge">daI</code> 都是够用了的；为了让我们用得更顺手一些，我们可以把 <code class="language-plaintext highlighter-rouge">ai</code> 映射成 <code class="language-plaintext highlighter-rouge">aI</code>：</p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">setting.json</code> 中添加设置：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="nl">"vim.operatorPendingModeKeyBindings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"a"</span><span class="p">,</span><span class="w"> </span><span class="s2">"i"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"a"</span><span class="p">,</span><span class="w"> </span><span class="s2">"I"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="err">,</span><span class="w">
+  </span><span class="nl">"vim.visualModeKeyBindings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"a"</span><span class="p">,</span><span class="w"> </span><span class="s2">"i"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"a"</span><span class="p">,</span><span class="w"> </span><span class="s2">"I"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">        
+  </span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>这样我们在可视化模式或者操作待决模式（operator pending mode）时可以直接使用 <code class="language-plaintext highlighter-rouge">i</code> 代替 <code class="language-plaintext highlighter-rouge">I</code>。</p>
+
+<p>而为了弥补上面提到的 vim-indent-object 的短板，我们还可以通过 <code class="language-plaintext highlighter-rouge">%</code> 配合 <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> 来实现删除函数；首先，对于光标在函数名所在行时（如上面提到的例子），我们可以使用 <code class="language-plaintext highlighter-rouge">V</code> 来选中当前行，然后需要把光标移动行末，即 <code class="language-plaintext highlighter-rouge">$</code>，这时光标在花括号上，再键入 <code class="language-plaintext highlighter-rouge">%</code>，这时候就可以选中到函数的闭合符处，最后键入 <code class="language-plaintext highlighter-rouge">d</code>，即可把函数删除；总的指令就是 <code class="language-plaintext highlighter-rouge">V$%d</code>。但是这么长一个命令未免太麻烦，这时我们就可以用 <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> 来映射：</p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">setting.json</code> 中添加设置</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="nl">"vim.normalModeKeyBindings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;Leader&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"d"</span><span class="p">,</span><span class="w"> </span><span class="s2">"f"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"V"</span><span class="p">,</span><span class="w"> </span><span class="s2">"$"</span><span class="p">,</span><span class="w"> </span><span class="s2">"%"</span><span class="p">,</span><span class="w"> </span><span class="s2">"d"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+  </span><span class="p">]</span><span class="err">,</span><span class="w">
+</span></code></pre></div></div>
+
+<p>这样当我们光标在函数名那一行时就可以通过 <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> + <code class="language-plaintext highlighter-rouge">df</code> 来快速删除一个函数了。再加上前面提到的光标在函数内部时的删除命令，基本可以应付大部分的情况了。</p>

@@ -1,0 +1,44 @@
+<h1 id="变化之术替换字符和多文本选中">变化之术：替换字符和多文本选中</h1>
+
+<p>前面学习了 <code class="language-plaintext highlighter-rouge">r</code> <code class="language-plaintext highlighter-rouge">c</code> 等可以修改文本的指令，再配合文本对象可以达到一个“快速”修改文本的效果，这里打双引号是因为，这些学过的修改替换文本，都是单个替换；而实际情况中，我们往往需要一次性修改多个地方的相同字符，比如修改一个变量名、函数名等；今天，我们就来了解一下选中和替换的操作。</p>
+
+<h2 id="替换">替换</h2>
+
+<p>多文本替换的操作指令是 <code class="language-plaintext highlighter-rouge">:substitute</code>，一般直接用 <code class="language-plaintext highlighter-rouge">:s</code>；替换的完整指令公式是：<code class="language-plaintext highlighter-rouge">:[range]s[ubstitute]/{pattern}/{string}/[flags]</code>；</p>
+
+<h3 id="公式">公式</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">[range]</code>：指范围，可以使用如下几个指令：
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">%</code>：匹配全文，建议只记忆这个就可以了，比较常用</li>
+      <li><code class="language-plaintext highlighter-rouge">$</code>：匹配到尾部；并非如 <code class="language-plaintext highlighter-rouge">$s</code> 这样使用，而是搭配下面的数字键，如 <code class="language-plaintext highlighter-rouge">:12,$s/[文本]/[文本]</code>，即匹配从 12 行到页面尾部</li>
+      <li>[number],[number]：匹配从 [number] 行到 [number] 行，如 <code class="language-plaintext highlighter-rouge">:10,12s/[文本]/[文本]</code>，即匹配从 10 行到 12 行</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">{pattern}</code>：正则表达式</li>
+  <li><code class="language-plaintext highlighter-rouge">[flags]</code>：
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">g</code>：匹配所有符合的字符；由于在使用 <code class="language-plaintext highlighter-rouge">s</code> 来匹配字符时，默认是匹配每一行的第一个，所以如果需要匹配所有，则需要加上 <code class="language-plaintext highlighter-rouge">/g</code></li>
+      <li><code class="language-plaintext highlighter-rouge">c</code>：弹出对话框来确认每一个替换</li>
+    </ul>
+  </li>
+  <li>visual mode 下输入 <code class="language-plaintext highlighter-rouge">:</code>，可以注意到命令栏会显示 <code class="language-plaintext highlighter-rouge">:'&lt;,'&gt;</code>，这其实是指从选中区域的开头到选中区域的结尾，相当于给我们划定了一个 [range]，这是我们接着输入 <code class="language-plaintext highlighter-rouge">s</code>，即可以选中文本进行替换
+    <h2 id="多选操作">多选操作</h2>
+  </li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">gb</code> 命令可以选中与我们光标所在的单词相同的且未被选中的第一个单词；比如有：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  number number
+  number
+</code></pre></div></div>
+
+<p>如果我们的光标在第一个 number 里面，并按下 <code class="language-plaintext highlighter-rouge">gb</code>，则会选中第一个 number；如果我们此时再按多一个 <code class="language-plaintext highlighter-rouge">gb</code>，则会选中第二个 number；如此类推。选中多个之后，我们就可以使用 <code class="language-plaintext highlighter-rouge">d</code> <code class="language-plaintext highlighter-rouge">c</code> 等命令来多光标修改了。</p>
+
+<h2 id="练习">练习</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vnode world
+
+vnode hello world
+
+vnode test
+</code></pre></div></div>

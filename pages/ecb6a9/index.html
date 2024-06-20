@@ -1,0 +1,59 @@
+<h1 id="好辅助数字与--的威力">好辅助：数字与 <code class="language-plaintext highlighter-rouge">.</code> 的威力</h1>
+
+<h2 id="数字">数字</h2>
+<p>之前的训练中提到了数字的简单使用，如 <code class="language-plaintext highlighter-rouge">J</code> <code class="language-plaintext highlighter-rouge">K</code> 映射到 <code class="language-plaintext highlighter-rouge">5j</code> <code class="language-plaintext highlighter-rouge">5k</code>，以及使用一些插件 viw.easymotion 来减少数字的使用；这一部分我们会学习数字的使用语法以及为什么我们要减少数字的使用。</p>
+
+<h3 id="语法">语法</h3>
+<p>数字可以让我们快速进行一些重复操作，比如我们需要删除 5 个单词，不使用数字的话我们需要输入 5 次 <code class="language-plaintext highlighter-rouge">dw</code>，但使用数字的话我们可以直接 <code class="language-plaintext highlighter-rouge">5dw</code> 或 <code class="language-plaintext highlighter-rouge">d5w</code> 即可；我们可以看到这两个命令数字在不同位置，一样的命令组合，效果也一样，这跟 vim 数字使用语法有关：</p>
+
+<ul>
+  <li>[数字] + operator + motion：如 <code class="language-plaintext highlighter-rouge">5dw</code> <code class="language-plaintext highlighter-rouge">3fe</code></li>
+  <li>operator + [数字] + motion：如 <code class="language-plaintext highlighter-rouge">d5w</code></li>
+</ul>
+
+<p>:::tip 什么是 motion 和 operator ?
+  motion 可以理解为字符范围，分类如：
+    - words motions
+    <code class="language-plaintext highlighter-rouge">w</code> 移光标至下一词
+    <code class="language-plaintext highlighter-rouge">b</code> 移光标至上一词
+    <code class="language-plaintext highlighter-rouge">e</code> 移光标至词末
+    - Left-right motion
+    <code class="language-plaintext highlighter-rouge">h</code> 光标向左移一字节
+    <code class="language-plaintext highlighter-rouge">l</code> 光标向右移一字节
+    <code class="language-plaintext highlighter-rouge">$</code> 移光标至行末
+    <code class="language-plaintext highlighter-rouge">0</code> 移光标至行首
+    <code class="language-plaintext highlighter-rouge">^</code> 移光标至本行首个非空格的字节
+    - Up-down motions
+    <code class="language-plaintext highlighter-rouge">j</code> 光标向下移一行
+    <code class="language-plaintext highlighter-rouge">k</code> 光标向上移一行
+    <code class="language-plaintext highlighter-rouge">gg</code> 移光标至整个文本的首行首个非空格字节
+    <code class="language-plaintext highlighter-rouge">G</code> 移光标至整个文本最后一行首个非空格字节
+    - Other motions
+    <code class="language-plaintext highlighter-rouge">%</code> 移光标至匹配括号的另一端
+    <code class="language-plaintext highlighter-rouge">H</code> 移光标至窗口第一行
+    <code class="language-plaintext highlighter-rouge">M</code> 移光标至窗口中间一行
+    <code class="language-plaintext highlighter-rouge">L</code> 移光标至窗口最后一行</p>
+
+<p>operator 为操作，如 <code class="language-plaintext highlighter-rouge">d</code> <code class="language-plaintext highlighter-rouge">c</code> <code class="language-plaintext highlighter-rouge">s</code> <code class="language-plaintext highlighter-rouge">x</code> <code class="language-plaintext highlighter-rouge">f</code>，vim 中的增删改查命令都可以理解为 operator
+  :::</p>
+
+<p>### 优点：</p>
+
+<p>使用数字可以让我们的命令历史记录连贯，在做撤销、重做等操作时可以有简洁的历史记录；如 <code class="language-plaintext highlighter-rouge">5dw</code>，撤销的时候一步就会撤销到五个单词删除前而不是要撤销五次</p>
+
+<p>### 缺点：</p>
+
+<p>由于数字键的位置实在偏僻，以及在大多数情况下，我们需要比较长的思考反应时间才能使用到准确的数字达到想要的效果</p>
+
+<h2 id="-命令"><code class="language-plaintext highlighter-rouge">.</code> 命令</h2>
+
+<p><code class="language-plaintext highlighter-rouge">.</code> 的作用是重复上一次的修改操作，这个修改操作是指：</p>
+
+<ul>
+  <li>对字符做了更新（增删改）：如 <code class="language-plaintext highlighter-rouge">d</code> <code class="language-plaintext highlighter-rouge">c</code> <code class="language-plaintext highlighter-rouge">x</code> 之类的</li>
+  <li>离开插入模式之前的按键组合</li>
+</ul>
+
+<p>:::tip 提示
+  能够使用重复的达到效果就不用使用数字，这样有利于留下完整的回退痕迹。
+  :::</p>

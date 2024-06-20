@@ -1,0 +1,133 @@
+<h1 id="react自动放缩组件">react自动放缩组件</h1>
+
+<blockquote>
+  <p>背景：公司有一个大屏展示的项目（1920*1080），该项目被多个产品以iframe的形式内嵌，有时候会出现布局混乱。
+所以需要做一个外部的壳子，根据外部穿进来的宽度，等比放缩该大屏项目，所以做了该功能。</p>
+</blockquote>
+
+<h4 id="代码">代码</h4>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// index.tsx</span>
+
+<span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="dl">'</span><span class="s1">./index.scss</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useImmer</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">use-immer</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Props</span><span class="p">,</span> <span class="nx">ScaleBoxState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./interface</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">ScaleBox</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">props</span><span class="p">:</span> <span class="nx">Props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">width</span> <span class="o">=</span> <span class="mi">1920</span><span class="p">,</span> <span class="nx">height</span> <span class="o">=</span> <span class="mi">1080</span><span class="p">,</span> <span class="nx">children</span><span class="p">,</span> <span class="nx">monitorScaleChange</span><span class="p">,</span> <span class="nx">outsideWidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">outsideHeight</span><span class="o">=</span><span class="mi">0</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">props</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">state</span><span class="p">,</span> <span class="nx">updateState</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useImmer</span><span class="o">&lt;</span><span class="nx">ScaleBoxState</span><span class="o">&gt;</span><span class="p">({</span>
+    <span class="na">scale</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">wrapWidth</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="na">wrapHeight</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">init</span><span class="p">();</span>
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nb">window</span><span class="p">.</span><span class="nx">onresize</span> <span class="o">=</span> <span class="kc">null</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">setScale</span><span class="p">();</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span> <span class="o">+</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">]);</span>
+
+  <span class="kd">const</span> <span class="nx">getScale</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">currentWrapWidth</span> <span class="o">=</span>  <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span> <span class="o">-</span> <span class="nx">outsideWidth</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">currentWrapHeight</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span> <span class="o">-</span> <span class="nx">outsideHeight</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">ww</span> <span class="o">=</span> <span class="nx">currentWrapWidth</span> <span class="o">/</span> <span class="nx">width</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">wh</span> <span class="o">=</span> <span class="nx">currentWrapHeight</span> <span class="o">/</span> <span class="nx">height</span><span class="p">;</span>
+    <span class="nx">updateState</span><span class="p">((</span><span class="nx">draft</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">draft</span><span class="p">.</span><span class="nx">wrapWidth</span> <span class="o">=</span> <span class="nx">currentWrapWidth</span><span class="p">;</span>
+      <span class="nx">draft</span><span class="p">.</span><span class="nx">wrapHeight</span> <span class="o">=</span> <span class="nx">currentWrapHeight</span><span class="p">;</span>
+    <span class="p">})</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">ww</span><span class="p">,</span> <span class="nx">wh</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="nx">setScale</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">scale</span> <span class="o">=</span> <span class="nx">getScale</span><span class="p">();</span>
+    <span class="nx">monitorScaleChange</span><span class="p">(</span><span class="nx">scale</span><span class="p">);</span>
+    <span class="nx">updateState</span><span class="p">((</span><span class="nx">draft</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">draft</span><span class="p">.</span><span class="nx">scale</span> <span class="o">=</span> <span class="nx">scale</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+
+  <span class="kd">const</span> <span class="nx">debounce</span><span class="p">:</span> <span class="nb">Function</span> <span class="o">=</span> <span class="p">(</span><span class="nx">fn</span><span class="p">:</span> <span class="nb">Function</span><span class="p">,</span> <span class="nx">delay</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">500</span><span class="p">):</span> <span class="nb">Function</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="na">timer</span><span class="p">:</span> <span class="kr">any</span>
+    <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">args</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">timer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">timer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">timer</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="nx">fn</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
+      <span class="p">},</span> <span class="nx">delay</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="nx">init</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">wrapWidth</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">state</span><span class="p">.</span><span class="nx">wrapHeight</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">window</span><span class="p">.</span><span class="nx">onresize</span> <span class="o">=</span> <span class="nx">debounce</span><span class="p">(</span><span class="nx">setScale</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"scale-box-wrap"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"scale-box"</span> <span class="na">style</span><span class="p">=</span><span class="si">{</span><span class="p">{</span><span class="na">width</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">width</span><span class="p">}</span><span class="s2">px`</span><span class="p">,</span> <span class="na">height</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">height</span><span class="p">}</span><span class="s2">px`</span><span class="p">,</span> <span class="na">transform</span><span class="p">:</span> <span class="s2">`scale(</span><span class="p">${</span><span class="nx">state</span><span class="p">.</span><span class="nx">scale</span><span class="p">}</span><span class="s2">) translate(-50%, -50%)`</span><span class="p">}</span><span class="si">}</span> <span class="p">&gt;</span>
+        <span class="si">{</span>
+          <span class="nx">children</span>
+        <span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">ScaleBox</span><span class="p">;</span>
+
+</code></pre></div></div>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// interface.ts</span>
+
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">Props</span> <span class="p">{</span>
+  <span class="nl">width</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">wrapWidth</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">wrapHeight</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">children</span><span class="p">?:</span> <span class="kr">any</span><span class="p">;</span>
+  <span class="nl">monitorScaleChange</span><span class="p">?:</span> <span class="nb">Function</span><span class="p">;</span>
+  <span class="nl">outsideWidth</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">outsideHeight</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ScaleBoxState</span> <span class="p">{</span>
+  <span class="nl">scale</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">wrapWidth</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">wrapHeight</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="c1">// tabDom: HTMLElement[];</span>
+  <span class="c1">// barWidth: number;</span>
+  <span class="c1">// barLeft: number;</span>
+  <span class="c1">// isClose: boolean;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<pre><code class="language-less">// index.less
+
+.scale-box-wrap {
+  background-color: #000000;
+  width: 100%;
+  height: 100%;
+}
+.scale-box {
+  display: flex;
+  flex-direction: column;
+  transform-origin: 0 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transition: 0.3s;
+}
+</code></pre>

@@ -1,0 +1,59 @@
+<h1 id="04-hook规则">04. Hook规则</h1>
+
+<p>Hook 本质就是 JavaScript 函数，但是在使用它时需要遵循<strong>两条规则</strong>。我们提供了一个 <a href="https://www.npmjs.com/package/eslint-plugin-react-hooks">linter 插件</a>来强制执行这些规则：</p>
+
+<h2 id="只在最顶层使用-hook">只在最顶层使用 Hook</h2>
+
+<p>不要在循环，条件或嵌套函数中调用 Hook， 确保<strong>总是在你的 React 函数的最顶层以及任何 return 之前调用他们</strong>。遵守这条规则，你就能确保 Hook 在每一次渲染中都按照同样的顺序被调用。</p>
+
+<p>:::tip</p>
+
+<ol>
+  <li>
+    <p>React 怎么知道哪个 state 对应哪个 <code class="language-plaintext highlighter-rouge">useState</code>？答案是 React 靠的是 Hook 调用的顺序</p>
+  </li>
+  <li>
+    <p>如果我们想要有条件地执行一个 effect，可以将判断放到 Hook 的<em>内部</em>：</p>
+  </li>
+</ol>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">useEffect</span><span class="p">(</span><span class="kd">function</span> <span class="nx">persistForm</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 👍 将条件判断放置在 effect 中</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">name</span> <span class="o">!==</span> <span class="dl">''</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="dl">'</span><span class="s1">formData</span><span class="dl">'</span><span class="p">,</span> <span class="nx">name</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+</code></pre></div></div>
+
+<p>:::</p>
+
+<h2 id="只在-react-函数中调用-hook">只在 React 函数中调用 Hook</h2>
+
+<p><strong>不要在普通的 JavaScript 函数中调用 Hook。</strong>你可以：</p>
+
+<ul>
+  <li>✅ 在 React 的函数组件中调用 Hook</li>
+  <li>✅ 在自定义 Hook 中调用其他 Hook</li>
+</ul>
+
+<h2 id="eslint-插件">ESLint 插件</h2>
+
+<p>我们发布了一个名为 <a href="https://www.npmjs.com/package/eslint-plugin-react-hooks"><code class="language-plaintext highlighter-rouge">eslint-plugin-react-hooks</code></a> 的 ESLint 插件来强制执行这两条规则。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install </span>eslint-plugin-react-hooks <span class="nt">--save-dev</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 你的 ESLint 配置</span>
+<span class="p">{</span>
+  <span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="c1">// ...</span>
+    <span class="dl">"</span><span class="s2">react-hooks</span><span class="dl">"</span>
+  <span class="p">],</span>
+  <span class="dl">"</span><span class="s2">rules</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="dl">"</span><span class="s2">react-hooks/rules-of-hooks</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">error</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// 检查 Hook 的规则</span>
+    <span class="dl">"</span><span class="s2">react-hooks/exhaustive-deps</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">warn</span><span class="dl">"</span> <span class="c1">// 检查 effect 的依赖</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+

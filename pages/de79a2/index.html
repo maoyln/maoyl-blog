@@ -1,0 +1,107 @@
+<h1 id="乘胜追击文件与窗口基础操作">乘胜追击：文件与窗口基础操作</h1>
+
+<p>vim 的部分已经结束，相信坚持到这里的朋友基本已经对 vim 有了基本（或更多）的了解，也已经可以在日常的开发中巴适地使用 vim 的操作命令来完成大部分的 coding 工作（如果你也是如我一般认真坚持了 18 天的话；我在到今天为止，在日常的 coding 中百分之 90 的时间双手是在键盘上的，而且随着对键位及快捷键的熟悉，coding 过程中的思维也愈加地集中，不容易被打断）。但是对于 vscode 来说，vim 是服务于或优势于编辑，而更多地对于 vscode 的使用操作，我们当然也是应该去学习、掌握，这样才可以让 vscode 之中 vim 之外的部分使用得更加丝滑。</p>
+
+<p>既然如此，我们就乘胜追击，了解更多关于 vscode 本身的操作命令、快捷键。</p>
+
+<h2 id="窗口焦点切换">窗口焦点切换</h2>
+
+<p>在<a href="../20.vim/15.窗口管理大法.md">之前的课程-15.窗口管理</a>中，我们学习了 vim 的窗口管理的一些命令，当光标在编辑窗口时，我们通过 <code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">ctrl</code> + <code class="language-plaintext highlighter-rouge">h</code> / <code class="language-plaintext highlighter-rouge">l</code> 来使光标在左右窗口移动焦点，不过在使用的过程中这个快捷键还是比较不顺手，毕竟要按三个键，而且 vim 的命令只能在编辑窗使用，如果我们当前焦点在终端这类的时候，就无法使用 vim 的命令切换焦点了；而对于我们日常来说，需要聚焦到侧边的资源管理器的情况是很常有的，我们急需一个更方便好用的组合键达到这个目的；而 vscode 中，其实是有这个快捷键的，就是 <code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">e</code>，既然如此，在结合我们<a href="../20.vim/18.调用vscode命令.md">前面-18.调用vscode命令</a>提到的方式，如此这般，就可以在 <code class="language-plaintext highlighter-rouge">keybindings.json</code> 中映射：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">...</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ctrl+;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"workbench.view.explorer"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">`shift`</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">`command`</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">`e`</span><span class="w"> </span><span class="err">组合键对应的</span><span class="w"> </span><span class="err">命令ID（Command</span><span class="w"> </span><span class="err">ID）</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">...</span><span class="w">
+</span></code></pre></div></div>
+
+<p>这样，我们就可以在任何时候都可以快速地聚焦到资源管理器了。与之相同的，聚焦编辑窗也是与聚焦资源管理器一样甚至更大的需求，同样 vscode 原本也有这个功能的组合键，就是 <code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">1</code> (workbench.action.focusFirstEditorGroup)，我们也可以把它重新映射一下：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ctrl+'"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"workbench.action.focusFirstEditorGroup"</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>这样，我们就可以在任何时候快速聚焦到编辑窗中了。</p>
+
+<p>:::tip 我的做法
+其实配置完 <code class="language-plaintext highlighter-rouge">ctrl</code> + <code class="language-plaintext highlighter-rouge">;</code> 后你会发现，当焦点在资源管理器时，如果使用这个快捷键，焦点会跳到编辑窗，这就意味着我们可以使用这个快捷键在这两个区域切换焦点；这时你可能会问，那终端与其他部分的焦点切换呢？我的做法是不用 vscode 的终端，直接打开自带的命令行工具或自己的其他命令行工具（比如我用 warp），一劳永逸，所有在跑的项目都在同一个地方查看，更方便管理。</p>
+
+<p>去 TM 的终端！
+:::</p>
+
+<h2 id="移动光标与查看">移动光标与查看</h2>
+
+<p>在我们习惯了 vim 的 <code class="language-plaintext highlighter-rouge">hjkl</code> 后，在资源管理器中上下切换文件焦点是很简单并且自然而然的事情。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">jk</code>：上下切换文件焦点</li>
+  <li><code class="language-plaintext highlighter-rouge">h</code>：聚焦当前文件所在的文件夹并且折叠收起该文件夹</li>
+  <li><code class="language-plaintext highlighter-rouge">l</code>：在编辑窗打开该文件</li>
+</ul>
+
+<h2 id="文件操作">文件操作</h2>
+
+<p>在日常使用中，我们常常需要新建文件或者文件夹；而对于我们使用了 vim 的 vscode，又可以分成三个不同的情况：</p>
+
+<ul>
+  <li>聚焦在资源管理器时：此时，我们可以配置个快捷键来新建文件或文件夹，在 <code class="language-plaintext highlighter-rouge">keybindings.json</code> 添加：</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">...</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">新建文件</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"explorer.newFile"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filesExplorerFocus &amp;&amp; !inputFocus"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shift+a"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">新建文件夹</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"explorer.newFolder"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filesExplorerFocus &amp;&amp; !inputFocus"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+</span><span class="err">...</span><span class="w">
+</span></code></pre></div></div>
+
+<p>这里的 <code class="language-plaintext highlighter-rouge">when</code> 条件其实是指：当前的 vscode 焦点要在侧边栏的资源管理器中，且不是在输入框聚焦的情况下；后者是为了限制在编辑文件或文件夹名称时这两快捷键不可触发。</p>
+
+<ul>
+  <li>聚焦在编辑窗时：此时我们可以在 <code class="language-plaintext highlighter-rouge">setting.json</code> 配置如下组合键来达到同样效果：</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"vim.normalModeKeyBindingsNonRecursive"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;Leader&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"d"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"explorer.newFolder"</span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;Leader&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"f"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"explorer.newFile"</span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li>除了以上两种情况时：而除了使用前面两种方式，vscode 也提供一个全局新建文件的命令 <code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">n</code>，这时会新建一个没有扩展名的空白文件，而且只能在保存时才能把文件保存到想要的路径下。</li>
+</ul>
+
+<p>除了新建，删除和重命名也有对应的快捷键（聚焦资源管理器并选中）：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">delete</code>：删除文件</li>
+  <li><code class="language-plaintext highlighter-rouge">enter</code>：重命名文件</li>
+</ul>
+
+<p>删除文件改建：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">删除文件改建</span><span class="w">
+    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deleteFile"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"explorerViewletVisible &amp;&amp; filesExplorerFocus &amp;&amp; !explorerResourceReadonly &amp;&amp; !inputFocus"</span><span class="w">
+  </span><span class="p">}</span><span class="err">,</span><span class="w">
+
+</span></code></pre></div></div>
+<p>删除文件按键比较远，顾改建为<code class="language-plaintext highlighter-rouge">r</code>； 重命名<code class="language-plaintext highlighter-rouge">enter</code>用起来很方便，而且已经习惯了，所以就不做修改了。</p>

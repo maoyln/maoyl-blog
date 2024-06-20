@@ -1,0 +1,64 @@
+<h1 id="百发百中掌握搜索命令">百发百中：掌握搜索命令</h1>
+
+<p>有一天，你终于厌倦了 <code class="language-plaintext highlighter-rouge">h</code> <code class="language-plaintext highlighter-rouge">j</code> <code class="language-plaintext highlighter-rouge">k</code> <code class="language-plaintext highlighter-rouge">l</code> 在字里行间移动，厌倦了 <code class="language-plaintext highlighter-rouge">w</code> <code class="language-plaintext highlighter-rouge">b</code> <code class="language-plaintext highlighter-rouge">e</code> 在 <del>屎山</del> 代码中半天跳不到头；你在想，有没有一种方法，可以像东风-41导弹一样指哪打哪，快速去到 <del>同事们写的垃圾</del> 代码中；</p>
+
+<p>恭喜你，你找到了！</p>
+
+<p>今天，我们就来学习搜索命令，打破你的困境。</p>
+
+<h2 id="行内搜索">行内搜索</h2>
+
+<p>通常我们在一行代码中时，有可能需要这里编辑一下那里编辑一下，虽然之前讲过的移动光标的命令也基本够用了，但可能在某些情况下，代码比较长之类的，可能用行内搜索命令是不错的方式。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">f</code> + 字符：自左往右移动光标到下一个匹配的字符中</li>
+  <li><code class="language-plaintext highlighter-rouge">F</code> + 字符：自右往左移动光标到下一个匹配的字符中</li>
+  <li><code class="language-plaintext highlighter-rouge">t</code> + 字符：自左往右移动光标到下一个匹配的字符的前一个字符中</li>
+  <li><code class="language-plaintext highlighter-rouge">T</code> + 字符：自右往左移动光标到下一个匹配的字符的后一个字符中</li>
+  <li><code class="language-plaintext highlighter-rouge">;</code>：重复执行上一个搜索命令</li>
+  <li><code class="language-plaintext highlighter-rouge">,</code>： 与上一个命令方向相反地执行上一个搜索命令</li>
+</ul>
+
+<p>:::tip 使用技巧
+  普通移动光标的时候使用 <code class="language-plaintext highlighter-rouge">f</code> <code class="language-plaintext highlighter-rouge">F</code>，配合 <code class="language-plaintext highlighter-rouge">c</code> <code class="language-plaintext highlighter-rouge">d</code> <code class="language-plaintext highlighter-rouge">v</code> 这些操作时使用 <code class="language-plaintext highlighter-rouge">t</code> <code class="language-plaintext highlighter-rouge">T</code>，如：</p>
+
+<p>this is a simple easy vim tutorial.</p>
+
+<p>如果我们光标在句首，需要跳到 easy 这个单词的字母 e，则直接 <code class="language-plaintext highlighter-rouge">fe;</code>即可（因为 <code class="language-plaintext highlighter-rouge">fe</code> 会跳到 simple 的 e，所以需要用 <code class="language-plaintext highlighter-rouge">;</code> 再执行一遍 <code class="language-plaintext highlighter-rouge">fe</code>）;</p>
+
+<p>而假如我们需要删除 easy 单词前的内容，则可以使用 <code class="language-plaintext highlighter-rouge">d2te</code> ，则句子就变成：</p>
+
+<p>easy vim tutorial.</p>
+
+<p>这里的 <code class="language-plaintext highlighter-rouge">2te</code> 是指使用 <code class="language-plaintext highlighter-rouge">te</code> 这个指令时的第二个结果，因为上面那句话有两个字母 e，我们要匹配第二个，所以在这个指令前加上数字 2，指令 <code class="language-plaintext highlighter-rouge">f</code> 也同理。
+  :::</p>
+
+<h2 id="全局搜索">全局搜索</h2>
+
+<p>在日常开发中，我们用得最多的搜索其实是全局搜索，尤其是在查看一些变量、函数调用情况的时候，而 vim 也提供了方便的全局搜索：</p>
+
+<ul>
+  <li>向前查找：<code class="language-plaintext highlighter-rouge">/</code> + 字符 + enter</li>
+  <li>向前查找：<code class="language-plaintext highlighter-rouge">?</code> + 字符 + enter</li>
+  <li>查看搜索历史：<code class="language-plaintext highlighter-rouge">/</code> + 上下方向键</li>
+</ul>
+
+<p>:::tip 使用技巧
+  使用 <code class="language-plaintext highlighter-rouge">/</code> <code class="language-plaintext highlighter-rouge">?</code> 查找时不需要输入要搜索的完整文本，就输入前面几个字符就可以了；而且这两个搜索命令是大写不敏感的，比如输入 <code class="language-plaintext highlighter-rouge">/ula，都可以匹配到 </code>ULA<code class="language-plaintext highlighter-rouge"> 和 </code>ula<code class="language-plaintext highlighter-rouge">；这种特性下，如果我们搜索一个变量，如 </code>text<code class="language-plaintext highlighter-rouge">，会匹配到 </code>Text<code class="language-plaintext highlighter-rouge"> </code>TEXT` 等单词，所以这两个命令是模糊搜索。
+  :::</p>
+
+<p>在大多数情况下，其实我们更需要的是精确搜索，这时我们可以把光标移到我们需要搜索的单词上，然后按下以下命令：</p>
+
+<ul>
+  <li>向上查找：<code class="language-plaintext highlighter-rouge">#</code></li>
+  <li>向下查找：<code class="language-plaintext highlighter-rouge">*</code></li>
+</ul>
+
+<p>这样就可以愉快地搜索了；我们还可以使用：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">n</code>：跳到下一个结果</li>
+  <li><code class="language-plaintext highlighter-rouge">N</code>：跳到上一个结果</li>
+</ul>
+
+<p>然后就可以快速查看搜索的结果了，完全不输 vscode 自带的搜索。</p>

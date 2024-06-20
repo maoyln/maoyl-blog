@@ -1,0 +1,264 @@
+<h1 id="01-hook概述">01. Hook概述</h1>
+
+<p>Hook可以让你在不编写 class 的情况下使用 state 以及其他的 React 特性。</p>
+
+<h2 id="什么是-hook">什么是 Hook?</h2>
+
+<p>Hook 是一个特殊的函数，可以让你在函数组件里“钩入” React <strong>state</strong> 及 <strong>生命周期</strong>  等特性的函数。</p>
+
+<blockquote>
+  <ol>
+    <li>
+      <p>Hook 不能在 class 组件中使用 —— 这使得你不使用 class 也能使用 React。</p>
+    </li>
+    <li>
+      <p>React 内置了一些像 <code class="language-plaintext highlighter-rouge">useState</code> 这样的 Hook。你也可以创建你自己的 Hook 来复用不同组件之间的状态逻辑。我们会先介绍这些内置的 Hook。</p>
+    </li>
+  </ol>
+</blockquote>
+
+<h2 id="usestate状态钩子">useState（状态钩子）</h2>
+
+<p><strong>模式：</strong></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">[</span><span class="o">&lt;</span><span class="nx">取值</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nx">设值</span><span class="o">&gt;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">初始值</span><span class="o">&gt;</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>上面的三个值均可自定义名称，分别是：</p>
+
+<ul>
+  <li>state取值变量名</li>
+  <li>state设值方法名</li>
+  <li>初始值
+    <ul>
+      <li>初始值可以是数字、字符串、对象、数组等</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>例子：</strong></p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">Example</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// 声明一个新的叫做 “count” 的 state 变量</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>You clicked <span class="si">{</span><span class="nx">count</span><span class="si">}</span> times<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="p">&gt;</span>
+        Click me
+      <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="声明多个-state-变量">声明多个 state 变量</h3>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">ExampleWithManyStates</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// 声明多个 state 变量！</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">age</span><span class="p">,</span> <span class="nx">setAge</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">fruit</span><span class="p">,</span> <span class="nx">setFruit</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="dl">'</span><span class="s1">banana</span><span class="dl">'</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">todos</span><span class="p">,</span> <span class="nx">setTodos</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">([{</span> <span class="na">text</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Learn Hooks</span><span class="dl">'</span> <span class="p">}]);</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="effect-hook-副作用钩子">Effect Hook (副作用钩子)</h2>
+
+<p>你之前可能已经在 React 组件中执行过<strong>数据获取、订阅 或 者手动修改 DOM</strong>。我们统一把这些操作称为“<strong>副作用</strong>”，或者简称为“作用”。</p>
+
+<h3 id="useeffect生命周期钩子">useEffect（生命周期钩子）</h3>
+
+<p><code class="language-plaintext highlighter-rouge">useEffect</code> 就是一个 Effect Hook，<strong>给函数组件增加了操作副作用的能力</strong>。它跟 class 组件中的 <code class="language-plaintext highlighter-rouge">componentDidMount</code>、<code class="language-plaintext highlighter-rouge">componentDidUpdate</code> 和 <code class="language-plaintext highlighter-rouge">componentWillUnmount</code> 具有相同的用途，只不过被合并成了一个 API。（我们会在<a href="https://zh-hans.reactjs.org/docs/hooks-effect.html">使用 Effect Hook</a> 里展示对比 <code class="language-plaintext highlighter-rouge">useEffect</code> 和这些方法的例子。）</p>
+
+<p>例如，下面这个组件在 React 更新 DOM 后会设置一个页面标题：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useState</span><span class="p">,</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">Example</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="c1">// 相当于 componentDidMount 和 componentDidUpdate:</span>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// 第一次渲染DOM以及更新DOM后执行此函数</span>
+    <span class="c1">// 使用浏览器的 API 更新页面标题</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="s2">`You clicked </span><span class="p">${</span><span class="nx">count</span><span class="p">}</span><span class="s2"> times`</span><span class="p">;</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>You clicked <span class="si">{</span><span class="nx">count</span><span class="si">}</span> times<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="p">&gt;</span>
+        Click me
+      <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>当你调用 <code class="language-plaintext highlighter-rouge">useEffect</code> 时，就是在告诉 React <strong>在完成对 DOM 的更改后运行你的“副作用”函数</strong>。由于副作用函数是在组件内声明的，所以它们可以访问到组件的 props 和 state。默认情况下，React 会在每次渲染后调用副作用函数 —— <strong>包括</strong>第一次渲染的时候。</p>
+
+<h3 id="清除副作用">“清除”副作用</h3>
+
+<p>副作用函数还可以通过返回一个函数来指定如何“清除”副作用。例如，在下面的组件中使用副作用函数来订阅好友的在线状态，并通过取消订阅来进行清除操作：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useState</span><span class="p">,</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">FriendStatus</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isOnline</span><span class="p">,</span> <span class="nx">setIsOnline</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+  <span class="kd">function</span> <span class="nx">handleStatusChange</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">setIsOnline</span><span class="p">(</span><span class="nx">status</span><span class="p">.</span><span class="nx">isOnline</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 组件挂载完成和更新完成后执行</span>
+    <span class="c1">// 创建订阅</span>
+    <span class="nx">ChatAPI</span><span class="p">.</span><span class="nx">subscribeToFriendStatus</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">friend</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">handleStatusChange</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// 组件销毁时执行</span>
+      <span class="c1">// 取消订阅</span>
+      <span class="nx">ChatAPI</span><span class="p">.</span><span class="nx">unsubscribeFromFriendStatus</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">friend</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">handleStatusChange</span><span class="p">);</span>
+    <span class="p">};</span>
+  <span class="p">});</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isOnline</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">Loading...</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">isOnline</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">Online</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Offline</span><span class="dl">'</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>在这个示例中，React 会在组件销毁时取消对 <code class="language-plaintext highlighter-rouge">ChatAPI</code> 的订阅，然后在后续渲染时重新执行副作用函数。（如果传给 <code class="language-plaintext highlighter-rouge">ChatAPI</code> 的 <code class="language-plaintext highlighter-rouge">props.friend.id</code> 没有变化，你也可以<a href="https://zh-hans.reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects">告诉 React 跳过重新订阅</a>。）</p>
+
+<p>跟 <code class="language-plaintext highlighter-rouge">useState</code> 一样，你可以在组件中多次使用 <code class="language-plaintext highlighter-rouge">useEffect</code> ：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">FriendStatusWithCounter</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="s2">`You clicked </span><span class="p">${</span><span class="nx">count</span><span class="p">}</span><span class="s2"> times`</span><span class="p">;</span>
+  <span class="p">});</span>
+
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isOnline</span><span class="p">,</span> <span class="nx">setIsOnline</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">ChatAPI</span><span class="p">.</span><span class="nx">subscribeToFriendStatus</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">friend</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">handleStatusChange</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">ChatAPI</span><span class="p">.</span><span class="nx">unsubscribeFromFriendStatus</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">friend</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">handleStatusChange</span><span class="p">);</span>
+    <span class="p">};</span>
+  <span class="p">});</span>
+
+  <span class="kd">function</span> <span class="nx">handleStatusChange</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">setIsOnline</span><span class="p">(</span><span class="nx">status</span><span class="p">.</span><span class="nx">isOnline</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// ...</span>
+</code></pre></div></div>
+
+<p>通过使用 Hook，你可以把组件内相关的副作用组织在一起（例如创建订阅及取消订阅），而不要把它们拆分到不同的生命周期函数里。</p>
+
+<blockquote>
+  <p>详细说明</p>
+
+  <p>你可以在这一章节了解更多关于 <code class="language-plaintext highlighter-rouge">useEffect</code> 的内容：<a href="https://zh-hans.reactjs.org/docs/hooks-effect.html">使用 Effect Hook</a></p>
+</blockquote>
+
+<h2 id="hook-使用规则">Hook 使用规则</h2>
+
+<p>Hook 就是 JavaScript 函数，但是使用它们会有两个额外的规则：</p>
+
+<ul>
+  <li>只能在<strong>函数最外层</strong>调用 Hook。不要在循环、条件判断或者子函数中调用。</li>
+  <li>只能在 <strong>React 的函数组件</strong>中调用 Hook。不要在其他 JavaScript 函数中调用。（还有一个地方可以调用 Hook —— 就是自定义的 Hook 中，我们稍后会学习到。）</li>
+</ul>
+
+<p>同时，我们提供了 <a href="https://www.npmjs.com/package/eslint-plugin-react-hooks">linter 插件</a>来自动执行这些规则。这些规则乍看起来会有一些限制和令人困惑，但是要让 Hook 正常工作，它们至关重要。</p>
+
+<blockquote>
+  <p>详细说明</p>
+
+  <p>你可以在这章节了解更多关于这些规则的内容：<a href="https://zh-hans.reactjs.org/docs/hooks-rules.html">Hook 使用规则</a>。</p>
+</blockquote>
+
+<h2 id="自定义-hook-hook的使用逻辑封装">自定义 Hook （Hook的使用逻辑封装）</h2>
+
+<p>有时候我们会想要在组件之间重用一些状态逻辑。目前为止，有两种主流方案来解决这个问题：<a href="https://zh-hans.reactjs.org/docs/higher-order-components.html">高阶组件</a>和 <a href="https://zh-hans.reactjs.org/docs/render-props.html">render props</a>。自定义 Hook 可以让你在不增加组件的情况下达到同样的目的。</p>
+
+<p>前面，我们介绍了一个叫 <code class="language-plaintext highlighter-rouge">FriendStatus</code> 的组件，它通过调用 <code class="language-plaintext highlighter-rouge">useState</code> 和 <code class="language-plaintext highlighter-rouge">useEffect</code> 的 Hook 来订阅一个好友的在线状态。假设我们想在另一个组件里重用这个订阅逻辑。</p>
+
+<p>首先，我们把这个逻辑抽取到一个叫做 <code class="language-plaintext highlighter-rouge">useFriendStatus</code> 的自定义 Hook 里：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useState</span><span class="p">,</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// 逻辑抽取，方便复用</span>
+<span class="kd">function</span> <span class="nx">useFriendStatus</span><span class="p">(</span><span class="nx">friendID</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// 每次调用时的state都是独立的</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isOnline</span><span class="p">,</span> <span class="nx">setIsOnline</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+  <span class="kd">function</span> <span class="nx">handleStatusChange</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">setIsOnline</span><span class="p">(</span><span class="nx">status</span><span class="p">.</span><span class="nx">isOnline</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">ChatAPI</span><span class="p">.</span><span class="nx">subscribeToFriendStatus</span><span class="p">(</span><span class="nx">friendID</span><span class="p">,</span> <span class="nx">handleStatusChange</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">ChatAPI</span><span class="p">.</span><span class="nx">unsubscribeFromFriendStatus</span><span class="p">(</span><span class="nx">friendID</span><span class="p">,</span> <span class="nx">handleStatusChange</span><span class="p">);</span>
+    <span class="p">};</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="nx">isOnline</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>它将 <code class="language-plaintext highlighter-rouge">friendID</code> 作为参数，并返回该好友是否在线：</p>
+
+<p>现在我们可以在两个组件中使用它：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">FriendStatus</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">isOnline</span> <span class="o">=</span> <span class="nx">useFriendStatus</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">friend</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isOnline</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">Loading...</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">isOnline</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">Online</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Offline</span><span class="dl">'</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">FriendListItem</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">isOnline</span> <span class="o">=</span> <span class="nx">useFriendStatus</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">friend</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">li</span> <span class="na">style</span><span class="p">=</span><span class="si">{</span><span class="p">{</span> <span class="na">color</span><span class="p">:</span> <span class="nx">isOnline</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">green</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span> <span class="p">}</span><span class="si">}</span><span class="p">&gt;</span>
+      <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">friend</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span>
+    <span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>每个组件间的 state 是完全独立的。Hook 是一种复用<em>状态逻辑</em>的方式，它不复用 state 本身</strong>。事实上 Hook 的每次<em>调用</em>都有一个完全独立的 state —— 因此你可以在单个组件中多次调用同一个自定义 Hook。</p>
+
+<p>自定义 Hook 更像是一种约定而不是功能。<strong>如果函数的名字以 “<code class="language-plaintext highlighter-rouge">use</code>” 开头并调用其他 Hook，我们就说这是一个自定义 Hook</strong>。 <code class="language-plaintext highlighter-rouge">useSomething</code> 的命名约定可以让我们的 linter 插件在使用 Hook 的代码中找到 bug。</p>
+
+<p>你可以创建涵盖各种场景的自定义 Hook，如表单处理、动画、订阅声明、计时器，甚至可能还有更多我们没想到的场景。我们很期待看到 React 社区会出现什么样的自定义 Hook。</p>
+
+<blockquote>
+  <p>详细说明</p>
+
+  <p>我们会在这一章节介绍更多关于自定义 Hook 的内容： <a href="https://zh-hans.reactjs.org/docs/hooks-custom.html">创建你自己的 Hook</a>。</p>
+</blockquote>
+
+<h2 id="其他-hook">其他 Hook</h2>
+
+<p>除此之外，还有一些使用频率较低的但是很有用的 Hook。比如，<a href="https://zh-hans.reactjs.org/docs/hooks-reference.html#usecontext"><code class="language-plaintext highlighter-rouge">useContext</code></a> 让你不使用组件嵌套就可以订阅 React 的 Context。</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Example</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">locale</span> <span class="o">=</span> <span class="nx">useContext</span><span class="p">(</span><span class="nx">LocaleContext</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">theme</span> <span class="o">=</span> <span class="nx">useContext</span><span class="p">(</span><span class="nx">ThemeContext</span><span class="p">);</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>另外 <a href="https://zh-hans.reactjs.org/docs/hooks-reference.html#usereducer"><code class="language-plaintext highlighter-rouge">useReducer</code></a> 可以让你通过 reducer 来管理组件本地的复杂 state。</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Todos</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">todos</span><span class="p">,</span> <span class="nx">dispatch</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useReducer</span><span class="p">(</span><span class="nx">todosReducer</span><span class="p">);</span>  <span class="c1">// ...</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>详细说明</p>
+
+  <p>你可以在这一章节了解更多关于所有内置 Hook 的内容：<a href="https://zh-hans.reactjs.org/docs/hooks-reference.html">Hook API 索引</a>。</p>
+</blockquote>
+

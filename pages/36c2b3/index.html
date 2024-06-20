@@ -1,0 +1,63 @@
+<h1 id="初出茅庐调用-vscode-命令">初出茅庐：调用 vscode 命令</h1>
+
+<p>经过这么多天的练习，相信大家对 vim 已经有了一定的了解；基本的常用命令，也已经不说熟悉也大概明了；作为 vim 章节的最后一节训练，我们会来探讨如何通过 vim 调用 vscode 的命令，以使我们在 vscode 中使用 vim 的过程中减淡操控的割裂感。</p>
+
+<p>:::tip 温馨提醒
+本节提到的快捷键映射既为进一步的快捷键拓展，也是为了说明 vim 命令与 vscode 快捷键的如何融汇贯通，大家了解了映射原理后，就可尽情拓展自己的其他需求和场景的快捷键，举一反三才是最好的实践。
+:::</p>
+
+<h2 id="从需求说起">从需求说起</h2>
+
+<p>在日常开发中，我们常常（可能）会有这几个需求：</p>
+
+<ul>
+  <li>格式化文档</li>
+  <li>重名名变量</li>
+  <li>折叠代码</li>
+</ul>
+
+<p>但是这几个“需求”，严格意义来说本来是不存在的；它们出现只是因为我们用了 vim；在我们还（大量）使用鼠标时，我们可以全选代码，然后右键格式化即可；折叠代码我们之间点行前的加减号就可以完成；或者有一些朋友之前已经很熟练使用这几个功能对应的 vscode 快捷键：</p>
+
+<ul>
+  <li>格式化文档：<code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">alt</code> + <code class="language-plaintext highlighter-rouge">f</code> / <code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">option</code> + <code class="language-plaintext highlighter-rouge">f</code></li>
+  <li>重名名变量：<code class="language-plaintext highlighter-rouge">f2</code></li>
+  <li>折叠代码：<code class="language-plaintext highlighter-rouge">option</code> + <code class="language-plaintext highlighter-rouge">command</code> + ‘[’</li>
+</ul>
+
+<h2 id="改建">改建</h2>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"vim.normalModeKeyBindings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;Leader&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"f"</span><span class="p">,</span><span class="w"> </span><span class="s2">"d"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"editor.action.formatDocument"</span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;Leader&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"r"</span><span class="p">,</span><span class="w"> </span><span class="s2">"n"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"editor.action.rename"</span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;Leader&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"["</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"editor.fold"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vim.remap"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"$"</span><span class="p">,</span><span class="w"> </span><span class="s2">"%"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;Leader&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"]"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"editor.unfold"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>但是由于我们现在使用 vim 了，为了让组合按键更舒服，也为了降低记忆快捷键的心智负担，统一键位刻不容缓（夸张手法，其实看个人；你用的舒服其实不改也没有关系）。</p>

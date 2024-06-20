@@ -1,0 +1,96 @@
+<h1 id="任意门easymotion让光标移动得随心所欲">任意门：easymotion，让光标移动得随心所欲</h1>
+
+<h2 id="插件vim-easymotion">插件：vim-easymotion</h2>
+
+<p>vim-easymotion 的出现，是为了替代如要移动光标到下五行的 <code class="language-plaintext highlighter-rouge">5j</code>、后六个单词的 <code class="language-plaintext highlighter-rouge">5w</code> 这类的移动光标时要与数字混合的指令（因为数字键不好按），它通过一种更直观的方式去让我们更方便舒服地移动光标。</p>
+
+<h3 id="配置">配置</h3>
+
+<ul>
+  <li>开启 vim-easymotion 插件</li>
+  <li>
+    <p>改键：<code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> 改为 <code class="language-plaintext highlighter-rouge">space</code>
+:::tip 拓展
+什么是 <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> ？</p>
+
+    <p>vim 中有很多快捷键，还有各种扩展插件，为了避免按键冲突以及丰富按键的组合，则推出了 <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> 的概念，即前缀键或扩展组合键，通过配置 <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> + 其他按键，来拓展出更多可用的组合键。 <br />
+:::</p>
+  </li>
+</ul>
+
+<h3 id="指令">指令</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">w</code>：高亮光标后的所有单词的开头</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">b</code>：高亮光标前的所有单词的开头</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">e</code>：高亮光标后的所有单词的结尾</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">ge</code>：高亮光标前的所有单词的结尾</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">l</code>：高亮光标后的单词的开头和结尾、驼峰、<code class="language-plaintext highlighter-rouge">_</code> 或 <code class="language-plaintext highlighter-rouge">#</code> 之后的内容</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">h</code>：高亮光标前的单词的开头和结尾、驼峰、<code class="language-plaintext highlighter-rouge">_</code> 或 <code class="language-plaintext highlighter-rouge">#</code> 之后的内容</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">j</code>：高亮光标后的所有行的开头</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">k</code>：高亮光标前的所有行的开头</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> <code class="language-plaintext highlighter-rouge">j</code>：高亮光标所有的单词的开头和结尾、驼峰、<code class="language-plaintext highlighter-rouge">_</code> 或 <code class="language-plaintext highlighter-rouge">#</code> 之后的内容</li>
+</ul>
+
+<h2 id="插件vim-sneak">插件：vim-sneak</h2>
+
+<p>vim 中的 <code class="language-plaintext highlighter-rouge">f</code> 命令后面只能跟一个字符，这样搜索的效率在实际场景中其实不高，而且它是行内搜索；为了弥补这些短板，就有了 vim-sneak。vim-sneak 使用 <code class="language-plaintext highlighter-rouge">s</code> <code class="language-plaintext highlighter-rouge">S</code> 操作符，后面可以接两个字符，并且是全局搜索，即当你搜索了一次之后，可以使用 <code class="language-plaintext highlighter-rouge">;</code> 不断的往下搜索相同的内容；为了使用更方便，我们可以直接把 <code class="language-plaintext highlighter-rouge">f</code> <code class="language-plaintext highlighter-rouge">F</code> 映射到 <code class="language-plaintext highlighter-rouge">s</code> <code class="language-plaintext highlighter-rouge">S</code>，这样在日常使用中就更方便了。</p>
+
+<h3 id="配置-1">配置</h3>
+
+<ul>
+  <li>开启 vim.sneak 插件，在 vscode 的 <code class="language-plaintext highlighter-rouge">setting.json</code> 中添加：
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="nl">"vim.sneak"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>
+    <p>添加改键映射：</p>
+
+    <p>首先配置 normal mode 下的 <code class="language-plaintext highlighter-rouge">f</code> <code class="language-plaintext highlighter-rouge">F</code> 映射为 vim-sneak 的 <code class="language-plaintext highlighter-rouge">s</code> <code class="language-plaintext highlighter-rouge">S</code>，这样映射后，为了让 <code class="language-plaintext highlighter-rouge">s</code> <code class="language-plaintext highlighter-rouge">S</code> 恢复为最原始的功能（删除光标所在字符并进入 insert mode；删除光标所在行从开头非 blank 字符到行尾的内容），需要把 <code class="language-plaintext highlighter-rouge">s</code> <code class="language-plaintext highlighter-rouge">S</code> 的原始功能用 <code class="language-plaintext highlighter-rouge">c</code> <code class="language-plaintext highlighter-rouge">C</code> 实现一下，而且由于在这个映射过程中，存在递归映射的情况（如 <code class="language-plaintext highlighter-rouge">f</code> → <code class="language-plaintext highlighter-rouge">s</code> → <code class="language-plaintext highlighter-rouge">c l</code>），所以要配置在 <code class="language-plaintext highlighter-rouge">vim.normalModeKeyBindingsNonRecursive</code> 中，遂在 vscode 的 <code class="language-plaintext highlighter-rouge">setting.json</code> 中添加：</p>
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"vim.normalModeKeyBindingsNonRecursive"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+
+        </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"s"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"F"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"S"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"s"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"c"</span><span class="p">,</span><span class="w"> </span><span class="s2">"l"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"S"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"^"</span><span class="p">,</span><span class="w"> </span><span class="s2">"C"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+</span><span class="p">]</span><span class="err">,</span><span class="w">
+    
+</span></code></pre></div>    </div>
+
+    <p>配置完上面的设置后，我们就可以愉快地使用 <code class="language-plaintext highlighter-rouge">f</code> 或 <code class="language-plaintext highlighter-rouge">F</code> + 两个字符（或单字符 + 回车）在 normal mode 下进行搜索了，但是想在 visual mode 和 operater-pending 模式（即当输入了如 <code class="language-plaintext highlighter-rouge">d</code> <code class="language-plaintext highlighter-rouge">c</code> 等操作符后，vim 等待输入范围和文本对象时的状态，简而言之就是可以让 vim 支持如 <code class="language-plaintext highlighter-rouge">df</code> + 两个字符的这种操作，因为不配置的话在 operater-pending 模式中 vim-sneak 使用的是 <code class="language-plaintext highlighter-rouge">z</code> 操作符），则需要继续配置；并且在 visual mode 中，<code class="language-plaintext highlighter-rouge">F</code> 无法使用，遂只配置 <code class="language-plaintext highlighter-rouge">f</code>，配置如下：</p>
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"vim.visualModeKeyBindingsNonRecursive"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"f"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"s"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+</span><span class="p">]</span><span class="err">,</span><span class="w">
+</span><span class="nl">"vim.operatorPendingModeKeyBindingsNonRecursive"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"f"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"z"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"F"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Z"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+</span><span class="p">]</span><span class="err">,</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="小练习">小练习</h2>
+
+<p>建议在日常使用中直接练习，或者把本文复制到中 vscode 随便跳。</p>

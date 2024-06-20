@@ -1,0 +1,71 @@
+<h1 id="以一打十snippet-代码片段">以一打十：Snippet 代码片段</h1>
+
+<p>你是否厌倦了每次新建个 vue 文件、react 文件是每次重复输入的 <code class="language-plaintext highlighter-rouge">template</code>、<code class="language-plaintext highlighter-rouge">script</code>、<code class="language-plaintext highlighter-rouge">style</code>，是否厌倦了每次命名个函数来来去去地敲 <code class="language-plaintext highlighter-rouge">function shitInput() {}</code> ；诸如此类的这种重复输入一天的<del>屎山</del> coding 下来，重复写的内容占据了相当一部分的时间；都 21 世纪了，我们能不能把这种重复的劳动浪费的时间节省下来摸鱼呢？那，就要看今天的主角 ———— Snippet 了！</p>
+
+<h2 id="snippet">Snippet</h2>
+
+<p>Snippet 即代码片段；在 vscode 中我们可以利用代码片段通过代码提示快速地输入固定的一些代码模版，方便我们输入一些重复、常用的代码片段。</p>
+
+<h2 id="vscode-snippet-插件">vscode Snippet 插件</h2>
+
+<p>vscode 中常用的前端开发 snippet 插件有：</p>
+
+<ul>
+  <li><a href="https://marketplace.visualstudio.com/items?itemName=xabikos.JavaScriptSnippets">JavaScript (ES6) code snippets</a></li>
+  <li><a href="https://marketplace.visualstudio.com/items?itemName=hollowtree.vue-snippets">Vue 3 Snippets</a></li>
+  <li><a href="https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets">Vue VSCode Snippets</a></li>
+</ul>
+
+<p>当然，你也可以根据自己的需求安装其他如 <code class="language-plaintext highlighter-rouge">html</code>、<code class="language-plaintext highlighter-rouge">css</code>、<code class="language-plaintext highlighter-rouge">markdown</code>、<code class="language-plaintext highlighter-rouge">python</code> 等语言的 snippet 插件。</p>
+
+<h2 id="常用-snippet-指令">常用 Snippet 指令</h2>
+
+<p>由于 vscode 会识别我们输入的字符进行代码提示，当我们安装了 snippet 插件后，一些代码块则会在我们输入到对应简写文本时在代码提示中出现以供选择；当我们安装了上面提到的几个插件后，会有如下一些简写提示代码指令：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">imp</code>：对应 <code class="language-plaintext highlighter-rouge">import second from 'first'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">imd</code>：对应 <code class="language-plaintext highlighter-rouge">import { second } from 'first'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">fn</code>：对应创建一个函数</li>
+  <li><code class="language-plaintext highlighter-rouge">log</code>：对应 <code class="language-plaintext highlighter-rouge">console.log()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vue</code>：对应创建 <code class="language-plaintext highlighter-rouge">vue</code> 文件模版</li>
+  <li><code class="language-plaintext highlighter-rouge">anfn</code>：<code class="language-plaintext highlighter-rouge">对应创建一个箭头函数</code></li>
+  <li><code class="language-plaintext highlighter-rouge">rp</code>：对应 <code class="language-plaintext highlighter-rouge">return new Promise()</code></li>
+</ul>
+
+<p>比如使用 <code class="language-plaintext highlighter-rouge">imp</code> 时，在选择了代码提示的代码块后，会输出 <code class="language-plaintext highlighter-rouge">import second from 'first|'</code>，<code class="language-plaintext highlighter-rouge">|</code> 代表当前光标所在位置，且此时 <code class="language-plaintext highlighter-rouge">first</code> 处于选中状态，我们可以直接键入要引入的内容所在的包名或路径；输入后（或不输入也没有关系）我们按下 <code class="language-plaintext highlighter-rouge">tab</code>，则光标会跳到 <code class="language-plaintext highlighter-rouge">second|</code>，且此时它也是处于选中状态，我们就可以输入导入的名称；其他简写也是如此。</p>
+
+<p>:::技巧
+如上面提到，<code class="language-plaintext highlighter-rouge">tab</code> 可以在代码块的占位光标中切换；另外一种情况是：有时候我们输入文本时，比如 <code class="language-plaintext highlighter-rouge">imp</code>，输入后可能不小心移动了光标或者切换了窗口，导致代码提示没有了，此时我们可以通过 <code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">.</code>（用 <code class="language-plaintext highlighter-rouge">ctrl</code> + <code class="language-plaintext highlighter-rouge">space</code> 也可以，不过这个是 MacOS 默认输入法切换组合键，所以一般不用这个）重新使代码提示框显示。
+:::</p>
+
+<h2 id="配置自己的-snippet">配置自己的 Snippet</h2>
+
+<p>既然插件可以配置一些供我们选择的代码块，那就意味着我们也可以自己配置专属自己的代码块；因为自己永远是最了解自己的。比如我在日常调试中常常需要输出一些变量、描述等内容来辨别一些逻辑是否正确。可是在公司的<del>屎山</del>项目中输出的除了我自己写的，还有很多其他人的输出，我常常无法找到我添加的输出。为此我在使用 <code class="language-plaintext highlighter-rouge">console.log()</code> 时会通过设置颜色代码来让我自己的输出更显眼。但是每次都手敲颜色设置，就非常麻烦；既然如此，我就为自己配置了一个专属的 color log snippet；</p>
+
+<p>首先我们<a href="./21.全局搜索命令.md#查找命令">打开命令查找框</a>，输入 <code class="language-plaintext highlighter-rouge">user snippet</code>，即查找当前用户自定义的 snippet，会有配置用户代码片段（configure user snippet）选项；选择它，会有如下选项：</p>
+
+<ul>
+  <li>新建全局代码片段文件</li>
+  <li>新建当前工作区的代码片段文件</li>
+  <li>为特定特定语言配置代码块；如 <code class="language-plaintext highlighter-rouge">javascript</code>、<code class="language-plaintext highlighter-rouge">c#</code> 等等</li>
+</ul>
+
+<p>如果你已经配置过自定义的代码块，也会显示对应的配置文件名；此时我们选择第一个；输入要生成的文件名后，就进入了配置文件中。vscode 官方 snippet 配置规则文档在<a href="https://code.visualstudio.com/docs/editor/userdefinedsnippets">这里</a>。于是乎，我根据上面的自己的需求，配置了一个自己的 snippet：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"color log"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		</span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"javascript,typescript"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ccl"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+			</span><span class="s2">"console.log('%c $1', 'color: ${2|red,blue,green|}')"</span><span class="p">,</span><span class="w">
+			</span><span class="s2">"$3"</span><span class="w">
+		</span><span class="p">]</span><span class="w">
+	</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>其中，<code class="language-plaintext highlighter-rouge">$</code> + [数字] 是指按下 <code class="language-plaintext highlighter-rouge">tab</code> 时光标跳转的顺序；而 <code class="language-plaintext highlighter-rouge">${[数字]|[文本],[文本],[文本]|}</code> 是指光标跳到该位置时除了输入也可以直接选择提供的 [文本] 选项；所以这个 snippet 的效果如下：</p>
+
+<p><img src="https://pic.imgdb.cn/item/62bf024d1d64b070667113c4.gif" alt="color log" /></p>
+
+<p>置于其他的一些灵活配置，大家可以直接看文档，都有详细说明。</p>

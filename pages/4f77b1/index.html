@@ -1,0 +1,79 @@
+<h1 id="包罗万键vspacecode-插件">包罗万键：VSpaceCode 插件</h1>
+
+<p>训练进行到这里，大部分日常的使用场景和功能我们基本都配置了对应的一些快捷键，或者知道如何不通过鼠标去达到目的；而今天我们来了解学习 VSpaceCode 插件，通过它，可以让我们的组合键覆盖得更广阔全面。至于怎么个覆盖，装完插件再慢慢道来。</p>
+
+<p>:::tip VSpaceCode 与 Whichkey
+二者是同一家出品，而且功能上基本一致；VSpaceCode 插件主要面向 Vim 使用者；而 Whichkey 更适用于普通用户;
+而且他们的<a href="https://vspacecode.github.io/docs/">文档</a>也已经合并在一起。
+:::</p>
+
+<h2 id="安装及初始配置">安装及初始配置</h2>
+<p><a href="https://marketplace.visualstudio.com/items?itemName=VSpaceCode.vspacecode">点击直达下载</a>或在 vscode 的拓展中搜索 <code class="language-plaintext highlighter-rouge">VSpaceCode</code> 安装；</p>
+
+<p>安装完后，查看<a href="https://vspacecode.github.io/docs/#manual-configuration-optional">文档</a>，可以发现文档中提到了两个配置文件 <a href="https://github.com/VSpaceCode/VSpaceCode/blob/master/src/configuration/settings.jsonc"><code class="language-plaintext highlighter-rouge">setting.jsonc</code></a> 与 <a href="https://github.com/VSpaceCode/VSpaceCode/blob/master/src/configuration/keybindings.jsonc"><code class="language-plaintext highlighter-rouge">keybindings.jsonc</code></a>；分别对应了 vim 中绑定 VSpaceCode 的激活命令以及在 vscode 中编辑窗之外的其他窗口 VSpaceCode 的激活命令；当然除了激活命令之外，我们还可以看到文档的这两个文件里面都配置了很多命令，其实都是一些扩展了其他功能的命令，我们暂时不需要，所以可以先不配置；而可以看到，两个文件中默认的激活命令是：</p>
+
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// keybinds.jsonc</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"space"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vspacecode.space"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"activeEditorGroupEmpty &amp;&amp; focusedView == '' &amp;&amp; !whichkeyActive &amp;&amp; !inputFocus"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// setting.jsonc</span><span class="w">
+</span><span class="nl">"vim.normalModeKeyBindingsNonRecursive"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;space&gt;"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"vspacecode.space"</span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+</span><span class="p">]</span><span class="err">,</span><span class="w">
+</span><span class="nl">"vim.visualModeKeyBindingsNonRecursive"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;space&gt;"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"vspacecode.space"</span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>可以看到，默认的配置是使用空格激活；但是我们配置的 vim 的 <code class="language-plaintext highlighter-rouge">&lt;Leader&gt;</code> 也是 <code class="language-plaintext highlighter-rouge">space</code> 键（如果你和我一样的配置，如果不是则无需接下来的改键），这时候我们就要重新配置激活按键，而我改成了 <code class="language-plaintext highlighter-rouge">space</code> + <code class="language-plaintext highlighter-rouge">;</code>，这样的按起来也比较顺手。如下：</p>
+
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// keybinds.jsonc</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"space+;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vspacecode.space"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"activeEditorGroupEmpty &amp;&amp; focusedView == '' &amp;&amp; !whichkeyActive &amp;&amp; !inputFocus"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+</span><span class="c1">// Trigger vspacecode when sidebar is in focus</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"space+;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vspacecode.space"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sideBarFocus &amp;&amp; !inputFocus &amp;&amp; !whichkeyActive"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// setting.jsonc</span><span class="w">
+</span><span class="nl">"vim.normalModeKeyBindingsNonRecursive"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;space&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">";"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"vspacecode.space"</span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+</span><span class="p">]</span><span class="err">,</span><span class="w">
+</span><span class="nl">"vim.visualModeKeyBindingsNonRecursive"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;space&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">";"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"vspacecode.space"</span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>这样我们就可以愉快地使用 VSpaceCode 了。</p>
+
+<p>现在我们激活它，会在 vscode 上面弹出输入框，并且在待选列表中有很多功能，每条记录都有一个符号前缀，在键盘上输入该前缀，就可进入该功能；比如激活插件后我们输入 <code class="language-plaintext highlighter-rouge">g</code>，则进入了 <code class="language-plaintext highlighter-rouge">git</code> 的功能模块中，则会列出可执行的操作，继续点击对应操作的前缀，则可以执行该操作；这就是 VSpaceCode 的使用逻辑。简单来说就是我们可以通过所见即所点的模式进行纯键盘的操作（和 chrome 的 vim 插件 vimium-c 一样的思想）。</p>
+
+<h2 id="修改原有配置">修改原有配置</h2>
+
+<h2 id="自定义">自定义</h2>
+
+<p>:::tip 拓展</p>
+
+<p>:::</p>

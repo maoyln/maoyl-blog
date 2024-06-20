@@ -1,0 +1,32 @@
+<h1 id="iframe跨域问题">iframe跨域问题</h1>
+
+<blockquote>
+  <p>成功解决Blocked a frame with origin “http://127.0.0.1:8080” from accessing a cross-origin frame.</p>
+</blockquote>
+
+<p><strong>解决方法：</strong></p>
+
+<p>假如当前的项目的域名端口是 <code class="language-plaintext highlighter-rouge">http://192.168.0.1:8080</code>，通过页面的 <code class="language-plaintext highlighter-rouge">iframe</code>访问 <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8080</code>，并接收 <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8080/file_system/</code>传过来的消息。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">iframe</span> <span class="nx">width</span><span class="o">=</span><span class="dl">"</span><span class="s2">100%</span><span class="dl">"</span> <span class="nx">height</span><span class="o">=</span><span class="dl">"</span><span class="s2">100%</span><span class="dl">"</span> <span class="nx">frameborder</span><span class="o">=</span><span class="dl">"</span><span class="s2">0</span><span class="dl">"</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">http://127.0.0.1:8080/file_system/</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/iframe</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<p>如果这是直接在子页面上调用 <code class="language-plaintext highlighter-rouge">parent.document.getElementById("parentUrl").value=''</code>给父页面传值或者使用 <code class="language-plaintext highlighter-rouge">top.location.pathname</code>，就遇到上面跨域问题。</p>
+
+<blockquote>
+  <p>解决方法就是：</p>
+</blockquote>
+
+<p>在父页面添加监听器,接收子页面的值：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">},</span><span class="kc">false</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>在子页面在要传值的地方调用以下语句传值：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">window</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="dl">'</span><span class="s1">值</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">http://192.168.0.1:8080</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>如果是非必需的功能，可以用 <code class="language-plaintext highlighter-rouge">try {}catch(){}</code>去捕捉问题，避免页面崩溃</p>

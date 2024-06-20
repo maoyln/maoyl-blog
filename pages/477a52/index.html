@@ -1,0 +1,245 @@
+<h1 id="react-hooks-的正确认知">react-hooks 的正确认知</h1>
+
+<ul>
+  <li><a href="https://www.maoyali.cn/">文档 (国内源)</a></li>
+  <li><a href="https://github.com/maoyln/react-hooks-cognition">文档 (github源)</a></li>
+  <li><a href="https://stackblitz.com/edit/react-ts-resje9?file=README.md">stackblitz</a></li>
+</ul>
+
+<h2 id="实例带入">实例带入</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">2</span><span class="nx">x</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">=</span> <span class="nx">y</span>
+</code></pre></div></div>
+
+<p>看上述公式，其中 x 的变化会导致 y 的变化</p>
+
+<ul>
+  <li>x: 自变量</li>
+  <li>y: 因变量</li>
+</ul>
+
+<h2 id="对号入座">对号入座</h2>
+
+<blockquote>
+  <p>下面我们列举出常用的几个hooks进行对号入座</p>
+</blockquote>
+
+<ul>
+  <li>useState</li>
+  <li>useEffect</li>
+  <li>useMemo</li>
+  <li>useReducer</li>
+  <li>useContext</li>
+  <li>useCallBack</li>
+  <li>useRef</li>
+</ul>
+
+<p>上述几个<code class="language-plaintext highlighter-rouge">hooks</code>除了<code class="language-plaintext highlighter-rouge">useRef</code>,其余几个都可以归类与自变量和因变量</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>自变量</th>
+      <th>因变量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>useState</td>
+      <td>useEffect</td>
+    </tr>
+    <tr>
+      <td>useReducer</td>
+      <td>useMemo</td>
+    </tr>
+    <tr>
+      <td>useContext</td>
+      <td>useCallBack</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="usestate">useState</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="kd">const</span> <span class="nx">handleChange</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ul</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">handleChange</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">count是</span><span class="p">:{</span><span class="nx">count</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/react-hooks%E8%87%AA%E5%8F%98%E9%87%8F%E5%9B%A0%E5%8F%98%E9%87%8F.gif" alt="reack-hooks自变量" /></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">count</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="kd">const</span> <span class="nx">handleChange</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ul</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">handleChange</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">count是</span><span class="p">:{</span><span class="nx">count</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">result是</span><span class="p">:</span> <span class="p">{</span><span class="nx">result</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/Aug-14-2022%2000-26-27.gif" alt="reack-hooks自变量和因变量" /></p>
+
+<blockquote>
+  <p>自变量修改引起试图渲染
+自变量变化引起因变量修改，因变量修改引起试图渲染
+<img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20220812144418.png" alt="reack-hooks自变量和因变量关系" /></p>
+</blockquote>
+
+<h2 id="usememo和usecallback">useMemo和useCallBack</h2>
+
+<blockquote>
+  <p>useMemo 在此处用来缓存一个因变量
+useCallBack 在此处用来缓存一个函数类型的因变量</p>
+</blockquote>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">useMemo</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">count</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="nx">count</span><span class="p">]);</span>
+
+  <span class="kd">const</span> <span class="nx">handleChange</span> <span class="o">=</span> <span class="nx">useCallback</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="nx">count</span><span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ul</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">handleChange</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">count是</span><span class="p">:{</span><span class="nx">count</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">result是</span><span class="p">:</span> <span class="p">{</span><span class="nx">result</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/Aug-14-2022%2000-29-34.gif" alt="useMemo和useCallBack" /></p>
+
+<p>使用hooks显示的指明因变量有什么好处呢？</p>
+
+<ul>
+  <li>当使用的时候<code class="language-plaintext highlighter-rouge">result</code>和<code class="language-plaintext highlighter-rouge">handleChange</code>会被缓存起来，只要<code class="language-plaintext highlighter-rouge">count</code>不变，它们始终读取的是缓存中的数据;</li>
+  <li>不使用<code class="language-plaintext highlighter-rouge">useMemo</code>和<code class="language-plaintext highlighter-rouge">useCallBack</code>是每次<code class="language-plaintext highlighter-rouge">count</code>改变的时候会创建新的<code class="language-plaintext highlighter-rouge">result</code>和新的<code class="language-plaintext highlighter-rouge">handleChange</code>;</li>
+</ul>
+
+<blockquote>
+  <p>这涉及到react的性能优化，当然也不是使用<code class="language-plaintext highlighter-rouge">useMemo</code>和<code class="language-plaintext highlighter-rouge">useCallBack</code>越多越好，后续我们会继续学习什么时候使用<code class="language-plaintext highlighter-rouge">useMemo</code>和<code class="language-plaintext highlighter-rouge">useCallBack</code>比较好</p>
+</blockquote>
+
+<h2 id="副作用函数">副作用函数</h2>
+
+<p>组件的功能不仅局限于渲染视图，还能产生副作用；</p>
+
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/WeChat51e6cd682133d4f2b5de4847a5a701fc.png" alt="副作用" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>纯函数：如果一个函数传入一个固定的输入一定会产生固定的输入，则此函数是纯函数
+
+包含副作用函数：如果传入一固定的参数，不因有固定的输出，则说改函数是包含副作用的
+</code></pre></div></div>
+
+<p>在函数组件中可以通过useEffect来定义有副作用的因变量
+假设我们<code class="language-plaintext highlighter-rouge">count</code>变化之后，让浏览器的title也改变; 改变标题就是副作用；</p>
+
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/Aug-14-2022%2000-39-18.gif" alt="useMemo和useCallBack" /></p>
+
+<p>## useContext</p>
+
+<p>接下来我们继续修改我们的例子</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">useMemo</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">count</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="nx">count</span><span class="p">]);</span>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="nx">count</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">新标题</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">count</span><span class="p">]);</span>
+
+  <span class="kd">const</span> <span class="nx">handleChange</span> <span class="o">=</span> <span class="nx">useCallback</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="nx">count</span><span class="p">]);</span>
+
+  <span class="kd">const</span> <span class="nx">RenderCount</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">data</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">i</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">data</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/i&gt;</span><span class="err">;
+</span>  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ul</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">handleChange</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span>
+          <span class="nx">count是</span><span class="p">:</span> <span class="o">&lt;</span><span class="nx">RenderCount</span> <span class="nx">data</span><span class="o">=</span><span class="p">{</span><span class="nx">count</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span>
+          <span class="nx">result是</span><span class="p">:</span> <span class="o">&lt;</span><span class="nx">RenderCount</span> <span class="nx">data</span><span class="o">=</span><span class="p">{</span><span class="nx">result</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/WeChatfc4b1c72b3d9f558640b05dfcd1b7278.png" alt="useContext" /></p>
+
+<p>如上图可以看出，一个字变量和因变量又能作为另一个组件（子组件）的自变量和因变量，使用我们上述方式如图中叶子节点视图组件拿到根节点的视图组件的参数需要逐一传递，很复杂；
+此时就又了<code class="language-plaintext highlighter-rouge">useContext</code>,在第一级组件通过<code class="language-plaintext highlighter-rouge">createContext</code>创建<code class="language-plaintext highlighter-rouge">Context</code>后，其子组件及其子组件的字组件等都能通过<code class="language-plaintext highlighter-rouge">useContext</code>可以直接使用第一级组件通过<code class="language-plaintext highlighter-rouge">creatContext</code>创建的<code class="language-plaintext highlighter-rouge">Context</code>。</p>
+
+<blockquote>
+  <p>总结：通过这种方式使得跨层级的传递自变量变得很简单</p>
+</blockquote>
+
+<h2 id="useref">useRef</h2>
+
+<blockquote>
+  <p>除了字变量和因变量外还有一种变量，他紧紧是其缓存数据作用，不会触发视图重新渲染</p>
+</blockquote>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">renderCountRef</span> <span class="o">=</span> <span class="nx">useRef</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">isOdd</span> <span class="o">=</span> <span class="nx">renderCountRef</span><span class="p">.</span><span class="nx">current</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">count</span> <span class="o">&amp;&amp;</span> <span class="nx">renderCountRef</span><span class="p">.</span><span class="nx">current</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">count</span><span class="p">]);</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">count</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">handleChange</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">RenderCount</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">data</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">i</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">data</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/i&gt;</span><span class="err">;
+</span>  <span class="p">};</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ul</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">handleChange</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="nx">isOdd</span> <span class="o">&amp;&amp;</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span>
+            <span class="na">count是</span><span class="p">:</span> <span class="o">&lt;</span><span class="nx">RenderCount</span> <span class="nx">data</span><span class="o">=</span><span class="p">{</span><span class="nx">count</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>        <span class="p">)}</span>
+        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span>
+          <span class="nx">result是</span><span class="p">:</span> <span class="o">&lt;</span><span class="nx">RenderCount</span> <span class="nx">data</span><span class="o">=</span><span class="p">{</span><span class="nx">result</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/Aug-14-2022%2001-47-54.gif" alt="useRef" /></p>
+
+<p>:::tip 总结
+    useState:定义自变量
+    useMemo：定义无辅助作用的因变量
+    useCallBack：定义无辅助作用的因变量
+    useEffect：定义有辅助作用的因变量
+    useReducer：可以看作是进阶版的useState，他使用redux的理念，
+                将多个state合并成一个，本质上也是因变量
+    useContext：为了跨组件层级操作自变量
+    useRef：为了让组件逻辑更灵活
+:::</p>

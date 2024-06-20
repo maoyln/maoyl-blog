@@ -1,0 +1,53 @@
+<h1 id="web网页性能指标"><code class="language-plaintext highlighter-rouge">WEB</code>网页性能指标</h1>
+<h2 id="web性能指标"><code class="language-plaintext highlighter-rouge">WEB</code>性能指标</h2>
+
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20220921175727.png" alt="" /></p>
+<h3 id="fps每秒帧数"><code class="language-plaintext highlighter-rouge">FPS</code>每秒帧数</h3>
+<p>正常人看<code class="language-plaintext highlighter-rouge">24PFS</code>的动画时，会觉得有些卡顿；是不是WEB网页的<code class="language-plaintext highlighter-rouge">FPS</code>要一直保持在<code class="language-plaintext highlighter-rouge">&gt;24</code>呢?</p>
+
+<p>其实人对连贯视觉效果的东西比较在意<code class="language-plaintext highlighter-rouge">FPS</code>,如一些游戏、动画、地图等等；
+ 相比来说对网页的<code class="language-plaintext highlighter-rouge">PFS</code>要求也并并不是那么的高，具体怎么设定性能指标呢？</p>
+
+<p>下面我们参考一下<code class="language-plaintext highlighter-rouge">RAIL</code>：</p>
+
+<p>### <code class="language-plaintext highlighter-rouge">RAIL</code>指标</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>RAIL步骤</th>
+      <th>关键指标</th>
+      <th>用户操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>响应</td>
+      <td>输入延迟时间（从点到绘制）小于<code class="language-plaintext highlighter-rouge">100毫秒</code></td>
+      <td>用户点击按钮（例如登录，提交）</td>
+    </tr>
+    <tr>
+      <td>动画</td>
+      <td>每个帧的工作（从JS到绘制）完成时间小于<code class="language-plaintext highlighter-rouge">16毫秒</code></td>
+      <td>用户滚动页面，拖动手指（例如，打开菜单）或看到动画。 拖动时，应用的响应与手指位置有关（例如，拉动刷新、滑动轮播）。 此指标仅适用于拖动的持续阶段，不适用于开始阶段。</td>
+    </tr>
+    <tr>
+      <td>空闲</td>
+      <td>主线程<code class="language-plaintext highlighter-rouge">JS</code>工作成分不大于<code class="language-plaintext highlighter-rouge">50毫秒</code>的块</td>
+      <td>用户没有与页面交互，主线程可利用空闲时间处理页面工作，不过应预留足够用的时间来处理用户的下次交互</td>
+    </tr>
+    <tr>
+      <td>加载</td>
+      <td>页面可以在<code class="language-plaintext highlighter-rouge">1000毫秒</code>内就绪</td>
+      <td>用户点击查询加载页面到看到相应内容</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>什么是<code class="language-plaintext highlighter-rouge">RAIL</code>?</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">RAIL</code>是一种以用户为中心的性能模型，每个网络应用均具有与其生命周期有关的四个方面。</p>
+
+<p><code class="language-plaintext highlighter-rouge">RAIL</code>内容详情：<a href="https://web.dev/rail/?utm_source=devtools#goals-and-guidelines">使用 RAIL 模型衡量性能</a></p>

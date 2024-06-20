@@ -1,0 +1,136 @@
+<h1 id="多种数组去重性能对比">多种数组去重性能对比</h1>
+
+<h2 id="测试模板">测试模板</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 创建一个 1 ~ 10w 的数组，Array.from为ES6语法</span>
+<span class="kd">let</span> <span class="nx">arr1</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">1000000</span><span class="p">),</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> 
+  <span class="k">return</span> <span class="nx">index</span>
+<span class="p">})</span>
+
+<span class="kd">let</span> <span class="nx">arr2</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">500000</span><span class="p">),</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">index</span> <span class="o">+</span> <span class="nx">index</span>
+<span class="p">})</span>
+
+<span class="kd">let</span> <span class="nx">start</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">()</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">开始数组去重</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="c1">// 数组去重</span>
+<span class="kd">function</span> <span class="nx">distinct</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+  <span class="c1">// 去重方法</span>
+<span class="p">}</span>
+
+
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">去重后的长度</span><span class="dl">'</span><span class="p">,</span> <span class="nx">distinct</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">).</span><span class="nx">length</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">end</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">()</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">耗时</span><span class="dl">'</span><span class="p">,</span> <span class="nx">end</span> <span class="o">-</span> <span class="nx">start</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">ms</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="测试代码">测试代码</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 创建一个 1 ~ 10w 的数组，Array.from为ES6语法</span>
+<span class="kd">let</span> <span class="nx">arr1</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">1000000</span><span class="p">),</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> 
+  <span class="k">return</span> <span class="nx">index</span>
+<span class="p">})</span>
+
+<span class="kd">let</span> <span class="nx">arr2</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">500000</span><span class="p">),</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">index</span> <span class="o">+</span> <span class="nx">index</span>
+<span class="p">})</span>
+
+<span class="kd">let</span> <span class="nx">start</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">()</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">开始数组去重</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="c1">// 数组去重</span>
+<span class="kd">function</span> <span class="nx">distinct</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+  
+  <span class="c1">// 方法1，耗时约11675ms，约11s</span>
+  <span class="c1">// return arr.filter((item, index) =&gt; {</span>
+  <span class="c1">//   return arr.indexOf(item) === index</span>
+  <span class="c1">// })</span>
+
+  <span class="c1">// 方法2，耗时约22851ms，约22s，性能最差</span>
+  <span class="c1">// for (let i = 0, len = arr.length; i &lt; len; i++) {</span>
+  <span class="c1">//   for (let j = i + 1; j &lt; len; j++) {</span>
+  <span class="c1">//     if (arr[i] == arr[j]) {</span>
+  <span class="c1">//       arr.splice(j, 1);</span>
+  <span class="c1">//       // splice 会改变数组长度，所以要将数组长度 len 和下标 j 减一</span>
+  <span class="c1">//       len--;</span>
+  <span class="c1">//       j--;</span>
+  <span class="c1">//     }</span>
+  <span class="c1">//   }</span>
+  <span class="c1">// }</span>
+  <span class="c1">// return arr</span>
+
+  <span class="c1">//方法3，耗时约12789ms，约12s，和方法1相当</span>
+  <span class="c1">// let result = []</span>
+  <span class="c1">// for (let i of arr) {</span>
+  <span class="c1">//   !result.includes(i) &amp;&amp; result.push(i)</span>
+  <span class="c1">// }</span>
+  <span class="c1">// return result</span>
+
+  <span class="c1">//方法4，耗时约23ms，ES5标准中性能最高</span>
+  <span class="c1">// arr = arr.sort()</span>
+  <span class="c1">// let result = [arr[0]]</span>
+  <span class="c1">// for (let i = 1, len = arr.length; i &lt; len; i++) {</span>
+  <span class="c1">//   arr[i] !== arr[i - 1] &amp;&amp; result.push(arr[i])</span>
+  <span class="c1">// }</span>
+  <span class="c1">// return result</span>
+
+  <span class="c1">// 方法5，ES6的Set数据结构，耗时约20ms，性能高，代码简洁</span>
+  <span class="c1">// return Array.from(new Set([...a, ...b]))</span>
+
+  <span class="c1">// 方法6，耗时约16ms，所有方法中 性能最高！ (千万级数据量下效率比方法5高4倍，for...of 为ES6语法)</span>
+  <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="k">of</span> <span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">obj</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+      <span class="nx">obj</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">result</span>
+
+<span class="p">}</span>
+
+
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">去重后的长度</span><span class="dl">'</span><span class="p">,</span> <span class="nx">distinct</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">).</span><span class="nx">length</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">end</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">()</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">耗时</span><span class="dl">'</span><span class="p">,</span> <span class="nx">end</span> <span class="o">-</span> <span class="nx">start</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">ms</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="结论">结论</h2>
+
+<p>ES5标准中性能最高的数组去重方法为:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 耗时约23ms</span>
+<span class="nx">arr</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">sort</span><span class="p">()</span>
+<span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[</span><span class="nx">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+<span class="p">}</span>
+<span class="k">return</span> <span class="nx">result</span>
+</code></pre></div></div>
+
+<p>ES6标准中性能最高的数组去重方法为:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 耗时约16ms (千万级数据量下效率比使用Set数据结构方法高4倍，for...of 为ES6语法)</span>
+<span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="k">of</span> <span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">obj</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">{</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+        <span class="nx">obj</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">return</span> <span class="nx">result</span>
+</code></pre></div></div>
+
+<p>代码既简洁性能又相对高的去重方法为：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 耗时约20ms，性能高，代码简洁</span>
+<span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="k">new</span> <span class="nb">Set</span><span class="p">([...</span><span class="nx">a</span><span class="p">,</span> <span class="p">...</span><span class="nx">b</span><span class="p">]))</span>
+</code></pre></div></div>
+

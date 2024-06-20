@@ -1,0 +1,38 @@
+<h1 id="得力辅助大小写转换注释与显示悬浮提示">得力辅助：大小写转换、注释与显示悬浮提示</h1>
+
+<h2 id="大小写转换">大小写转换</h2>
+
+<p>在之前的训练开始前的准备中提到的改改键中，我们提到把 <code class="language-plaintext highlighter-rouge">control</code> 键与 <code class="language-plaintext highlighter-rouge">caps lock</code> 键互换，因为在大部分要输入大写的时候，我们都可以通过 <code class="language-plaintext highlighter-rouge">shift + [字母]</code> 来达到一样的效果；</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">gu</code>：变小写</li>
+  <li><code class="language-plaintext highlighter-rouge">gU</code>：变大小</li>
+  <li><code class="language-plaintext highlighter-rouge">~</code>：大小写互换</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">gu</code> <code class="language-plaintext highlighter-rouge">gU</code> 后面可接 motion ，比如 <code class="language-plaintext highlighter-rouge">gue</code> 就可以把光标到单词末尾的字符变成小写，而 <code class="language-plaintext highlighter-rouge">gUiw</code> 就可以把当前单词变成全大写；与 <code class="language-plaintext highlighter-rouge">d</code> <code class="language-plaintext highlighter-rouge">c</code> 等操作符是一样的用法。而在 visul mode 中，我们可以直接使用 <code class="language-plaintext highlighter-rouge">u</code> <code class="language-plaintext highlighter-rouge">U</code>，即选中了一段文本后可以直接用这两个命令把所有的字母转换成大写或小写。</p>
+
+<h2 id="注释">注释</h2>
+
+<p>平时在 vscode 中，注释的快捷键是 <code class="language-plaintext highlighter-rouge">command + /</code>，其实也能用，不过 vim 的注释命令除了单行注释、多行注释，还可以选中了行内的文本后进行行内注释；命令如下：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">gc</code>：单行注释，和 <code class="language-plaintext highlighter-rouge">command + /</code> 的效果一样；如在 js 文件中注释时是 <code class="language-plaintext highlighter-rouge">//</code> 开头</li>
+  <li><code class="language-plaintext highlighter-rouge">gC</code>：多行注释，如在 js 文件中注释时是被 <code class="language-plaintext highlighter-rouge">/* */</code> 包裹</li>
+</ul>
+
+<p>而且，这个命令在 visual mode 和 normal mode 是通用的。</p>
+
+<h2 id="显示悬浮提示">显示悬浮提示</h2>
+
+<p>在日常开发中，我们常常会需要查看一些代码中的报错、警告或者一些代码提示等，但是大部分的编辑器，如 vscode，都是需要用鼠标移到被标记的代码中才能让悬浮提示框显示出来，而 vim 提供了一个命令，可以达到鼠标划入光标所在单词的效果，它就是 <code class="language-plaintext highlighter-rouge">gh</code>。记忆它也很简单，就记住 “h for hover”，即 <code class="language-plaintext highlighter-rouge">h</code> 是指 “hover” 的意思，我相信前端开发的小伙伴应该都能快速记住这个指令。</p>
+
+<h2 id="练习">练习</h2>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">function</span> <span class="nx">myTest</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">atest</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">btest</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">ctest</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>

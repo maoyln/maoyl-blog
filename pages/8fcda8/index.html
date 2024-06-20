@@ -1,0 +1,199 @@
+<h1 id="06-条件渲染">06. 条件渲染</h1>
+
+<p>React 中的条件渲染和 JavaScript 中的一样，使用 JavaScript 运算符 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else"><code class="language-plaintext highlighter-rouge">if</code></a> 或者<a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Conditional_Operator">条件运算符</a>去创建元素来表现当前的状态，然后让 React 根据它们来更新 UI。</p>
+
+<p>观察这两个组件:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">UserGreeting</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Welcome back!<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">GuestGreeting</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Please sign up.<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>再创建一个 <code class="language-plaintext highlighter-rouge">Greeting</code> 组件，它会根据用户是否登录来决定显示上面的哪一个组件。</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Greeting</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">isLoggedIn</span> <span class="o">=</span> <span class="nx">props</span><span class="p">.</span><span class="nx">isLoggedIn</span><span class="p">;</span>
+
+  <span class="c1">// 根据条件来渲染组件(UI)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isLoggedIn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">&lt;</span><span class="nc">UserGreeting</span> <span class="p">/&gt;;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="p">&lt;</span><span class="nc">GuestGreeting</span> <span class="p">/&gt;;</span>
+<span class="p">}</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="c1">// Try changing to isLoggedIn={true}:</span>
+  <span class="p">&lt;</span><span class="nc">Greeting</span> <span class="na">isLoggedIn</span><span class="p">=</span><span class="si">{</span><span class="kc">false</span><span class="si">}</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="元素变量">元素变量</h2>
+
+<p>你可以使用变量来储存元素。 它可以帮助你有条件地渲染组件的一部分，而其他的渲染部分并不会因此而改变。</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">LoginControl</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">handleLoginClick</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">handleLoginClick</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">handleLogoutClick</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">handleLogoutClick</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span><span class="na">isLoggedIn</span><span class="p">:</span> <span class="kc">false</span><span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="nx">handleLoginClick</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">isLoggedIn</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">handleLogoutClick</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">isLoggedIn</span><span class="p">:</span> <span class="kc">false</span><span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">isLoggedIn</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">isLoggedIn</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">button</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">isLoggedIn</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">button</span> <span class="o">=</span> <span class="p">&lt;</span><span class="nc">LogoutButton</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleLogoutClick</span><span class="si">}</span> <span class="p">/&gt;;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">button</span> <span class="o">=</span> <span class="p">&lt;</span><span class="nc">LoginButton</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleLoginClick</span><span class="si">}</span> <span class="p">/&gt;;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Greeting</span> <span class="na">isLoggedIn</span><span class="p">=</span><span class="si">{</span><span class="nx">isLoggedIn</span><span class="si">}</span> <span class="p">/&gt;</span>
+        <span class="si">{</span><span class="nx">button</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nc">LoginControl</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p><a href="https://codepen.io/gaearon/pen/QKzAgB?editors=0010"><strong>在 CodePen 上尝试</strong></a></p>
+
+<blockquote>
+  <p>此方式有些复杂~</p>
+</blockquote>
+
+<h2 id="与运算符-">与运算符 &amp;&amp;</h2>
+
+<p>通过花括号包裹代码，你可以<a href="https://zh-hans.reactjs.org/docs/introducing-jsx.html#embedding-expressions-in-jsx">在 JSX 中嵌入表达式</a>。这也包括 JavaScript 中的逻辑与 (&amp;&amp;) 运算符。它可以很方便地进行元素的条件渲染：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Mailbox</span><span class="p">(</span><span class="nx">props</span><span class="p">){</span>
+  <span class="kd">const</span> <span class="nx">unreadMeg</span> <span class="o">=</span> <span class="nx">props</span><span class="p">.</span><span class="nx">unreadMeg</span>
+  <span class="k">return</span> <span class="p">(</span>
+  	<span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+    	<span class="si">{</span>
+        <span class="nx">unreadMeg</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span>
+          <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>You have <span class="si">{</span><span class="nx">unreadMeg</span><span class="p">.</span><span class="nx">length</span><span class="si">}</span> unread messages<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+      <span class="si">}</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">meg</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">1</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">22</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">33</span><span class="dl">'</span><span class="p">]</span>
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+	<span class="p">&lt;</span><span class="nc">Mailbox</span> <span class="na">unreadMeg</span><span class="p">=</span><span class="si">{</span><span class="nx">meg</span><span class="si">}</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>如果条件是 <code class="language-plaintext highlighter-rouge">true</code>，<code class="language-plaintext highlighter-rouge">&amp;&amp;</code> 右侧的元素就会被渲染，如果是 <code class="language-plaintext highlighter-rouge">false</code>，React 会忽略并跳过它。</p>
+
+<p>请<strong>注意</strong>，返回 false 的表达式会使 <code class="language-plaintext highlighter-rouge">&amp;&amp;</code> 后面的元素被跳过，但会返回 false 表达式。在下面示例中，render 方法的返回值是 <code class="language-plaintext highlighter-rouge">&lt;div&gt;0&lt;/div&gt;</code>。</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      // 这里会渲染count的值
+      <span class="si">{</span> <span class="nx">count</span> <span class="o">&amp;&amp;</span> <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Messages: <span class="si">{</span><span class="nx">count</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span><span class="si">}</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="三目运算符">三目运算符</h2>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">isLoggedIn</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">isLoggedIn</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      The user is <span class="p">&lt;</span><span class="nt">b</span><span class="p">&gt;</span><span class="si">{</span><span class="nx">isLoggedIn</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">currently</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">not</span><span class="dl">'</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">b</span><span class="p">&gt;</span> logged in.
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">isLoggedIn</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">isLoggedIn</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="si">{</span><span class="nx">isLoggedIn</span>
+        <span class="p">?</span> <span class="p">&lt;</span><span class="nc">LogoutButton</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleLogoutClick</span><span class="si">}</span> <span class="p">/&gt;</span>
+        <span class="p">:</span> <span class="p">&lt;</span><span class="nc">LoginButton</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleLoginClick</span><span class="si">}</span> <span class="p">/&gt;</span>
+      <span class="si">}</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>可通过三目运算符来条件渲染相应组件。</p>
+</blockquote>
+
+<h2 id="阻止组件渲染">阻止组件渲染</h2>
+
+<p>通过让 <code class="language-plaintext highlighter-rouge">render</code> 方法直接返回 <code class="language-plaintext highlighter-rouge">null</code>阻止渲染：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">WarningBanner</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">props</span><span class="p">.</span><span class="nx">warn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 返回null则不渲染此组件</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"warning"</span><span class="p">&gt;</span>
+      Warning!
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">Page</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span><span class="na">showWarning</span><span class="p">:</span> <span class="kc">true</span><span class="p">};</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">handleToggleClick</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">handleToggleClick</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">handleToggleClick</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">(</span><span class="nx">state</span> <span class="o">=&gt;</span> <span class="p">({</span>
+      <span class="na">showWarning</span><span class="p">:</span> <span class="o">!</span><span class="nx">state</span><span class="p">.</span><span class="nx">showWarning</span>
+    <span class="p">}));</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">WarningBanner</span> <span class="na">warn</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">showWarning</span><span class="si">}</span> <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleToggleClick</span><span class="si">}</span><span class="p">&gt;</span>
+          <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">showWarning</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">Hide</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Show</span><span class="dl">'</span><span class="si">}</span>
+        <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nc">Page</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>在组件的 <code class="language-plaintext highlighter-rouge">render</code> 方法中返回 <code class="language-plaintext highlighter-rouge">null</code> 并不会影响组件的生命周期。例如，上面这个示例中，<code class="language-plaintext highlighter-rouge">componentDidUpdate</code> 依然会被调用。</p>

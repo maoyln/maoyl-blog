@@ -1,0 +1,250 @@
+<h2 id="js设计模式总结笔记-单例模式">JS设计模式总结笔记-单例模式</h2>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">分类:</code>创建类模式</p>
+</blockquote>
+
+<h2 id="概念">概念</h2>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">单例模式</code>定义：保证一个类仅有一个实例，并提供一个访问它的全局访问点；</p>
+</blockquote>
+
+<p>对于单例模式，就是一个类只能有一个实例。其中<code class="language-plaintext highlighter-rouge">类</code>这一概念对于前端JS而言，是一个比较神奇的存在，它既是一个<code class="language-plaintext highlighter-rouge">funciton</code>又是一个<code class="language-plaintext highlighter-rouge">Class（ES6）</code>，其实<code class="language-plaintext highlighter-rouge">Class</code>也只是<code class="language-plaintext highlighter-rouge">Function</code>的语法糖。对于这样每一个类我们只能有一个对应的对象，这就是单例模式。</p>
+
+<h2 id="实现理念">实现理念</h2>
+
+<p>在<code class="language-plaintext highlighter-rouge">JavaScript</code>里，单例作为一个命名空间提供者，从全局命名空间里提供一个唯一的访问点来访问该对象。
+在 <code class="language-plaintext highlighter-rouge">js</code> 开发中，我们经常会把全局变量当成单例来使用</p>
+
+<h3 id="最简单的对象字面量">最简单的对象字面量</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">A</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">maoyl</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">age</span><span class="p">:</span> <span class="mi">12</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">t1</span> <span class="o">=</span> <span class="nx">A</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">t2</span> <span class="o">=</span> <span class="nx">A</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t1</span> <span class="o">===</span> <span class="nx">t2</span><span class="p">);</span> <span class="c1">// true</span>
+
+</code></pre></div></div>
+
+<p>其实对象的直接赋值也是单例模式，A负值给t1 和t2只是修改了它的指向。 <code class="language-plaintext highlighter-rouge">个人理解：有错联系修正</code>。</p>
+
+<h3 id="单例模式的多种实现方案">单例模式的多种实现方案</h3>
+
+<p>单例模式很简单，下面我们之间看几个实例：</p>
+
+<blockquote>
+  <p>方案一</p>
+</blockquote>
+
+<ul>
+  <li>利用instanceof判断是否使用new关键字调用函数进行对象的实例化</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Singleton</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span> <span class="k">instanceof</span> <span class="nx">Singleton</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">maoyl</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">singleton1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">();</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">singleton1</span> <span class="o">===</span> <span class="nx">singleton2</span><span class="p">);</span> <span class="c1">// 返回true</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>方案二</p>
+</blockquote>
+
+<ul>
+  <li>在函数上直接添加方法属性调用生成实例</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Singleton</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">maoyl</span><span class="dl">'</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">Singleton</span><span class="p">.</span><span class="nx">getInstance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">singleton1</span> <span class="o">=</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">singleton2</span> <span class="o">=</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">singleton1</span> <span class="o">===</span> <span class="nx">singleton2</span><span class="p">);</span> <span class="c1">// 返回true</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>方案三</p>
+</blockquote>
+
+<ul>
+  <li>使用闭包(改进<code class="language-plaintext highlighter-rouge">方式二</code>)</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Singleton</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">maoyl</span><span class="dl">'</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">Singleton</span><span class="p">.</span><span class="nx">getInstance</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">instance</span><span class="p">;</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">instance</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">instance</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">})();</span>
+
+<span class="kd">const</span> <span class="nx">singleton1</span> <span class="o">=</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">singleton2</span> <span class="o">=</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">singleton1</span> <span class="o">===</span> <span class="nx">singleton2</span><span class="p">);</span> <span class="c1">// 返回true</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>方式四</p>
+</blockquote>
+
+<ul>
+  <li>使用包装对象结合闭包的形式实现(改进<code class="language-plaintext highlighter-rouge">方式三</code>)</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">Singleton</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">_singleton</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">maoyl</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">_singleton</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">_singleton</span><span class="p">.</span><span class="nx">instance</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_singleton</span><span class="p">.</span><span class="nx">instance</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">_singleton</span><span class="p">.</span><span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">_singleton</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">_singleton</span><span class="p">.</span><span class="nx">instance</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">})();</span>
+
+<span class="kd">const</span> <span class="nx">singleton1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">();</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">singleton1</span> <span class="o">===</span> <span class="nx">singleton2</span><span class="p">);</span> <span class="c1">// 返回true</span>
+</code></pre></div></div>
+<p>在流程比较复杂的情况下，闭包里的东西也是可以提取出来单独封装的</p>
+
+<blockquote>
+  <p>在频繁使用到单例的情况下，推荐使用类似此方法的方案，当然内部实现可以采用上述任意一种</p>
+</blockquote>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">SingleWrapper</span><span class="p">(</span><span class="nx">cons</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// 排除非函数与箭头函数</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">cons</span> <span class="k">instanceof</span> <span class="nb">Function</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="nx">cons</span><span class="p">.</span><span class="nx">prototype</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">不是合法的构造函数</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="kd">var</span> <span class="nx">instance</span>
+  <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">instance</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cons</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">instance</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">Singleton</span><span class="p">(){</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">xm</span><span class="dl">'</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">MySingleton</span> <span class="o">=</span> <span class="nx">SingleWrapper</span><span class="p">(</span><span class="nx">Singleton</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">singleton1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MySingleton</span><span class="p">()</span>
+<span class="kd">const</span> <span class="nx">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MySingleton</span><span class="p">()</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">singleton1</span> <span class="o">===</span> <span class="nx">singleton2</span><span class="p">);</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>方式五</p>
+</blockquote>
+
+<ul>
+  <li>在构造函数中利用new.target判断是否使用new关键字</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Singleton</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">new</span><span class="p">.</span><span class="nx">target</span> <span class="o">===</span> <span class="o">!</span> <span class="nx">Singleton</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">maoyl</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">singleton1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">();</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">singleton1</span> <span class="o">===</span> <span class="nx">singleton2</span><span class="p">);</span> <span class="c1">// 返回true</span>
+</code></pre></div></div>
+
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/new.target">new.target学习</a>
+::: tip new.targe:
+<strong>new.target</strong> 属性允许你检测函数或构造方法是否是通过new运算符被调用的。在通过new运算符被初始化的函数或构造方法中，new.target返回一个指向构造方法或函数的引用。在普通的函数调用中，new.target 的值是undefined。
+:::</p>
+
+<blockquote>
+  <p>方式六</p>
+</blockquote>
+
+<ul>
+  <li>使用static静态方法</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Singleton</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">maoyl</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">static</span> <span class="nx">getInstance</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">_instance</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">singleton1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">singleton2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Singleton</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">singleton1</span> <span class="o">===</span> <span class="nx">singleton2</span><span class="p">);</span> <span class="c1">// 返回true</span>
+</code></pre></div></div>
+
+<h3 id="单例模式优缺点">单例模式优缺点</h3>
+
+<blockquote>
+  <p>优点：</p>
+</blockquote>
+
+<ul>
+  <li>提供了对唯一实例的受控访问。</li>
+  <li>由于在系统内存中只存在一个对象，因此可以节约系统资源，对于一些需要频繁创建和销毁的对象单例模式无疑可以提高系统的性能。</li>
+  <li>允许可变数目的实例。</li>
+</ul>
+
+<blockquote>
+  <p>缺点：</p>
+</blockquote>
+
+<ul>
+  <li>由于单例模式中没有抽象层，因此单例类的扩展有很大的困难。</li>
+  <li>单例类的职责过重，在一定程度上违背了“单一职责原则”。</li>
+  <li>滥用单例将带来一些负面问题，如为了节省资源将数据库连接池对象设计为的单例类，可能会导致共享连接池对象的程序过多而出现连接池溢出；如果实例化的对象长时间不被利用，系统会认为是垃圾而被回收，这将导致对象状态的丢失。</li>
+</ul>

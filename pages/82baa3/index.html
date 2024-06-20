@@ -1,0 +1,109 @@
+<h1 id="02-使用state-hook">02. 使用State Hook</h1>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">Example</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// 声明一个叫 "count" 的 state 变量</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>You clicked <span class="si">{</span><span class="nx">count</span><span class="si">}</span> times<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="p">&gt;</span>
+        Click me
+      <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>我们将通过将这段代码与一个等价的 class 示例进行比较来开始学习 Hook。</p>
+
+<h2 id="等价的class组件示例">等价的Class组件示例</h2>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Example</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">count</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>You clicked <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">count</span><span class="si">}</span> times<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="na">count</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">})</span><span class="si">}</span><span class="p">&gt;</span>
+          Click me
+        <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>state 初始值为 <code class="language-plaintext highlighter-rouge">{ count: 0 }</code> ，当用户点击按钮后，我们通过调用 <code class="language-plaintext highlighter-rouge">this.setState()</code> 来增加 <code class="language-plaintext highlighter-rouge">state.count</code>。整个章节中都将使用该 class 的代码片段做示例。</p>
+
+<h3 id="hook-在-class-内部是不起作用">Hook 在 class 内部是不起作用</h3>
+
+<p><strong>Hook 在 class 内部是不起作用的</strong>。但你可以使用它们来取代 class 。</p>
+
+<h2 id="调用-usestate-方法的时候做了什么">调用 <code class="language-plaintext highlighter-rouge">useState</code> 方法的时候做了什么?</h2>
+
+<p>它定义一个 “state 变量”。我们的变量叫 <code class="language-plaintext highlighter-rouge">count</code>， 但是我们可以叫他任何名字，比如 <code class="language-plaintext highlighter-rouge">banana</code>。这是一种在函数调用时保存变量的方式 —— <code class="language-plaintext highlighter-rouge">useState</code> 是一种新方法，它与 class 里面的 <code class="language-plaintext highlighter-rouge">this.state</code> 提供的功能完全相同。<strong>一般来说，在函数退出后变量就会”消失”，而 state 中的变量会被 React 保留。</strong></p>
+
+<h2 id="usestate-需要哪些参数"><code class="language-plaintext highlighter-rouge">useState</code> 需要哪些参数？</h2>
+
+<p><code class="language-plaintext highlighter-rouge">useState()</code> 方法里面<strong>唯一的参数就是初始 state</strong>。不同于 class 的是，我们可以按照需要使用数字或字符串对其进行赋值，而不一定是对象。在示例中，只需使用数字来记录用户点击次数，所以我们传了 <code class="language-plaintext highlighter-rouge">0</code> 作为变量的初始 state。（如果我们想要在 state 中存储两个不同的变量，只需调用 <code class="language-plaintext highlighter-rouge">useState()</code> 两次即可。）</p>
+
+<h2 id="usestate-方法的返回值是什么"><code class="language-plaintext highlighter-rouge">useState</code> 方法的返回值是什么？</h2>
+
+<p>返回值为：当前 state 以及更新 state 的函数。这就是我们写 <code class="language-plaintext highlighter-rouge">const [count, setCount] = useState()</code> 的原因。这与 class 里面 <code class="language-plaintext highlighter-rouge">this.state.count</code> 和 <code class="language-plaintext highlighter-rouge">this.setState</code> 类似，唯一区别就是你需要成对的获取它们。</p>
+
+<h2 id="理解usestate">理解useState</h2>
+
+<p>既然我们知道了 <code class="language-plaintext highlighter-rouge">useState</code> 的作用，我们的示例应该更容易理解了：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">Example</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// 声明一个叫 "count" 的 state 变量  const [count, setCount] = useState(0);</span>
+</code></pre></div></div>
+
+<p>我们声明了一个叫 <code class="language-plaintext highlighter-rouge">count</code> 的 state 变量，然后把它设为 <code class="language-plaintext highlighter-rouge">0</code>。<strong>React 会在重复渲染时记住它当前的值，并且提供最新的值给我们的函数。</strong>我们可以通过调用 <code class="language-plaintext highlighter-rouge">setCount</code> 来更新当前的 <code class="language-plaintext highlighter-rouge">count</code>。</p>
+
+<blockquote>
+  <p>注意</p>
+
+  <p>你可能想知道：为什么叫 <code class="language-plaintext highlighter-rouge">useState</code> 而不叫 <code class="language-plaintext highlighter-rouge">createState</code>?</p>
+
+  <p>“Create” 可能不是很准确，因为 state 只在组件首次渲染的时候被创建。在下一次重新渲染时，<code class="language-plaintext highlighter-rouge">useState</code> 返回给我们当前的 state。否则它就不是 “state”了！这也是 Hook 的名字<em>总是</em>以 <code class="language-plaintext highlighter-rouge">use</code> 开头的一个原因。我们将在后面的 <a href="https://zh-hans.reactjs.org/docs/hooks-rules.html">Hook 规则</a>中了解原因。</p>
+</blockquote>
+
+<h2 id="使用多个-state-变量">使用多个 state 变量</h2>
+
+<p>将 state 变量声明为一对 <code class="language-plaintext highlighter-rouge">[something, setSomething]</code> 也很方便，因为如果我们想使用多个 state 变量，它允许我们给不同的 state 变量取不同的名称：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">ExampleWithManyStates</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// 声明多个 state 变量</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">age</span><span class="p">,</span> <span class="nx">setAge</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">fruit</span><span class="p">,</span> <span class="nx">setFruit</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="dl">'</span><span class="s1">banana</span><span class="dl">'</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">todos</span><span class="p">,</span> <span class="nx">setTodos</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">([{</span> <span class="na">text</span><span class="p">:</span> <span class="dl">'</span><span class="s1">学习 Hook</span><span class="dl">'</span> <span class="p">}]);</span>
+</code></pre></div></div>
+
+<p>在以上组件中，我们有局部变量 <code class="language-plaintext highlighter-rouge">age</code>，<code class="language-plaintext highlighter-rouge">fruit</code> 和 <code class="language-plaintext highlighter-rouge">todos</code>，并且我们可以单独更新它们：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">function</span> <span class="nx">handleOrangeClick</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 和 this.setState({ fruit: 'orange' }) 类似</span>
+    <span class="nx">setFruit</span><span class="p">(</span><span class="dl">'</span><span class="s1">orange</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>你<strong>不必</strong>使用多个 state 变量。<strong>State 变量可以很好地存储对象和数组，因此，你仍然可以将相关数据分为一组</strong>。然而，不像 class 中的 <code class="language-plaintext highlighter-rouge">this.setState</code>，<strong>更新 state 变量总是<em>替换</em>它而不是合并它</strong>。</p>
+
+<p>我们<a href="https://zh-hans.reactjs.org/docs/hooks-faq.html#should-i-use-one-or-many-state-variables">在 FAQ 中</a>提供了更多关于分离独立 state 变量的建议。</p>
+
+<blockquote>
+  <p>把所有 state 都放在同一个 <code class="language-plaintext highlighter-rouge">useState</code> 调用中，或是每一个字段都对应一个 <code class="language-plaintext highlighter-rouge">useState</code> 调用，这两方式都能跑通。当你在这两个极端之间找到平衡，然后把相关 state 组合到几个独立的 state 变量时，组件就会更加的可读。如果 state 的逻辑开始变得复杂，我们推荐 <a href="https://zh-hans.reactjs.org/docs/hooks-reference.html#usereducer">用 reducer 来管理它</a>，或使用自定义 Hook。</p>
+</blockquote>
+

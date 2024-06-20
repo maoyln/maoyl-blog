@@ -1,0 +1,59 @@
+<ol>
+  <li>镜面水平翻转法
+::: demo [vanilla]
+``` html</li>
+</ol>
+<html>
+  <div id="tBox1">
+    <div class="ta" id="t1"></div>
+    <div class="ta" id="t2"></div>
+  </div>
+</html>
+<style>
+    #tBox1 {
+        display: flex;
+    }
+    
+    .ta {
+        width: 50%;
+        padding-bottom: 56.25%;
+        background: conic-gradient(from 90deg, blue, #6cf);
+    }
+    
+    #t2 {
+        transform: rotateY(180deg);
+    }
+</style>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:::
+
+2. 水平相反方向渐变法
+
+::: demo [vanilla]
+``` html
+&lt;html&gt;
+  &lt;div id="tBox2"&gt;
+    &lt;div class="tb" id="t3"&gt;&lt;/div&gt;
+    &lt;div class="tb" id="t4"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/html&gt;
+&lt;style&gt;
+    #tBox2 {
+        display: flex;
+    }
+    
+    .tb {
+        width: 50%;
+        padding-bottom: 56.25%;
+    }
+    
+    #t3 {
+        background: conic-gradient(from 90deg, blue, #6cf);
+    }
+    
+    #t4 {
+        background: conic-gradient(from 270deg, #6cf, blue);
+    }
+&lt;/style&gt;
+</code></pre></div></div>
+<p>:::</p>

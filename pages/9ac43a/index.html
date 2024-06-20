@@ -1,0 +1,183 @@
+<h1 id="03-组件--props">03. 组件 &amp; Props</h1>
+
+<h2 id="函数组件与-class-组件">函数组件与 class 组件</h2>
+
+<h3 id="1函数组件">1.函数组件</h3>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Welcome</span><span class="p">(</span><span class="nx">props</span><span class="p">){</span>
+  <span class="k">return</span> <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>该函数是一个有效的React组件。接收唯一带有数据的props参数，并返回一个React元素。</p>
+
+<h3 id="2class组件">2.class组件</h3>
+
+<p>使用ES6的class来定义：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Welcome</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="p">{</span>
+  <span class="c1">// render 方法描述你想在屏幕看到的内容</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>以上两个组件是等效的。</p>
+
+<h3 id="函数组件与class组件在事件处理上的一些区别">函数组件与Class组件在事件处理上的一些区别</h3>
+
+<ul>
+  <li>
+    <p>使用<code class="language-plaintext highlighter-rouge">class组件</code>时的事件处理： <code class="language-plaintext highlighter-rouge">onClick={() =&gt; this.props.onClick()}</code></p>
+  </li>
+  <li>
+    <p>使用<code class="language-plaintext highlighter-rouge">函数组件</code>时的事件处理： <code class="language-plaintext highlighter-rouge">onClick={props.onClick}</code>（注意两侧<em>都</em>没有括号）。</p>
+  </li>
+</ul>
+
+<h2 id="渲染组件父子组件传值">渲染组件（父子组件传值）</h2>
+
+<p>React 元素也可以是用户自定义的组件：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="p">&lt;</span><span class="nc">Welcome</span> <span class="na">name</span><span class="p">=</span><span class="s">"Sara"</span> <span class="p">/&gt;;</span>
+</code></pre></div></div>
+
+<p>通过属性（attributes）来传递值给子组件：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Welcome</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 通过props接收传入值</span>
+  <span class="k">return</span> <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;;</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="p">&lt;</span><span class="nc">Welcome</span> <span class="na">name</span><span class="p">=</span><span class="s">"Sara"</span> <span class="p">/&gt;;</span> <span class="c1">// 通过attributes传入值</span>
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="nx">element</span><span class="p">,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>注意：</strong> <strong>组件名称必须以大写字母开头。</strong></p>
+
+<p>React 会将以小写字母开头的组件视为原生 DOM 标签。例如，<code class="language-plaintext highlighter-rouge">&lt;div /&gt;</code> 代表 HTML 的 div 标签，而 <code class="language-plaintext highlighter-rouge">&lt;Welcome /&gt;</code> 则代表一个组件，并且需在作用域内使用 <code class="language-plaintext highlighter-rouge">Welcome</code>。</p>
+
+<h2 id="组合组件复用组件">组合组件（复用组件）</h2>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Welcome</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      // 复用Welcome组件
+      <span class="p">&lt;</span><span class="nc">Welcome</span> <span class="na">name</span><span class="p">=</span><span class="s">"Sara"</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">Welcome</span> <span class="na">name</span><span class="p">=</span><span class="s">"Cahal"</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">Welcome</span> <span class="na">name</span><span class="p">=</span><span class="s">"Edite"</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nc">App</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>通常来说，每个新的 React 应用程序的顶层组件都是 <code class="language-plaintext highlighter-rouge">App</code> 组件</p>
+</blockquote>
+
+<h2 id="提取组件拆分组件">提取组件（拆分组件）</h2>
+
+<p>参考如下 <code class="language-plaintext highlighter-rouge">Comment</code> 组件：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Comment</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"Comment"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"UserInfo"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">img</span> <span class="na">className</span><span class="p">=</span><span class="s">"Avatar"</span>
+          <span class="na">src</span><span class="p">=</span><span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">author</span><span class="p">.</span><span class="nx">avatarUrl</span><span class="si">}</span>
+          <span class="na">alt</span><span class="p">=</span><span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">author</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span>
+        <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"UserInfo-name"</span><span class="p">&gt;</span>
+          <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">author</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"Comment-text"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">text</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"Comment-date"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">date</span><span class="p">)</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>该组件由于嵌套的关系，变得难以维护，且很难复用它的各个部分。因此，让我们从中提取一些组件出来。</p>
+
+<p>首先，提取 <code class="language-plaintext highlighter-rouge">Avatar</code> 组件：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Avatar</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">img</span> <span class="na">className</span><span class="p">=</span><span class="s">"Avatar"</span>
+      <span class="na">src</span><span class="p">=</span><span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">avatarUrl</span><span class="si">}</span>
+      <span class="na">alt</span><span class="p">=</span><span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span>
+    <span class="p">/&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="props命名原则">props命名原则</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Avatar</code> 不需知道它在 <code class="language-plaintext highlighter-rouge">Comment</code> 组件内部是如何渲染的。因此，我们给它的 props 起了一个更通用的名字：<code class="language-plaintext highlighter-rouge">user</code>，而不是 <code class="language-plaintext highlighter-rouge">author</code>。</p>
+
+<p>我们<strong>建议从组件自身的角度命名 props，而不是依赖于调用组件的上下文命名</strong>。</p>
+
+<p>接下来，我们将提取 <code class="language-plaintext highlighter-rouge">UserInfo</code> 组件，该组件在用户名旁渲染 <code class="language-plaintext highlighter-rouge">Avatar</code> 组件：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">UserInfo</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"UserInfo"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nc">Avatar</span> <span class="na">user</span><span class="p">=</span><span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">user</span><span class="si">}</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"UserInfo-name"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>最终的 <code class="language-plaintext highlighter-rouge">Comment</code> 组件：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Comment</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"Comment"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nc">UserInfo</span> <span class="na">user</span><span class="p">=</span><span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">author</span><span class="si">}</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"Comment-text"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">text</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"Comment-date"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">date</span><span class="p">)</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>最初看上去，提取组件可能是一件繁重的工作，但是，在大型应用中，构建可复用组件库是完全值得的。</p>
+
+<h3 id="提取原则">提取原则</h3>
+
+<ul>
+  <li>UI中多次被使用的部分</li>
+  <li>一个足够复杂的组件（页面）</li>
+</ul>
+
+<h2 id="props-的只读性不能修改props">Props 的只读性（不能修改Props）</h2>
+
+<p>组件无论是使用<a href="https://zh-hans.reactjs.org/docs/components-and-props.html#function-and-class-components">函数声明还是通过 class 声明</a>，都决不能修改自身的 props。</p>
+
+<blockquote>
+  <p>当然，应用程序的 UI 是动态的，并会伴随着时间的推移而变化。在<a href="https://zh-hans.reactjs.org/docs/state-and-lifecycle.html">下一章节</a>中，我们将介绍一种新的概念，称之为 “state”。在不违反上述规则的情况下，state 允许 React 组件随用户操作、网络响应或者其他变化而动态更改输出内容</p>
+</blockquote>

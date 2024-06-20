@@ -1,0 +1,27 @@
+<h1 id="似曾相识vscode-多窗口操作">似曾相识：vscode 多窗口操作</h1>
+
+<p>前面我们学习了不少关于“窗口”的操作，基本都是对于资源管理器、编辑窗之类的，今天我们来学习一下多个 vscode 窗口时的一些操作命令。</p>
+
+<h2 id="新建窗口">新建窗口</h2>
+
+<p>在开发中，我们可能要同时打开多个项目，这时候就需要创建一个新的 vscode 窗口，而对于 window 和 mac 系统，新建窗口的快捷键分别是：</p>
+
+<ul>
+  <li>MacOS：<code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">n</code>；（不要和新建文件 <code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">n</code> 记混了）</li>
+  <li>Window：<code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">ctrl</code> + <code class="language-plaintext highlighter-rouge">n</code></li>
+</ul>
+
+<h2 id="选择工作区">选择工作区</h2>
+
+<p>新建了窗口之后，是空白窗口；则需要为当前窗口选择一个工作区（即我们的项目），此时通过 <code class="language-plaintext highlighter-rouge">ctrl</code> + <code class="language-plaintext highlighter-rouge">r</code> 可以显示最近打开过的工作区（项目）；选中一个工作区，即可打开。</p>
+
+<p>:::tip 切换工作区
+<code class="language-plaintext highlighter-rouge">ctrl</code> + <code class="language-plaintext highlighter-rouge">r</code> 是一个 vscode 的全局命令，即意味着我们在任何时候都可以通过它来切换当前窗口打开的工作区；但在你实践的时候你可能会发现，聚焦在编辑窗时是无法触发 <code class="language-plaintext highlighter-rouge">ctrl</code> + <code class="language-plaintext highlighter-rouge">r</code> 的，这是因为我们使用了 vim；这时只要你聚焦到资源管理器或其他地方，或把所有已打开的编辑窗关闭，即可使用该命令。
+:::</p>
+
+<h2 id="多窗口切换">多窗口切换</h2>
+
+<p>打开多个 vscode 窗口的时候，我们可以通过 <code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">`</code> 来切换不同的工作区窗口。这个快捷键在大部分软件中效果都是如此，如 Chrome 。</p>
+<h2 id="关闭窗口">关闭窗口</h2>
+
+<p>和切换窗口一样，关闭窗口的快捷键 <code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">w</code> 在大部分软件中也是一样的效果 (<code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">w</code> 则是关闭当前激活的编辑窗，即当前右边显示的编辑窗)。而 Window 系统则是使用 <code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">ctrl</code> + <code class="language-plaintext highlighter-rouge">w</code>。</p>

@@ -1,0 +1,89 @@
+<h1 id="只手遮窗窗口管理大法">只手遮窗：窗口管理大法</h1>
+
+<p>在开发中，我们可能需要同时打开多个编辑窗口，二分屏、三分屏甚至更多，这时候在不同的窗口中切换焦点也就是一个大需求，而 vim 和 vscode，都有提供一套多编辑窗口的管理方法。</p>
+
+<h2 id="vim-的窗口管理">vim 的窗口管理</h2>
+
+<p>### 新建窗</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">w</code> + <code class="language-plaintext highlighter-rouge">v</code>：在当前窗口的左边或右边新建窗口</li>
+  <li><code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">w</code> + <code class="language-plaintext highlighter-rouge">s</code>：在当前窗口的上边或下边新建窗口</li>
+</ul>
+
+<p>### 窗口切换</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">w</code> + <code class="language-plaintext highlighter-rouge">h</code> <code class="language-plaintext highlighter-rouge">j</code> <code class="language-plaintext highlighter-rouge">k</code> <code class="language-plaintext highlighter-rouge">l</code>：切换到上 / 下 / 左 / 右方向的窗口</li>
+  <li><code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">w</code> + <code class="language-plaintext highlighter-rouge">v</code>：打开多个窗口时，在不同的窗口间相互切换，如只有两个窗口时，则在两个窗口间互相切换</li>
+</ul>
+
+<p>### 关闭窗口</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">w</code> + <code class="language-plaintext highlighter-rouge">c</code>：关闭当前窗口</li>
+  <li><code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">w</code> + <code class="language-plaintext highlighter-rouge">v</code>：保留当前窗口，关闭其他所有窗口</li>
+</ul>
+
+<h2 id="vscode-的窗口管理">vscode 的窗口管理</h2>
+<p>可能有些人（包括我）会觉得 vim 的窗口管理快捷键比较繁琐，尤其是使用过 vscode 的窗口管理快捷键的小伙伴，为了让我们管理得更顺手，我们可以结合 vscode 自身的快捷键再加上一些扩展的键位映射，达到和 vim 的窗口管理快捷键一样的效果。如下：</p>
+
+<p>### 新建窗口</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">\</code>：在当前窗口的左边或右边新建口</li>
+  <li><code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">\</code>：在当前窗口的上边或下边新建窗口</li>
+</ul>
+
+<p>### 窗口切换</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">h</code> <code class="language-plaintext highlighter-rouge">j</code> <code class="language-plaintext highlighter-rouge">k</code> <code class="language-plaintext highlighter-rouge">l</code>：切换到上 / 下 / 左 / 右方向的窗口 (需要有将 <code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">h</code> <code class="language-plaintext highlighter-rouge">j</code> <code class="language-plaintext highlighter-rouge">k</code> <code class="language-plaintext highlighter-rouge">l</code> 映射为方向键)，并且在 vscode 的 <code class="language-plaintext highlighter-rouge">keybindings.json</code> 中添加如下映射,映射其实是把 <code class="language-plaintext highlighter-rouge">shift</code> + 方向键映射为 vim 的窗口切换键了：</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shift+left"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vim.remap"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vim.mode == 'Normal'"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;c-w&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"h"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="err">,</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shift+right"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vim.remap"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vim.mode == 'Normal'"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;c-w&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"l"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="err">,</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shift+up"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vim.remap"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vim.mode == 'Normal'"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;c-w&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"k"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="err">,</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shift+down"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vim.remap"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vim.mode == 'Normal'"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;c-w&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"j"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>:::info 多嘴一句
+  感觉 <code class="language-plaintext highlighter-rouge">shift</code> + <code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">h</code> <code class="language-plaintext highlighter-rouge">j</code> <code class="language-plaintext highlighter-rouge">k</code> <code class="language-plaintext highlighter-rouge">l</code> 和 <code class="language-plaintext highlighter-rouge">control</code> + <code class="language-plaintext highlighter-rouge">w</code> + <code class="language-plaintext highlighter-rouge">h</code> <code class="language-plaintext highlighter-rouge">j</code> <code class="language-plaintext highlighter-rouge">k</code> <code class="language-plaintext highlighter-rouge">l</code> 其实是差不多的，改不改区别不大。
+  :::</p>
+
+<p>### 关闭窗口</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">w</code>：关闭当前窗口</li>
+  <li><code class="language-plaintext highlighter-rouge">command</code> + <code class="language-plaintext highlighter-rouge">k</code> + <code class="language-plaintext highlighter-rouge">w</code>：保留当前窗口，关闭其他所有窗口</li>
+</ul>
+
+<p>:::tip 小提示
+  在vscode中如果关闭有未保存内容的窗口时，会弹出对话框；
+  这时如果按 <code class="language-plaintext highlighter-rouge">enter</code> 键，即为 “保存”， 
+  按 <code class="language-plaintext highlighter-rouge">space</code> 键，是为 “不保存”。
+:::</p>

@@ -1,0 +1,291 @@
+<h2 id="一日期处理">一、日期处理</h2>
+
+<h3 id="1-检察日期是否有效">1. 检察日期是否有效</h3>
+
+<p>该方法用于检测给出的日期是否有效：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">isDateValid</span> <span class="o">=</span> <span class="p">(...</span><span class="nx">val</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="o">!</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(...</span><span class="nx">val</span><span class="p">).</span><span class="nx">valueOf</span><span class="p">());</span>
+<span class="nx">isDateValid</span><span class="p">(</span><span class="dl">"</span><span class="s2">December 17, 1995 03:24:00</span><span class="dl">"</span><span class="p">);</span>  <span class="c1">// true</span>
+</code></pre></div></div>
+
+<h3 id="2-计算两个日期之间的间隔">2. 计算两个日期之间的间隔</h3>
+
+<p>该方法用于计算两个日期之间的间隔时间：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">dayDif</span> <span class="o">=</span> <span class="p">(</span><span class="nx">date1</span><span class="p">,</span> <span class="nx">date2</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">date1</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">-</span> <span class="nx">date2</span><span class="p">.</span><span class="nx">getTime</span><span class="p">())</span> <span class="o">/</span> <span class="mi">86400000</span><span class="p">)</span>
+<span class="nx">dayDif</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="dl">"</span><span class="s2">2021-11-3</span><span class="dl">"</span><span class="p">),</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="dl">"</span><span class="s2">2022-2-1</span><span class="dl">"</span><span class="p">))</span>  <span class="c1">// 90</span>
+</code></pre></div></div>
+
+<p>距离过年还有90天~</p>
+
+<h3 id="3-查找日期位于一年中的第几天">3. 查找日期位于一年中的第几天</h3>
+
+<p>该方法用于检测给出的日期位于今年的第几天：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">dayOfYear</span> <span class="o">=</span> <span class="p">(</span><span class="nx">date</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">((</span><span class="nx">date</span> <span class="o">-</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">date</span><span class="p">.</span><span class="nx">getFullYear</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">/</span> <span class="mi">24</span><span class="p">);</span>
+<span class="nx">dayOfYear</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">());</span>   <span class="c1">// 307</span>
+</code></pre></div></div>
+
+<p>2021年已经过去300多天了~</p>
+
+<h3 id="4-时间格式化">4. 时间格式化</h3>
+
+<p>该方法可以用于将时间转化为hour:minutes:seconds的格式：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">timeFromDate</span> <span class="o">=</span> <span class="nx">date</span> <span class="o">=&gt;</span> <span class="nx">date</span><span class="p">.</span><span class="nx">toTimeString</span><span class="p">().</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+<span class="nx">timeFromDate</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>  <span class="c1">// 12:30:00</span>
+<span class="nx">timeFromDate</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">());</span>  <span class="c1">// 返回当前时间 09:00:00</span>
+</code></pre></div></div>
+
+<h2 id="二字符串处理">二、字符串处理</h2>
+
+<h3 id="1-字符串首字母大写">1. 字符串首字母大写</h3>
+
+<p>该方法用于将英文字符串的首字母大写处理：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">capitalize</span> <span class="o">=</span> <span class="nx">str</span> <span class="o">=&gt;</span> <span class="nx">str</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="nx">toUpperCase</span><span class="p">()</span> <span class="o">+</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="nx">capitalize</span><span class="p">(</span><span class="dl">"</span><span class="s2">hello world</span><span class="dl">"</span><span class="p">)</span>  <span class="c1">// Hello world</span>
+</code></pre></div></div>
+
+<h3 id="2-翻转字符串">2. 翻转字符串</h3>
+
+<p>该方法用于将一个字符串进行翻转操作，返回翻转后的字符串：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">reverse</span> <span class="o">=</span> <span class="nx">str</span> <span class="o">=&gt;</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">''</span><span class="p">).</span><span class="nx">reverse</span><span class="p">().</span><span class="nx">join</span><span class="p">(</span><span class="dl">''</span><span class="p">);</span>
+<span class="nx">reverse</span><span class="p">(</span><span class="dl">'</span><span class="s1">hello world</span><span class="dl">'</span><span class="p">);</span>   <span class="c1">// 'dlrow olleh'</span>
+</code></pre></div></div>
+
+<h3 id="3-随机字符串">3. 随机字符串</h3>
+
+<p>该方法用于生成一个随机的字符串：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">randomString</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">().</span><span class="nx">toString</span><span class="p">(</span><span class="mi">36</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="nx">randomString</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="4-截断字符串">4. 截断字符串</h3>
+
+<p>该方法可以从指定长度处截断字符串:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">truncateString</span> <span class="o">=</span> <span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">length</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">string</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">length</span> <span class="p">?</span> <span class="nx">string</span> <span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">string</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)}</span><span class="s2">...`</span><span class="p">;</span>
+<span class="nx">truncateString</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hi, I should be truncated because I am too loooong!</span><span class="dl">'</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>   <span class="c1">// 'Hi, I should be truncated because...'</span>
+</code></pre></div></div>
+
+<h3 id="5-去除字符串中的html">5. 去除字符串中的HTML</h3>
+
+<p>该方法用于去除字符串中的HTML元素：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">stripHtml</span> <span class="o">=</span> <span class="nx">html</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="k">new</span> <span class="nx">DOMParser</span><span class="p">().</span><span class="nx">parseFromString</span><span class="p">(</span><span class="nx">html</span><span class="p">,</span> <span class="dl">'</span><span class="s1">text/html</span><span class="dl">'</span><span class="p">)).</span><span class="nx">body</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="三数组处理">三、数组处理</h2>
+
+<h3 id="1-从数组中移除重复项">1. 从数组中移除重复项</h3>
+
+<p>该方法用于移除数组中的重复项：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">removeDuplicates</span> <span class="o">=</span> <span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[...</span><span class="k">new</span> <span class="nb">Set</span><span class="p">(</span><span class="nx">arr</span><span class="p">)];</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">removeDuplicates</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]));</span>
+</code></pre></div></div>
+
+<h3 id="2-判断数组是否为空">2. 判断数组是否为空</h3>
+
+<p>该方法用于判断一个数组是否为空数组，它将返回一个布尔值：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">isNotEmpty</span> <span class="o">=</span> <span class="nx">arr</span> <span class="o">=&gt;</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nx">isNotEmpty</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]);</span>  <span class="c1">// true</span>
+</code></pre></div></div>
+
+<h3 id="3-合并两个数组">3. 合并两个数组</h3>
+
+<p>可以使用下面两个方法来合并两个数组：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">merge</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">merge</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[...</span><span class="nx">a</span><span class="p">,</span> <span class="p">...</span><span class="nx">b</span><span class="p">];</span>
+</code></pre></div></div>
+
+<h2 id="四数字操作">四、数字操作</h2>
+
+<h3 id="1-判断一个数是奇数还是偶数">1. 判断一个数是奇数还是偶数</h3>
+
+<p>该方法用于判断一个数字是奇数还是偶数：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">isEven</span> <span class="o">=</span> <span class="nx">num</span> <span class="o">=&gt;</span> <span class="nx">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nx">isEven</span><span class="p">(</span><span class="mi">996</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="2-获得一组数的平均值">2. 获得一组数的平均值</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">average</span> <span class="o">=</span> <span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">args</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">)</span> <span class="o">/</span> <span class="nx">args</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+<span class="nx">average</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>   <span class="c1">// 3</span>
+</code></pre></div></div>
+
+<h3 id="3-获取两个整数之间的随机整数">3. 获取两个整数之间的随机整数</h3>
+
+<p>该方法用于获取两个整数之间的随机整数</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">random</span> <span class="o">=</span> <span class="p">(</span><span class="nx">min</span><span class="p">,</span> <span class="nx">max</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="nx">max</span> <span class="o">-</span> <span class="nx">min</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nx">min</span><span class="p">);</span>
+<span class="nx">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="4-指定位数四舍五入">4. 指定位数四舍五入</h3>
+
+<p>该方法用于将一个数字按照指定位进行四舍五入：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">round</span> <span class="o">=</span> <span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">d</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Number</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">n</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">e</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">d</span><span class="p">)</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">e-</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">d</span><span class="p">)</span>
+<span class="nx">round</span><span class="p">(</span><span class="mf">1.005</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">//1.01</span>
+<span class="nx">round</span><span class="p">(</span><span class="mf">1.555</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">//1.56</span>
+</code></pre></div></div>
+
+<h2 id="五颜色操作">五、颜色操作</h2>
+
+<h3 id="1-将rgb转化为十六机制">1. 将RGB转化为十六机制</h3>
+
+<p>该方法可以将一个RGB的颜色值转化为16进制值：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">rgbToHex</span> <span class="o">=</span> <span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="dl">"</span><span class="s2">#</span><span class="dl">"</span> <span class="o">+</span> <span class="p">((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nx">r</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nx">g</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="nx">b</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="nx">rgbToHex</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">);</span>  <span class="c1">// '#ffffff'</span>
+</code></pre></div></div>
+
+<h3 id="2-获取随机十六进制颜色">2. 获取随机十六进制颜色</h3>
+
+<p>该方法用于获取一个随机的十六进制颜色值：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">randomHex</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">`#</span><span class="p">${</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mh">0xffffff</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="nx">padEnd</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="dl">"</span><span class="s2">0</span><span class="dl">"</span><span class="p">)}</span><span class="s2">`</span><span class="p">;</span>
+<span class="nx">randomHex</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="六浏览器操作">六、浏览器操作</h2>
+
+<h3 id="1-复制内容到剪切板">1. 复制内容到剪切板</h3>
+
+<p>该方法使用 navigator.clipboard.writeText 来实现将文本复制到剪贴板：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">copyToClipboard</span> <span class="o">=</span> <span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">navigator</span><span class="p">.</span><span class="nx">clipboard</span><span class="p">.</span><span class="nx">writeText</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+<span class="nx">copyToClipboard</span><span class="p">(</span><span class="dl">"</span><span class="s2">Hello World</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="2-清除所有cookie">2. 清除所有cookie</h3>
+
+<p>该方法可以通过使用 document.cookie 来访问 cookie 并清除存储在网页中的所有 cookie：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">clearCookies</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">'</span><span class="s1">;</span><span class="dl">'</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">cookie</span> <span class="o">=&gt;</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="nx">cookie</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^ +/</span><span class="p">,</span> <span class="dl">''</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/=.*/</span><span class="p">,</span> <span class="s2">`=;expires=</span><span class="p">${</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="nx">toUTCString</span><span class="p">()}</span><span class="s2">;path=/`</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h3 id="3-获取选中的文本">3. 获取选中的文本</h3>
+
+<p>该方法通过内置的 getSelection 属性获取用户选择的文本：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">getSelectedText</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">window</span><span class="p">.</span><span class="nx">getSelection</span><span class="p">().</span><span class="nx">toString</span><span class="p">();</span>
+<span class="nx">getSelectedText</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="4-检测是否是黑暗模式">4. 检测是否是黑暗模式</h3>
+
+<p>该方法用于检测当前的环境是否是黑暗模式，它是一个布尔值：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">isDarkMode</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">matchMedia</span> <span class="o">&amp;&amp;</span> <span class="nb">window</span><span class="p">.</span><span class="nx">matchMedia</span><span class="p">(</span><span class="dl">'</span><span class="s1">(prefers-color-scheme: dark)</span><span class="dl">'</span><span class="p">).</span><span class="nx">matches</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">isDarkMode</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="5-滚动到页面顶部">5. 滚动到页面顶部</h3>
+
+<p>该方法用于在页面中返回顶部：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">goToTop</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">window</span><span class="p">.</span><span class="nx">scrollTo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="nx">goToTop</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="6-判断当前标签页是否激活">6. 判断当前标签页是否激活</h3>
+
+<p>该方法用于检测当前标签页是否已经激活：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">isTabInView</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">!</span><span class="nb">document</span><span class="p">.</span><span class="nx">hidden</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="7-判断当前是否是苹果设备">7. 判断当前是否是苹果设备</h3>
+
+<p>该方法用于检测当前的设备是否是苹果的设备：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">isAppleDevice</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="sr">/Mac|iPod|iPhone|iPad/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nb">navigator</span><span class="p">.</span><span class="nx">platform</span><span class="p">);</span>
+<span class="nx">isAppleDevice</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="8-是否滚动到页面底部">8. 是否滚动到页面底部</h3>
+
+<p>该方法用于判断页面是否已经底部：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">scrolledToBottom</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">.</span><span class="nx">clientHeight</span> <span class="o">+</span> <span class="nb">window</span><span class="p">.</span><span class="nx">scrollY</span> <span class="o">&gt;=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">.</span><span class="nx">scrollHeight</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="9-重定向到一个url">9. 重定向到一个URL</h3>
+
+<p>该方法用于重定向到一个新的URL：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">redirect</span> <span class="o">=</span> <span class="nx">url</span> <span class="o">=&gt;</span> <span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">url</span>
+<span class="nx">redirect</span><span class="p">(</span><span class="dl">"</span><span class="s2">https://www.google.com/</span><span class="dl">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="10-打开浏览器打印框">10. 打开浏览器打印框</h3>
+
+<p>该方法用于打开浏览器的打印框：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">showPrintDialog</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">window</span><span class="p">.</span><span class="nx">print</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="七其他操作">七、其他操作</h2>
+
+<h3 id="1-随机布尔值">1. 随机布尔值</h3>
+
+<p>该方法可以返回一个随机的布尔值，使用Math.random()可以获得0-1的随机数，与0.5进行比较，就有一半的概率获得真值或者假值。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">randomBoolean</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">;</span>
+<span class="nx">randomBoolean</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="2-变量交换">2. 变量交换</h3>
+
+<p>可以使用以下形式在不适用第三个变量的情况下，交换两个变量的值：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nx">foo</span><span class="p">,</span> <span class="nx">bar</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">bar</span><span class="p">,</span> <span class="nx">foo</span><span class="p">];</span>
+</code></pre></div></div>
+
+<h3 id="3-获取变量的类型">3. 获取变量的类型</h3>
+
+<p>该方法用于获取一个变量的类型：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">trueTypeOf</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="nx">toLowerCase</span><span class="p">();</span>
+<span class="nx">trueTypeOf</span><span class="p">(</span><span class="dl">''</span><span class="p">);</span>     <span class="c1">// string</span>
+<span class="nx">trueTypeOf</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>      <span class="c1">// number</span>
+<span class="nx">trueTypeOf</span><span class="p">();</span>       <span class="c1">// undefined</span>
+<span class="nx">trueTypeOf</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>   <span class="c1">// null</span>
+<span class="nx">trueTypeOf</span><span class="p">({});</span>     <span class="c1">// object</span>
+<span class="nx">trueTypeOf</span><span class="p">([]);</span>     <span class="c1">// array</span>
+<span class="nx">trueTypeOf</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>      <span class="c1">// number</span>
+<span class="nx">trueTypeOf</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{});</span>  <span class="c1">// function</span>
+</code></pre></div></div>
+
+<h3 id="4-华氏度和摄氏度之间的转化">4. 华氏度和摄氏度之间的转化</h3>
+
+<p>该方法用于摄氏度和华氏度之间的转化：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">celsiusToFahrenheit</span> <span class="o">=</span> <span class="p">(</span><span class="nx">celsius</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">celsius</span> <span class="o">*</span> <span class="mi">9</span><span class="o">/</span><span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">fahrenheitToCelsius</span> <span class="o">=</span> <span class="p">(</span><span class="nx">fahrenheit</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="nx">fahrenheit</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="o">/</span><span class="mi">9</span><span class="p">;</span>
+<span class="nx">celsiusToFahrenheit</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>    <span class="c1">// 59</span>
+<span class="nx">celsiusToFahrenheit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>     <span class="c1">// 32</span>
+<span class="nx">celsiusToFahrenheit</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">);</span>   <span class="c1">// -4</span>
+<span class="nx">fahrenheitToCelsius</span><span class="p">(</span><span class="mi">59</span><span class="p">);</span>    <span class="c1">// 15</span>
+<span class="nx">fahrenheitToCelsius</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>    <span class="c1">// 0</span>
+</code></pre></div></div>
+
+<h3 id="5-检测对象是否为空">5. 检测对象是否为空</h3>
+
+<p>该方法用于检测一个JavaScript对象是否为空：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">isEmpty</span> <span class="o">=</span> <span class="nx">obj</span> <span class="o">=&gt;</span> <span class="nb">Reflect</span><span class="p">.</span><span class="nx">ownKeys</span><span class="p">(</span><span class="nx">obj</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">obj</span><span class="p">.</span><span class="kd">constructor</span> <span class="o">===</span> <span class="nb">Object</span><span class="p">;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>作者：CUGGZ
+链接：https://juejin.cn/post/7025771605422768159</p>
+</blockquote>

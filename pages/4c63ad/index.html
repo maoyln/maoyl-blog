@@ -1,0 +1,44 @@
+<h1 id="告别重复vim-的宏操作">告别重复：vim 的宏操作</h1>
+
+<p>在开发中，我们有时会面临需要重复大量相同的操作的情况，比如下面的代码：</p>
+
+<p>我们需要把所有变量名为 <code class="language-plaintext highlighter-rouge">obj</code> 的对象修改为 <code class="language-plaintext highlighter-rouge">Obj</code> 并在前面添加 <code class="language-plaintext highlighter-rouge">_</code>，最终变成 <code class="language-plaintext highlighter-rouge">_Obj</code>，但是我们不能修改为数组的 <code class="language-plaintext highlighter-rouge">obj</code>，而且处于谨慎起见，我们不可以同事多光标去修改；</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>这时，你可能想起 <code class="language-plaintext highlighter-rouge">.</code> 命令，在<a href="./10.数字与'点'的威力.md">前面</a>我们提到过，它可以重复执行上一个命令；但是对于当前的场景，有好像无法使用 <code class="language-plaintext highlighter-rouge">.</code>，这时就要请出终极大杀器 ———— 宏操作（macro）了。</p>
+
+<h2 id="宏操作">宏操作</h2>
+
+<p>宏（macro）即可以把一系列的操作录制成组并暂存起来，然后通过特定的指令重复去触发执行。</p>
+
+<h3 id="命令">命令</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">q</code> + [字母]：开始录制，并把当前一次的录制命名为 [字母]；如 <code class="language-plaintext highlighter-rouge">qa</code>，则当前录制的宏操作名称为 <code class="language-plaintext highlighter-rouge">a</code>，如 <code class="language-plaintext highlighter-rouge">qq</code>，宏操作则为 <code class="language-plaintext highlighter-rouge">q</code>；录制完后，再输入 <code class="language-plaintext highlighter-rouge">q</code> 则退出录制</li>
+  <li><code class="language-plaintext highlighter-rouge">:req</code> + [字母]：查看录制好的名为 [字母] 的宏操作</li>
+  <li><code class="language-plaintext highlighter-rouge">@</code> + [字母]：调用名为 [字母] 的宏操作</li>
+  <li><code class="language-plaintext highlighter-rouge">@@</code>：调用最后一次执行的宏操作</li>
+  <li>[数字] + <code class="language-plaintext highlighter-rouge">@</code> + [字母]：以 [数字] 次数重复执行名称为 [字母] 的宏操作</li>
+  <li><code class="language-plaintext highlighter-rouge">q</code> + [大写字母]：在对应名为 [字母] 的宏操作后追加命令</li>
+</ul>
+
+<p>:::tip 注意
+在录制宏操作时，名称无论输入的是大写字母还是小写字母，最终都会暂存为小写字母，而往宏操作追加时，则使用名称字母的大写进行追加。
+:::</p>
+
+<h4 id="修改已暂存的宏">修改已暂存的宏</h4>
+
+<h2 id="技巧">技巧</h2>
+
+<ul>
+  <li>规范好光标的位置</li>
+  <li>移录光标移动时使用相对位置</li>
+</ul>

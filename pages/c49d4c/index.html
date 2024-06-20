@@ -1,0 +1,217 @@
+<blockquote>
+  <p>github：<a href="https://github.com/maoyln/react-createPortal">https://github.com/maoyln/react-createPortal</a></p>
+</blockquote>
+
+<h1 id="react的portal的用法">React的Portal的用法</h1>
+
+<blockquote>
+  <p>我们思考一个问题，我们创建了一个字组建之后，想要把它放在指定的dom元素下面，有什么办法吗？</p>
+</blockquote>
+
+<h2 id="react-portal语法解释">react Portal语法解释</h2>
+
+<p>Portals 提供了一个最好的在父组件包含的DOM结构层级外的DOM节点渲染组件的方法</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// child可以是ReactElement, Arrays, fragments, Portals, String, numbers,</span>
+<span class="c1">// Booleans, null, ...</span>
+<span class="c1">// container是dom元素</span>
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">createPortal</span><span class="p">(</span><span class="nx">child</span><span class="p">,</span> <span class="nx">container</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li>第一个参数<code class="language-plaintext highlighter-rouge">child</code>是可渲染的<code class="language-plaintext highlighter-rouge">react</code>子项，</li>
+  <li>第一个参数<code class="language-plaintext highlighter-rouge">container</code>是需要挂载到<code class="language-plaintext highlighter-rouge">dom</code>元素</li>
+</ul>
+
+<h2 id="react-portal使用方法">react Portal使用方法</h2>
+
+<h4 id="引入">引入</h4>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">createPortal</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-dom</span><span class="dl">'</span>
+</code></pre></div></div>
+
+<h4 id="使用方法">使用方法</h4>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">createPortal</span><span class="p">(</span>
+  <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+    <span class="p">{</span>
+      <span class="nx">createPortalRender</span><span class="p">()</span>
+    <span class="p">}</span>
+  <span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">,
+</span>  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h4 id="完整代码">完整代码</h4>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// App.js</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">createPortalDom</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./reactPortalDom</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="dl">'</span><span class="s1">./App.css</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">main</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">createPortal</span><span class="o">&lt;</span><span class="sr">/h1</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">father</span><span class="dl">"</span> <span class="nx">id</span><span class="o">=</span><span class="dl">"</span><span class="s2">father</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="nx">父节点</span>
+        <span class="p">{</span>
+          <span class="nx">createPortalDom</span><span class="p">()</span>
+        <span class="p">}</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/main</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>
+
+</code></pre></div></div>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// createPortalDom.js</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createPortal</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-dom</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">createPortalDom</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">createPortalRender</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">id</span><span class="o">=</span><span class="dl">'</span><span class="s1">children</span><span class="dl">'</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">children</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="nx">孩子节点</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="nx">createPortal</span><span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+        <span class="p">{</span>
+          <span class="nx">createPortalRender</span><span class="p">()</span>
+        <span class="p">}</span>
+      <span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">,
+</span>      <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">createPortalDom</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* App.css */</span>
+<span class="nt">main</span> <span class="p">{</span>
+  <span class="nl">align-content</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.father</span> <span class="p">{</span>
+  <span class="nl">border</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="m">#ff00ff</span><span class="p">;</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">10px</span><span class="p">;</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="m">#cccccc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.children</span> <span class="p">{</span>
+  <span class="nl">border</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="m">#0000ff</span><span class="p">;</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="m">#ff0000</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="createportal实践">createPortal实践</h2>
+
+<h4 id="默认dom">默认dom</h4>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// createPortalDom.js</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">createPortalDom</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">createPortalRender</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">id</span><span class="o">=</span><span class="dl">'</span><span class="s1">children</span><span class="dl">'</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">children</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="nx">孩子节点</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="p">{</span>
+        <span class="nx">createPortalRender</span><span class="p">()</span>
+      <span class="p">}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">createPortalDom</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/2181646109449_.pic_hd.jpg" alt="" /></p>
+
+<h4 id="使用createportal">使用createPortal</h4>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// createPortalDom.js</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createPortal</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-dom</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">createPortalDom</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">createPortalRender</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">id</span><span class="o">=</span><span class="dl">'</span><span class="s1">children</span><span class="dl">'</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">children</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="nx">孩子节点</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="nx">createPortal</span><span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+        <span class="p">{</span>
+          <span class="nx">createPortalRender</span><span class="p">()</span>
+        <span class="p">}</span>
+      <span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">,
+</span>      <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">createPortalDom</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/2191646109515_.pic_hd.jpg" alt="" /></p>
+
+<p>#####</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">仔细观察使用</span><span class="s2">`createPortal`</span><span class="nx">前后</span><span class="s2">`dom`</span><span class="nx">节点的变换</span>
+<span class="nx">使用</span><span class="s2">`createPortal`</span><span class="nx">之前</span><span class="err">，</span><span class="s2">`children`</span><span class="nx">dom节点在</span><span class="s2">`father`</span><span class="nx">dom节点下</span>
+<span class="nx">使用</span><span class="s2">`createPortal`</span><span class="nx">之后</span><span class="err">，</span><span class="s2">`children`</span><span class="nx">dom节点在</span><span class="s2">`root`</span><span class="nx">dom节点下</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>注意</p>
+</blockquote>
+
+<p>孩子节点使用<code class="language-plaintext highlighter-rouge">createPortal</code>之后，<code class="language-plaintext highlighter-rouge">孩子节点</code>文字从居中<code class="language-plaintext highlighter-rouge">（继承的父节点样式）</code>样式变成了默认左对齐样式，可以看出<code class="language-plaintext highlighter-rouge">createPortal</code>修改dom节点后，有可能影响原有样式，这里建议使用内联样式</p>
+
+<h2 id="portals事件传递">Portals事件传递</h2>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createPortal</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-dom</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">createPortalDom</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">clickChild</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">点击孩子节点</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kd">const</span> <span class="nx">createPortalRender</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">clickChild</span><span class="p">}</span> <span class="nx">id</span><span class="o">=</span><span class="dl">'</span><span class="s1">children</span><span class="dl">'</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">children</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="nx">孩子节点</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="nx">createPortal</span><span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+        <span class="p">{</span>
+          <span class="nx">createPortalRender</span><span class="p">()</span>
+        <span class="p">}</span>
+      <span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">,
+</span>      <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">createPortalDom</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>虽然我们通过<code class="language-plaintext highlighter-rouge">Dom</code>操作，把它移到了<code class="language-plaintext highlighter-rouge">root</code>节点下，与<code class="language-plaintext highlighter-rouge">React</code>的虚拟<code class="language-plaintext highlighter-rouge">Dom</code>结构不一致，但是<code class="language-plaintext highlighter-rouge">React</code>的虚拟<code class="language-plaintext highlighter-rouge">Dom</code>结构并未发生变化，父子关系仍然存在。这就导致，事件的传递依然有效，在createPortalDom组件触发的click事件，依然会传递到root节点中。</p>

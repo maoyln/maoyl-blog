@@ -1,0 +1,75 @@
+<h1 id="快如闪电快速移动s">快如闪电：快速移动s</h1>
+
+<p>前面几天学到了光标一些的“快捷”移动方式，如 <code class="language-plaintext highlighter-rouge">hjkl</code> <code class="language-plaintext highlighter-rouge">b</code> <code class="language-plaintext highlighter-rouge">w</code> <code class="language-plaintext highlighter-rouge">e</code> 等等，但是在真实的使用中，他们的快捷确实是需要打上双引号，因为等我们打开动则上千行的 <del>屎山</del> 代码时，这些移动光标的方法就捉襟见肘了；这一节，我们就要祭出 vim 的一个大杀器，让我们的光标移动飞速起来！</p>
+
+<h2 id="给我滚">给我滚！</h2>
+
+<p>先来看看让页面滚动起来的指令：</p>
+
+<ul>
+  <li>向下滚动一屏：<code class="language-plaintext highlighter-rouge">ctrl + b</code></li>
+  <li>向上滚动一屏：<code class="language-plaintext highlighter-rouge">ctrl + f</code></li>
+  <li>向下滚动半屏：<code class="language-plaintext highlighter-rouge">ctrl + d</code></li>
+  <li>向上滚动半屏：<code class="language-plaintext highlighter-rouge">ctrl + u</code></li>
+  <li>向下滚动一行：<code class="language-plaintext highlighter-rouge">ctrl + e</code> , 光标不会移动，只是屏幕滚动</li>
+  <li>向上滚动一行：<code class="language-plaintext highlighter-rouge">ctrl + y</code> , 光标不会移动，只是屏幕滚动</li>
+</ul>
+
+<p>这时候，我们就可以愉快地在 <del>屎山</del> 代码中快速移动了。可是问题又来了，这几个指令动则半个屏幕移动，要不就一行行移，有没有在这些范围内的更适合平时使用的呢？</p>
+
+<p>答案是：没有。</p>
+
+<p>但不代表不可以，这时我们就要用老办法 – 修改配置来达成需求了。</p>
+
+<p>打开 vscode <code class="language-plaintext highlighter-rouge">setting.json</code>，在 <code class="language-plaintext highlighter-rouge">vim.visualModeKeyBindings</code> 和 <code class="language-plaintext highlighter-rouge">vim.normalModeKeyBindings</code> 中添加如下设置：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
+    </span><span class="nl">"vim.normalModeKeyBindings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"J"</span><span class="p">],</span><span class="w">
+            </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"j"</span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"K"</span><span class="p">],</span><span class="w">
+            </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"k"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">]</span><span class="err">,</span><span class="w">
+    </span><span class="nl">"vim.visualModeKeyBindings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"J"</span><span class="p">],</span><span class="w">
+            </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"j"</span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"K"</span><span class="p">],</span><span class="w">
+            </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"k"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">]</span><span class="err">,</span><span class="w">
+</span></code></pre></div></div>
+
+<p>这里的配置是把 <code class="language-plaintext highlighter-rouge">J</code> <code class="language-plaintext highlighter-rouge">K</code> 映射成每次跳五行的效果，当然，如果你觉得不合适也可以根据自己的需求更改。配置完后，就可以在方便地跳转了。</p>
+
+<p>## 光标位置</p>
+
+<p>有时候在我们的光标移动到要编辑的行时，可能刚好这一行在屏幕的顶部或底部，或者需要跳转到文件的头或尾，这里有更快捷的指令：</p>
+
+<ul>
+  <li>将当前行置于屏幕中央：<code class="language-plaintext highlighter-rouge">zz</code></li>
+  <li>将当前行置于屏幕顶部：<code class="language-plaintext highlighter-rouge">zt</code>，t 即 top</li>
+  <li>将当前行置于屏幕底部：<code class="language-plaintext highlighter-rouge">zb</code>，b 即 bottom</li>
+  <li>跳到文件首：<code class="language-plaintext highlighter-rouge">gg</code></li>
+  <li>跳到文件尾：<code class="language-plaintext highlighter-rouge">G</code></li>
+</ul>
+
+<p>如果是以上所有的命令都无法让你快速跳到要去的行，这时候就有一个终极方法：</p>
+
+<ul>
+  <li>行数 + <code class="language-plaintext highlighter-rouge">gg</code> / <code class="language-plaintext highlighter-rouge">G</code>：跳到指定行；只要你知道行数，就可以准确无误地跳到那一行，在调试或查看报错位置时特别有用。比如跳到 1024 行，输入 <code class="language-plaintext highlighter-rouge">1024 gg</code>，这时候再搭配 <code class="language-plaintext highlighter-rouge">zz</code>，让当前行置于屏幕中间，然后就可以愉快 coding 了~</li>
+</ul>
+
+<p>## 小练习</p>
+
+<p>这一天没有练习，去屎山里跳动吧！go and get it！</p>

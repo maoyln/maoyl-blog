@@ -1,0 +1,140 @@
+<h1 id="js设计模式总结笔记">JS设计模式总结笔记</h1>
+
+<blockquote>
+  <p>本人笔记主要是对《JavaScript 设计模式与开发实践》的学习；</p>
+</blockquote>
+
+<h2 id="开篇前端工程师的成长论">开篇：前端工程师的成长论</h2>
+
+<p>能够决定一个前端工程师的本质的，不是那些瞬息万变的技术点，而是那些<strong>不变的东西</strong>。</p>
+
+<p>所谓“不变的东西”，就是<strong>驾驭技术的能力</strong>。</p>
+
+<p>具体来说，它分为以下三个层次：</p>
+
+<ul>
+  <li>能用健壮的代码去解决具体的问题；</li>
+  <li>能用抽象的思维去应对复杂的系统；</li>
+  <li>能用工程化的思想去规划更大规模的业务。</li>
+</ul>
+
+<blockquote>
+  <p>基础理论知识是一个人的基线，理论越强基线越高。再为自己定一个目标和向上攀附的阶梯，那么达到目标就是时间问题，而很多野路子工程师搞了半辈子也未达到优秀工程师的基线，<strong>很多他们绞尽脑汁得出的高深学问，不过是正规工程师看起来很自然的东西</strong>。—— 吴军</p>
+</blockquote>
+
+<h2 id="设计模式之道">设计模式之“道”</h2>
+
+<ul>
+  <li>设计模式是“拿来主义”。如使用数学公式，不会从头推导一个公式。</li>
+</ul>
+
+<h3 id="核心思想">核心思想</h3>
+
+<ul>
+  <li>设计模式的核心思想——<strong>封装变化</strong></li>
+  <li>保证可维护性、可扩展性。</li>
+  <li>将变与不变分离，确保变化的部分灵活，不变的部分稳定。——这就是所谓的“健壮”的代码。</li>
+</ul>
+
+<h2 id="设计模式之术">设计模式之“术”</h2>
+
+<p>即最经典的<strong>23种设计模式</strong>。按<code class="language-plaintext highlighter-rouge">创建型</code>、<code class="language-plaintext highlighter-rouge">结构型</code>、<code class="language-plaintext highlighter-rouge">行为型</code>划分。</p>
+
+<h3 id="创建型">创建型</h3>
+
+<ol>
+  <li>单例模式</li>
+  <li>原型模式</li>
+  <li>构造器模式</li>
+  <li>工厂模式</li>
+  <li>抽象工厂模式</li>
+</ol>
+
+<h3 id="结构型">结构型</h3>
+
+<ol>
+  <li>桥接模式</li>
+  <li>外观模式</li>
+  <li>组合模式</li>
+  <li>装饰器模式</li>
+  <li>适配器模式</li>
+  <li>代理模式</li>
+  <li>享元模式</li>
+</ol>
+
+<h3 id="行为型">行为型</h3>
+
+<ol>
+  <li>迭代器模式</li>
+  <li>解释器模式</li>
+  <li>观察者模式</li>
+  <li>访问者模式</li>
+  <li>状态模式</li>
+  <li>备忘录模式</li>
+  <li>策略模式</li>
+  <li>模板方法模式</li>
+  <li>职责链模式</li>
+  <li>命令模式</li>
+</ol>
+
+<h2 id="小结">小结：</h2>
+
+<ul>
+  <li>
+    <p>创建型模型封装了创建对象过程中的变化。</p>
+  </li>
+  <li>
+    <p>结构型模式封装了对象之间组合方式的变化。目的在于灵活的表达对象间的配合与依赖关系。</p>
+  </li>
+  <li>
+    <p>行为型模式将对象千变万化的行为进行抽离，确保安全、方便的更改。</p>
+  </li>
+</ul>
+
+<h2 id="创建型工厂模式-简单工厂区分变与不变">创建型：工厂模式-简单工厂——区分“变与不变”</h2>
+
+<p>先了解构造器模式，在JS中的构造函数即构造器。使用构造函数，即使用构造器模式。</p>
+
+<h3 id="构造器模式">构造器模式</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">User</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">,</span> <span class="nx">career</span><span class="p">){</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">career</span> <span class="o">=</span> <span class="nx">career</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">New</span> <span class="nx">User</span><span class="p">(</span><span class="dl">'</span><span class="s1">张三</span><span class="dl">'</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="dl">'</span><span class="s1">前端工程师</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>变与不变：user的属性(name, age, car)不变，即共性。变的是属性值，即个性。</p>
+
+<h3 id="简单工厂模式">简单工厂模式</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">User</span><span class="p">(</span><span class="nx">name</span> <span class="p">,</span> <span class="nx">age</span><span class="p">,</span> <span class="nx">career</span><span class="p">,</span> <span class="nx">work</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">career</span> <span class="o">=</span> <span class="nx">career</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">work</span> <span class="o">=</span> <span class="nx">work</span>
+<span class="p">}</span>
+
+<span class="c1">// 工厂函数 （将变的部分抽离出一个函数）</span>
+<span class="kd">function</span> <span class="nx">Factory</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">,</span> <span class="nx">career</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">work</span>
+    <span class="k">switch</span><span class="p">(</span><span class="nx">career</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="dl">'</span><span class="s1">coder</span><span class="dl">'</span><span class="p">:</span>
+            <span class="nx">work</span> <span class="o">=</span>  <span class="p">[</span><span class="dl">'</span><span class="s1">写代码</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">写系分</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">修Bug</span><span class="dl">'</span><span class="p">]</span>
+            <span class="k">break</span>
+        <span class="k">case</span> <span class="dl">'</span><span class="s1">product manager</span><span class="dl">'</span><span class="p">:</span>
+            <span class="nx">work</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">订会议室</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">写PRD</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">催更</span><span class="dl">'</span><span class="p">]</span>
+            <span class="k">break</span>
+        <span class="k">case</span> <span class="dl">'</span><span class="s1">boss</span><span class="dl">'</span><span class="p">:</span>
+            <span class="nx">work</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">喝茶</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">看报</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">见客户</span><span class="dl">'</span><span class="p">]</span>
+
+        <span class="c1">// 其它工种的职责分配</span>
+        <span class="c1">//case 'xxx':</span>
+            <span class="c1">//...</span>
+
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">User</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">,</span> <span class="nx">career</span><span class="p">,</span> <span class="nx">work</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>工厂模式就是将创建对象的过程单独封装。</p>

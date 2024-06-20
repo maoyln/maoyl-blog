@@ -1,0 +1,71 @@
+<h1 id="小试牛刀行相关命令">小试牛刀：行相关命令</h1>
+
+<p>经过第一天的小试牛刀，这时候的你估计已经可以大概地操控光标了（可能还是不太习惯上下左右），但是不用担心，在接下来的每一天的训练里，你都会不断地重复巩固他们，直到它们变成你不假思索的动作。</p>
+
+<p>今天，我们将更进一步，去学习更多更有用的操作；但在这之前，我想问你一个问题：</p>
+
+<ul>
+  <li>昨天的训练中，你是否发现，<code class="language-plaintext highlighter-rouge">h</code> <code class="language-plaintext highlighter-rouge">j</code> <code class="language-plaintext highlighter-rouge">k</code> <code class="language-plaintext highlighter-rouge">l</code> 固然可以移动光标，但是在很多时候，他们移动的效率实在是太慢了…；想想，当光标实在一行中的末尾，你却要修改行首的字符时，这就要一顿好按才行。而今天，我们就来尝试解决这个问题</li>
+</ul>
+
+<h2 id="移动光标到行首">移动光标到行首</h2>
+
+<ol>
+  <li>移动到光标所在行的第一个字符：<code class="language-plaintext highlighter-rouge">0</code></li>
+  <li>移动到光标所在行的除 <code class="language-plaintext highlighter-rouge">blank</code> 字符外的第一个字符：<code class="language-plaintext highlighter-rouge">^</code></li>
+</ol>
+
+<h2 id="移动光标到行尾">移动光标到行尾</h2>
+
+<ol>
+  <li>移动到光标所在行的最后一个字符：<code class="language-plaintext highlighter-rouge">$</code></li>
+  <li>移动到光标所在行的除 <code class="language-plaintext highlighter-rouge">blank</code> 字符外的最后一个字符：<code class="language-plaintext highlighter-rouge">g _</code></li>
+</ol>
+
+<h2 id="化繁为简">化繁为简</h2>
+
+<p>通过上面的四个操作，你就可以让你的光标快速去到行首行尾了；但是这时新的问题也随之而来，这四个操作，三个是需要击键两次，一个是需要那笨拙的右小拇指费劲按的键，光标的移动速度也一样是慢。这时我们就可以在 vscode 中对 vim 插件进行新键位映射，以简单化我们的使用；其中，<code class="language-plaintext highlighter-rouge">^</code> 和 <code class="language-plaintext highlighter-rouge">g _</code> 在开发中是很常用的，我们就对这两个操作进行重新映射。</p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">setting.json</code> 中添加设置：</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="nl">"vim.normalModeKeyBindings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        
+      </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"H"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"^"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"L"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"g"</span><span class="p">,</span><span class="w"> </span><span class="s2">"_"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="err">,</span><span class="w">
+</span></code></pre></div></div>
+
+<p>通过这样设置，我们就可以使用 <code class="language-plaintext highlighter-rouge">H</code> <code class="language-plaintext highlighter-rouge">L</code> 来达到和 <code class="language-plaintext highlighter-rouge">^</code> <code class="language-plaintext highlighter-rouge">g _</code> 一样的效果了；其中，这里的 <code class="language-plaintext highlighter-rouge">vim.normalModeKeyBindings</code> 是指在 vim Normal 模式即命令模式下的键映射，对于其他模式（如插入模式及后面会学到的可视化模式）是不起作用的。对于往后我们有其他的操作觉得比较复杂但是又常用的，也可以通过这种方式来添加自己的配置。</p>
+
+<h2 id="一简再简">一简再简</h2>
+
+<p>通过键位的重新映射，总算是可以愉快地行首行尾快速输入了…吗？</p>
+
+<p>并没有的。想想：光标跳到行首或行尾后，要输入字符的话，我们还是要再使用如 <code class="language-plaintext highlighter-rouge">i</code> <code class="language-plaintext highlighter-rouge">a</code> 这些操作指令，才能从命令模式进入输入模式；这时，我们就要请出新的操作命令了：</p>
+
+<ol>
+  <li>在光标所在行行首插入(并进入输入模式)：<code class="language-plaintext highlighter-rouge">I</code></li>
+  <li>在光标所在行行尾插入(并进入输入模式)：<code class="language-plaintext highlighter-rouge">A</code></li>
+  <li>在光标所在行的上方插入空白行插入(并进入输入模式)：<code class="language-plaintext highlighter-rouge">O</code></li>
+  <li>在光标所在行的下方插入空白行插入(并进入输入模式)：<code class="language-plaintext highlighter-rouge">o</code></li>
+</ol>
+
+<p>通过这几个命令，我们就可以让光标快速跳到对应的位置并进入输入模式。</p>
+
+<h2 id="three-more-thing">three more thing</h2>
+
+<ol>
+  <li>复制光标所在行：<code class="language-plaintext highlighter-rouge">yy</code>；与系统的 <code class="language-plaintext highlighter-rouge">command + c</code> 不冲突，即如果先通过 <code class="language-plaintext highlighter-rouge">cmd + c</code> 复制一些内容，再通过 <code class="language-plaintext highlighter-rouge">yy</code> 复制一些内容，此时 <code class="language-plaintext highlighter-rouge">command + v</code> 快捷键粘贴出来的内容是 <code class="language-plaintext highlighter-rouge">command + c</code> 复制的内容而非 <code class="language-plaintext highlighter-rouge">yy</code> 复制的内容;</li>
+  <li>粘贴：<code class="language-plaintext highlighter-rouge">p</code>；在 vim 中，有一个叫寄存器的概念，无论是 <code class="language-plaintext highlighter-rouge">y</code>（复制指令），还是 <code class="language-plaintext highlighter-rouge">d</code>（删除指令），<code class="language-plaintext highlighter-rouge">c</code>（删除并进入输入模式指令），被操作后的内容都会暂存在寄存器中，通过 <code class="language-plaintext highlighter-rouge">p</code> 指令则会把寄存器中的内容重新输出，从而达到粘贴的功能</li>
+  <li>通过 <code class="language-plaintext highlighter-rouge">v</code> 可以选中内容，<code class="language-plaintext highlighter-rouge">h</code> <code class="language-plaintext highlighter-rouge">j</code> <code class="language-plaintext highlighter-rouge">k</code> <code class="language-plaintext highlighter-rouge">l</code> 调整选中区域，选中后通过 <code class="language-plaintext highlighter-rouge">y</code> 复制内容</li>
+</ol>
+
+<p>:::tip 提示
+用完中文输入法后尽快切回英文模式
+:::</p>
+

@@ -1,0 +1,104 @@
+<h1 id="继续深入什么是文本对象">继续深入：什么是文本对象？</h1>
+
+<p>在前面的训练中，我们学习了（比较）快速的删除 <code class="language-plaintext highlighter-rouge">X</code> <code class="language-plaintext highlighter-rouge">S</code>，以及选中文本 <code class="language-plaintext highlighter-rouge">v</code> 等指令，但在日常更多的使用中，我们常常是需要</p>
+
+<ul>
+  <li>删除某些多余的变量</li>
+  <li>复制某个单词</li>
+  <li>删除被特定符号中包裹的某些内容，如 <code class="language-plaintext highlighter-rouge">()</code> <code class="language-plaintext highlighter-rouge">{}</code> <code class="language-plaintext highlighter-rouge">[]</code> 这些符号</li>
+  <li>删除一段内容</li>
+  <li>…等等等等</li>
+</ul>
+
+<p>这时候之前的指令明显就不够用了。那就需要来认真认识一下 vim 的文本对象了。</p>
+
+<h2 id="文本对象">文本对象</h2>
+
+<p>在 vim 中，文本是结构化的存在，即 <strong>文本对象（text—object）</strong>；而 vim 对于文本对象，专门有一部分语法，用于快速对文本对象进行编辑操作。</p>
+
+<h2 id="语法结构">语法结构</h2>
+
+<p>文本对象的操作语法：<strong>operater + 范围（内 / 外）+ 文本对象</strong></p>
+
+<ul>
+  <li>内部：<code class="language-plaintext highlighter-rouge">i</code> ，意指 inner</li>
+  <li>外部：<code class="language-plaintext highlighter-rouge">a</code> ，英文单词 a，一个的意思</li>
+</ul>
+
+<p>可能看到这里，你会有点迷糊，没关系，我们下面会举例说明。</p>
+
+<h2 id="对象">对象</h2>
+
+<p>vim 中的文本对象主要有这一些：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">(</code> 或 <code class="language-plaintext highlighter-rouge">)</code> ：一对 <code class="language-plaintext highlighter-rouge">()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">b</code> ：一对 <code class="language-plaintext highlighter-rouge">()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">{</code> 或 <code class="language-plaintext highlighter-rouge">}</code> ：一对 <code class="language-plaintext highlighter-rouge">{}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">B</code> ：一对 <code class="language-plaintext highlighter-rouge">{}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[</code> 或 <code class="language-plaintext highlighter-rouge">]</code> ：一对 <code class="language-plaintext highlighter-rouge">[]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;</code> 或 <code class="language-plaintext highlighter-rouge">&gt;</code> ：一对 <code class="language-plaintext highlighter-rouge">&lt;&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">t</code> ：tag （HTML 或 XML）标签</li>
+  <li><code class="language-plaintext highlighter-rouge">'</code> 或 <code class="language-plaintext highlighter-rouge">'</code> ：一对 <code class="language-plaintext highlighter-rouge">''</code></li>
+  <li><code class="language-plaintext highlighter-rouge">"</code> 或 <code class="language-plaintext highlighter-rouge">"</code> ：一对 <code class="language-plaintext highlighter-rouge">""</code></li>
+  <li><code class="language-plaintext highlighter-rouge">`</code> 或 <code class="language-plaintext highlighter-rouge">`</code> ：一对 <code class="language-plaintext highlighter-rouge"></code> ``</li>
+  <li><code class="language-plaintext highlighter-rouge">w</code> ：一个单词</li>
+  <li><code class="language-plaintext highlighter-rouge">s</code> ：一个句子；以 <code class="language-plaintext highlighter-rouge">.</code> <code class="language-plaintext highlighter-rouge">!</code> <code class="language-plaintext highlighter-rouge">?</code> 结尾即为一个句子</li>
+  <li><code class="language-plaintext highlighter-rouge">p</code> ：一个段落；以一个换行符间隔即为一个段落</li>
+</ul>
+
+<h2 id="组合举例">组合举例</h2>
+
+<p>看了列举出来的文本对象后，可能你会更迷糊，那我们可以先来举个例子：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">viw</code>：<code class="language-plaintext highlighter-rouge">v</code> 是指选中， <code class="language-plaintext highlighter-rouge">i</code> 指内部， <code class="language-plaintext highlighter-rouge">w</code> 指一个单词，这个指令可以快速选中光标所在的单词，无论光标是在单词的前中后，都可以起效</li>
+  <li><code class="language-plaintext highlighter-rouge">vi(</code>：<code class="language-plaintext highlighter-rouge">(</code> 指一个中括号，如果光标在一对括号里面，这个指令可以快速选中括号的内部内容（不包括括号本身），如 <code class="language-plaintext highlighter-rouge">('test')</code> 中的 <code class="language-plaintext highlighter-rouge">'test'</code>；同样的，<code class="language-plaintext highlighter-rouge">vi）</code> 或 <code class="language-plaintext highlighter-rouge">vib</code> 也是一样的效果</li>
+  <li><code class="language-plaintext highlighter-rouge">va(</code>: 这个指令也可以选中括号内部的内容，并且会把括号本身也选中，如这 <code class="language-plaintext highlighter-rouge">('test')</code> 中使用这个指令，则会选中 <code class="language-plaintext highlighter-rouge">('test')</code>；这就是前面 <code class="language-plaintext highlighter-rouge">a</code> 被解释为外部的原因</li>
+</ul>
+
+<p>相信看完这个例子，你应该大概能明白文本对象的使用方式了；对了，以上的 <code class="language-plaintext highlighter-rouge">v</code> 也可以换成 <code class="language-plaintext highlighter-rouge">d</code> <code class="language-plaintext highlighter-rouge">c</code>等操作符；这样下来，日常的使用中就更丝滑了！</p>
+
+<h2 id="vim-textobj-arguments--vim-textobj-entire">vim-textobj-arguments &amp; vim-textobj-entire</h2>
+
+<p>在开始让你练习前，再提多一个内容：vim-textobj-arguments 与 vim-textobj-entire：
+  这是两个 vim 的插件，额外提供了两个文本对象 <code class="language-plaintext highlighter-rouge">a</code> 和 <code class="language-plaintext highlighter-rouge">e</code>，使用方式和上面提到的一样；<code class="language-plaintext highlighter-rouge">a</code> 具体的功能如下：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">// Examples:</span>
+  <span class="c1">// 删除一个参数</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span>    <span class="nx">ch</span><span class="p">)</span>  <span class="c1">// 在第二个参数（即 “    ch”）中输入 daa</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">arg1</span><span class="o">|</span><span class="p">)</span> <span class="c1">// 就会变成这样，| 代表这时光标所在位置；如果这时再输入 daa</span>
+  <span class="kd">function</span><span class="p">(</span><span class="o">|</span><span class="p">)</span> <span class="c1">// 就会变成这样</span>
+
+  <span class="c1">// 修改一个参数</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span>    <span class="nx">ch</span><span class="p">)</span> <span class="c1">// 在第二个参数（即 “    ch”）中输入 cia</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span>    <span class="o">|</span><span class="p">)</span> <span class="c1">// 就会变成这样，| 代表这时光标所在位置</span>
+</code></pre></div></div>
+
+<p>以上可以看到在 文本对象 a 中，在他的前面接上表示范围的指令 a 和 i 时，它们的区别是是否包括前面的空格和符号（即当前参数外的内容)。所以规则如下：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ia</code>：不包含分隔符</li>
+  <li><code class="language-plaintext highlighter-rouge">aa</code>：包含分隔符</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">e</code> 在这里代表 entire ，即所有的意思；顾名思义，会针对当前文件所有内容左操作；规则如下：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ae</code>：当前文本所有内容</li>
+  <li><code class="language-plaintext highlighter-rouge">ie</code>：当前文本所有内容，但不包括前面和后面的 blank 字符</li>
+</ul>
+
+<p>所以当我们要选中当前文件所有内容时，就可以直接用 <code class="language-plaintext highlighter-rouge">vie</code> ，其他删除复制也如此类推。</p>
+
+<h2 id="小练习">小练习</h2>
+
+<p>把以下被符号包裹的内容复制到符号外</p>
+
+<pre><code class="language-```js">  'single quotation mark'
+  "double quotation mark"
+  [square bracket]
+  {curly bracket}
+  &lt;angel bracket&gt;
+  `backquote`
+</code></pre>

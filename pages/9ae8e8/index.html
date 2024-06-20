@@ -1,0 +1,168 @@
+<h1 id="10组合vs继承">10.组合vs继承</h1>
+
+<p>React 有十分强大的组合模式。我们<strong>推荐使用组合而非继承来实现组件间的代码重用</strong>。</p>
+
+<h2 id="包含关系-组件组合">包含关系 (组件组合)</h2>
+
+<p>有些组件无法提前知晓它们子组件的具体内容。在 <code class="language-plaintext highlighter-rouge">Sidebar</code>（侧边栏）和 <code class="language-plaintext highlighter-rouge">Dialog</code>（对话框）等展现通用容器（box）的组件中特别容易遇到这种情况。</p>
+
+<h3 id="props的children属性类似vue的插槽">props的children属性（类似vue的插槽）</h3>
+
+<p>我们建议这些组件使用一个<strong>特殊的 <code class="language-plaintext highlighter-rouge">children</code> prop 来将他们的子组件传递到渲染结果中</strong>：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">FancyBorder</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="si">{</span><span class="dl">'</span><span class="s1">FancyBorder FancyBorder-</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">props</span><span class="p">.</span><span class="nx">color</span><span class="si">}</span><span class="p">&gt;</span>
+      // children 是特殊的prop，在父组件中没有显式声明
+      <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="si">}</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">WelcomeDialog</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">FancyBorder</span> <span class="na">color</span><span class="p">=</span><span class="s">"blue"</span><span class="p">&gt;</span>
+      // 子组件标签之间的内容被当做 props.children 传入
+      <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">className</span><span class="p">=</span><span class="s">"Dialog-title"</span><span class="p">&gt;</span>
+        Welcome
+      <span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">className</span><span class="p">=</span><span class="s">"Dialog-message"</span><span class="p">&gt;</span>
+        Thank you for visiting our spacecraft!
+      <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nc">FancyBorder</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>:::note</p>
+
+<p>类似于vue中的插槽</p>
+
+<p>:::</p>
+
+<h3 id="props传入组件类似vue命名插槽">props传入组件（类似vue命名插槽）</h3>
+
+<p>少数情况下，你可能需要在一个组件中预留出几个“洞”。这种情况下，我们可以不使用 <code class="language-plaintext highlighter-rouge">children</code>，而是自行约定：将所需内容传入 props，并使用相应的 prop。</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">SplitPane</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"SplitPane"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"SplitPane-left"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">left</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"SplitPane-right"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">right</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// props传入组件</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">SplitPane</span>
+      <span class="na">left</span><span class="p">=</span><span class="si">{</span>
+        <span class="p">&lt;</span><span class="nc">Contacts</span> <span class="p">/&gt;</span>
+      <span class="si">}</span>
+      <span class="na">right</span><span class="p">=</span><span class="si">{</span>
+        <span class="p">&lt;</span><span class="nc">Chat</span> <span class="p">/&gt;</span>
+      <span class="si">}</span> <span class="p">/&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">&lt;Contacts /&gt;</code> 和 <code class="language-plaintext highlighter-rouge">&lt;Chat /&gt;</code> 之类的 React 元素本质就是对象（object），所以你可以把它们当作 props，像其他数据一样传递。<strong>你可以将任何格式的数据作为 props 进行传递。</strong></p>
+
+<p>:::note</p>
+
+<p>类似于vue中的命名插槽</p>
+
+<p>:::</p>
+
+<h2 id="特例关系字符串与组件组合">特例关系（字符串与组件组合）</h2>
+
+<p>有些时候，我们会把一些组件看作是其他组件的特殊实例，比如 <code class="language-plaintext highlighter-rouge">WelcomeDialog</code> 可以说是 <code class="language-plaintext highlighter-rouge">Dialog</code> 的特殊实例。</p>
+
+<p>在 React 中，我们也可以通过组合来实现这一点。“特殊”组件可以通过 props 定制并渲染“一般”组件：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dialog</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">FancyBorder</span> <span class="na">color</span><span class="p">=</span><span class="s">"blue"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">className</span><span class="p">=</span><span class="s">"Dialog-title"</span><span class="p">&gt;</span>
+        // 这里props.title非组件对象，而是字符串
+        <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">title</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">className</span><span class="p">=</span><span class="s">"Dialog-message"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">message</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nc">FancyBorder</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">WelcomeDialog</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">Dialog</span>
+      <span class="na">title</span><span class="p">=</span><span class="s">"Welcome"</span>
+      <span class="na">message</span><span class="p">=</span><span class="s">"Thank you for visiting our spacecraft!"</span>
+      <span class="p">/&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="class方式的组件组合">class方式的组件组合</h2>
+
+<p>组合也同样适用于以 class 形式定义的组件。</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dialog</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">FancyBorder</span> <span class="na">color</span><span class="p">=</span><span class="s">"blue"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">className</span><span class="p">=</span><span class="s">"Dialog-title"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">title</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">className</span><span class="p">=</span><span class="s">"Dialog-message"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">message</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+      <span class="si">{</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="si">}</span>
+    <span class="p">&lt;/</span><span class="nc">FancyBorder</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">SignUpDialog</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">handleChange</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">handleChange</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">handleSignUp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">handleSignUp</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span><span class="na">login</span><span class="p">:</span> <span class="dl">''</span><span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">Dialog</span> <span class="na">title</span><span class="p">=</span><span class="s">"Mars Exploration Program"</span>
+              <span class="na">message</span><span class="p">=</span><span class="s">"How should we refer to you?"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">value</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">login</span><span class="si">}</span>
+          <span class="na">onChange</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleChange</span><span class="si">}</span> <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleSignUp</span><span class="si">}</span><span class="p">&gt;</span>
+          Sign Me Up!
+        <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">Dialog</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">handleChange</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">login</span><span class="p">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">handleSignUp</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s2">`Welcome aboard, </span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">login</span><span class="p">}</span><span class="s2">!`</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="那么继承呢不推荐">那么继承呢？（不推荐）</h2>
+
+<p>在 Facebook，我们在成百上千个组件中使用 React。我们并没有发现需要使用继承来构建组件层次的情况。</p>
+
+<p>Props 和组合为你提供了清晰而安全地定制组件外观和行为的灵活方式。<strong>注意：组件可以接受任意 props，包括基本数据类型，React 元素以及函数</strong>。</p>
+
+<p>如果你想要在组件间复用非 UI 的功能，我们建议将其提取为一个单独的 JavaScript 模块，如函数、对象或者类。组件可以直接引入（import）而<strong>无需通过 extend 继承它们</strong>。</p>
+

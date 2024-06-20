@@ -1,0 +1,80 @@
+<h1 id="渐入佳境认识可视化模式">渐入佳境：认识可视化模式</h1>
+<h2 id="可视化模式">可视化模式</h2>
+
+<ul>
+  <li>字符可视化模式（Characterwise visual mode）：文本选择是以字符为单位，命令 <code class="language-plaintext highlighter-rouge">v</code> （命令模式下）</li>
+  <li>行可视化模式（Linewise visual mode）：文本选择是以行为单位，命令 <code class="language-plaintext highlighter-rouge">V</code> （命令模式下）</li>
+  <li>块可视化模式（Blockwise visual mode）：文本选择是以块为单位（非代码块，指一个矩形区域内的文本，多光标），命令 <code class="language-plaintext highlighter-rouge">Ctrl + v</code> （命令模式下）</li>
+</ul>
+
+<p>通过以上三种方式进入可视化模式后，底部会显示 <code class="language-plaintext highlighter-rouge">-- visual --</code> 字样（vscode中）；对于不同的可视化模式，可以直接输入另外两种可视化模式的命令直接切换模式，如 <code class="language-plaintext highlighter-rouge">v → V</code> 可以直接从字符可视化模式切换到行可视化模式，如此类推。</p>
+
+<p><strong>退出命令：</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">esc</code> / <code class="language-plaintext highlighter-rouge">Ctrl + [</code>：通用退出命令</li>
+  <li><code class="language-plaintext highlighter-rouge">v</code> / <code class="language-plaintext highlighter-rouge">V</code> / <code class="language-plaintext highlighter-rouge">Ctrl + v</code>：使用某个命令进入了可视化模式则可以通过相同的命令退出，但是由于不同的可视化模式可以直接切换，所以如果切换多了自己可能也忘记是在哪个模式下了，所以推荐用通用退出命令</li>
+</ul>
+
+<h2 id="使用">使用</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">v</code> / <code class="language-plaintext highlighter-rouge">V</code> / <code class="language-plaintext highlighter-rouge">Ctrl + v</code> + 范围 / 位置：如 <code class="language-plaintext highlighter-rouge">v + e</code> 则是选中到单词结尾，诸如此类，可以搭配前面提到的 <code class="language-plaintext highlighter-rouge">w</code> <code class="language-plaintext highlighter-rouge">b</code> <code class="language-plaintext highlighter-rouge">h</code> <code class="language-plaintext highlighter-rouge">j</code> … 等等的命令</li>
+  <li>可视化模式下 <code class="language-plaintext highlighter-rouge">o</code>：切换光标位置，此时会在选中区域的头和尾之间切换</li>
+</ul>
+
+<h2 id="技巧">技巧</h2>
+
+<ul>
+  <li>多行修改：如果我们要统一修改多行的内容，可以用 <code class="language-plaintext highlighter-rouge">Ctrl + v</code> 选中多行后，通过 <code class="language-plaintext highlighter-rouge">I</code> 或 <code class="language-plaintext highlighter-rouge">A</code> 进行前插入或后插入</li>
+  <li>通过可视化模式复制的内容，其实是暂存在了 vim 的寄存器中（<code class="language-plaintext highlighter-rouge">d</code> <code class="language-plaintext highlighter-rouge">c</code> 等操作其实也是，所以在 <code class="language-plaintext highlighter-rouge">d</code> 后，你也可以用 <code class="language-plaintext highlighter-rouge">p</code> 粘贴出来），而我们的 <code class="language-plaintext highlighter-rouge">command + c</code> 复制的内容则和 vim 无关，也就意味着，我们可以通过这两种不同的指令同时复制不同的内容而不会冲突，在某些场景下可以起到不错的辅助</li>
+</ul>
+
+<h2 id="拓展">拓展</h2>
+
+<p>还记得我们前面配置 <code class="language-plaintext highlighter-rouge">H</code> 和 <code class="language-plaintext highlighter-rouge">L</code> 来快速移动光标到行首行尾吗，在可视化模式中你会发现无法使用如 <code class="language-plaintext highlighter-rouge">vL</code> <code class="language-plaintext highlighter-rouge">vH</code> 这样的命令，这是因为我们 <code class="language-plaintext highlighter-rouge">H</code> <code class="language-plaintext highlighter-rouge">L</code> 的映射是在 normal mode 下的，我们需要在 vscode 的  <code class="language-plaintext highlighter-rouge">setting.json</code> 中添加如下配置：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="nl">"vim.visualModeKeyBindings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        
+      </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"H"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"^"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"L"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"g"</span><span class="p">,</span><span class="w"> </span><span class="s2">"_"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"J"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"j"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"K"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"k"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="err">,</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="小练习">小练习</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 复制以下单词：
+
+javascript
+
+python
+
+java
+
+swift
+
+2. 把以下所有句子的第一个单词改为 Just Vim It
+
+this is a simple easy vim tutorial
+this is a simple easy vim tutorial
+this is a simple easy vim tutorial
+this is a simple easy vim tutorial
+this is a simple easy vim tutorial
+this is a simple easy vim tutorial
+this is a simple easy vim tutorial
+this is a simple easy vim tutorial
+this is a simple easy vim tutorial
+
+</code></pre></div></div>

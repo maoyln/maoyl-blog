@@ -1,0 +1,599 @@
+<h1 id="typescript-学习笔记">TypeScript 学习笔记</h1>
+
+<p>TypeScript 的类型校验是给程序员看的，在编译后不会存在TS代码。</p>
+
+<h2 id="类型注解">类型注解</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">person</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span><span class="k">void</span><span class="p">{</span> <span class="c1">// 参数类型是字符串，没有返回值</span>
+    <span class="c1">///...</span>
+<span class="p">}</span>
+<span class="nx">fn</span><span class="p">(</span><span class="dl">'</span><span class="s1">str</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// 如传递参数非字符串，vscode编辑器中或在编译时将给出错误提示</span>
+
+<span class="kd">const</span> <span class="nx">test</span><span class="p">:</span><span class="kr">number</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<h3 id="有哪些基础类型注解">有哪些基础类型注解？</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 基础类型</span>
+<span class="p">:</span><span class="kr">string</span>
+<span class="p">:</span><span class="kr">number</span>
+<span class="p">:</span><span class="nx">boolean</span>
+
+<span class="p">:</span><span class="kc">null</span>  <span class="c1">// 只能是null值</span>
+<span class="p">:</span><span class="kc">undefined</span> <span class="c1">// 只能是undefined值</span>
+
+<span class="p">:</span><span class="nx">symbol</span>
+
+<span class="c1">// 引用类型</span>
+<span class="p">:</span><span class="nx">object</span> <span class="c1">// 不常用，多使用接口来给对象进行类型注解</span>
+
+<span class="c1">// 其他</span>
+<span class="p">:</span><span class="kr">any</span>  <span class="c1">// 任意类型</span>
+<span class="p">:</span><span class="k">void</span>  <span class="c1">// 空，用于函数的无返回值的注解</span>
+<span class="p">:</span><span class="nx">never</span> <span class="c1">// 用于标注函数代码永远执行不完（如抛出错误的函数，死循环函数）</span>
+
+
+</code></pre></div></div>
+
+<h3 id="什么是类型注解和类型推断类型断言">什么是类型注解和类型推断、类型断言？</h3>
+
+<p><strong>类型注解</strong> 是显式的标注类型</p>
+
+<p><strong>类型推断</strong> 是编辑器根据值来自动推断出类型 (编辑器中鼠标移到变量会显示类型的提示)。</p>
+
+<p><strong>类型断言</strong> 是告诉编译器，“相信我，它就是这个类型”。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 类型注解就是显式的写出类型</span>
+<span class="kd">const</span> <span class="nx">myNumber</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">123</span>
+
+<span class="c1">// 类型推断是根据值来推断类型 (鼠标移到变量会显示类型(或直接显示值)的提示)</span>
+<span class="kd">const</span> <span class="nx">myString</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span>
+
+<span class="c1">// 类型断言（开发者明确知道是什么类型）</span>
+<span class="kd">const</span> <span class="nx">someValue</span><span class="p">:</span><span class="kr">any</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">abc</span><span class="dl">'</span>
+<span class="kd">const</span> <span class="nx">strLength</span><span class="p">:</span><span class="kr">number</span> <span class="o">=</span> <span class="p">(</span><span class="nx">someValue</span> <span class="k">as</span> <span class="kr">string</span><span class="p">).</span><span class="nx">length</span> <span class="c1">// 断言someValue是字符串类型</span>
+</code></pre></div></div>
+
+<h3 id="对象的类型">对象的类型</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 对象字面量的类型检查</span>
+<span class="kd">const</span> <span class="nx">xiaojiejie</span><span class="p">:</span> <span class="p">{</span>
+  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+  <span class="nx">age</span><span class="p">:</span> <span class="kr">number</span>
+<span class="p">}</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">小红</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">age</span><span class="p">:</span> <span class="mi">18</span>
+<span class="p">}</span>
+
+<span class="c1">// 标注:object</span>
+<span class="kd">const</span> <span class="nx">obj</span><span class="p">:</span><span class="nx">object</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1">// 使用接口</span>
+<span class="kr">interface</span> <span class="nx">Person</span><span class="p">{</span>
+    <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span>
+    <span class="nx">age</span><span class="p">:</span> <span class="kr">number</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">xjj</span><span class="p">:</span> <span class="nx">Person</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">xh</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">age</span><span class="p">:</span> <span class="mi">18</span>
+<span class="p">}</span>
+
+<span class="c1">// class类的类型检查</span>
+<span class="kd">class</span> <span class="nx">Parson</span> <span class="p">{</span> <span class="p">}</span>
+<span class="kd">const</span> <span class="nx">xiaobai</span><span class="p">:</span> <span class="nx">Parson</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Parson</span><span class="p">()</span>
+
+<span class="c1">// 函数和返回值的类型检查</span>
+<span class="kd">const</span> <span class="nx">fn</span><span class="p">:</span> <span class="p">()</span><span class="o">=&gt;</span> <span class="kr">string</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="dl">'</span><span class="s1">123</span><span class="dl">'</span>
+</code></pre></div></div>
+
+<h3 id="函数的类型注解">函数的类型注解</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 函数返回值的类型注解 fn(): number {}</span>
+<span class="kd">function</span> <span class="nx">getTotal2</span><span class="p">(</span><span class="nx">one</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">two</span><span class="p">:</span> <span class="kr">number</span><span class="p">):</span> <span class="kr">number</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">one</span> <span class="o">+</span> <span class="nx">two</span>
+<span class="p">}</span>
+<span class="nx">getTotal2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+
+<span class="c1">// 无返回值: void</span>
+<span class="kd">function</span> <span class="nx">sayHello</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Hello</span><span class="dl">"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 永远执行不玩的函数</span>
+<span class="kd">function</span> <span class="nx">setTimer</span><span class="p">():</span><span class="nx">never</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">()</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 参数是对象时的注解 （也可以用接口）</span>
+<span class="kd">function</span> <span class="nx">add</span><span class="p">({</span> <span class="nx">one</span><span class="p">,</span> <span class="nx">two</span> <span class="p">}:</span> <span class="p">{</span><span class="nl">one</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">two</span><span class="p">:</span> <span class="kr">number</span><span class="p">})</span> <span class="p">{</span>
+  <span class="k">return</span>  <span class="nx">one</span> <span class="o">+</span> <span class="nx">two</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">total</span> <span class="o">=</span> <span class="nx">add</span><span class="p">({</span><span class="na">one</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">two</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+</code></pre></div></div>
+
+<h3 id="数组的类型注解">数组的类型注解</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">numberArr</span><span class="p">:</span> <span class="kr">number</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="kd">const</span> <span class="nx">stringArr</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">]</span>
+<span class="kd">const</span> <span class="nx">undefinedArr</span><span class="p">:</span> <span class="kc">undefined</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">undefined</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">]</span>
+<span class="kd">const</span> <span class="nx">arr</span><span class="p">:</span> <span class="p">(</span><span class="kr">number</span> <span class="o">|</span> <span class="kr">string</span> <span class="o">|</span> <span class="nx">boolean</span><span class="p">)[]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">]</span> <span class="c1">// 用到联合类型</span>
+
+<span class="c1">// 类型别名 type alias</span>
+<span class="kd">type</span> <span class="nx">lady</span> <span class="o">=</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="na">age</span><span class="p">:</span> <span class="kr">number</span> <span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">xiaojj</span><span class="p">:</span> <span class="nx">lady</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">xiaojj</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">age</span><span class="p">:</span> <span class="mi">90</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">j</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">age</span><span class="p">:</span> <span class="mi">30</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1">// 或用类的方式</span>
+<span class="kd">class</span> <span class="nx">Ady2</span> <span class="p">{</span>
+  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">age</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">xiaojj2</span><span class="p">:</span> <span class="nx">Ady2</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">xiaojj</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">age</span><span class="p">:</span> <span class="mi">90</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">j</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">age</span><span class="p">:</span> <span class="mi">30</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="元组">元组</h2>
+
+<p>元组，可以理解为：<strong>已知元素数量和类型的数组</strong></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 联合类型</span>
+<span class="kd">const</span> <span class="nx">xjj</span><span class="p">:(</span><span class="kr">string</span> <span class="o">|</span> <span class="kr">number</span><span class="p">)[]</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">]</span> <span class="c1">// 规定整个数组当中可以有string或number</span>
+
+<span class="c1">// 元组注解 注意这里的注解只有一个中括号</span>
+<span class="kd">const</span> <span class="nx">xjj1</span><span class="p">:</span> <span class="p">[</span><span class="kr">string</span><span class="p">,</span> <span class="kr">number</span><span class="p">,</span> <span class="kr">number</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">33</span><span class="p">]</span> <span class="c1">// 规定了数组每个元素对应位置的类型</span>
+
+<span class="c1">// Note: 在开发中元祖的使用在相对少</span>
+
+
+<span class="c1">// CSV的方式定义数据格式； （二维数组时需要多加一个中括号）</span>
+<span class="kd">const</span> <span class="nx">xjj2</span><span class="p">:</span> <span class="p">[</span><span class="kr">string</span><span class="p">,</span> <span class="kr">number</span><span class="p">,</span> <span class="kr">number</span><span class="p">][]</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">33</span><span class="p">],</span>
+  <span class="p">[</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">33</span><span class="p">]</span>
+<span class="p">]</span>
+
+</code></pre></div></div>
+
+<h2 id="接口">接口</h2>
+
+<p>接口，可以理解为对象属性的类型描述。和<code class="language-plaintext highlighter-rouge">类型别名</code>类似，不同的是 接口必须是一个对象，而别名可以直接是一个类型，如<code class="language-plaintext highlighter-rouge"> type Girl = string</code></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">Girl</span> <span class="p">{</span> <span class="c1">// 接口 （理解：对象属性的类型描述）</span>
+  <span class="k">readonly</span> <span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// 只读属性 （定义之后不能再修改）</span>
+  <span class="nl">age</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">waistline</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// 加个问号表示是可选值</span>
+  <span class="p">[</span><span class="nx">propname</span><span class="p">:</span> <span class="kr">string</span><span class="p">]:</span> <span class="kr">any</span><span class="p">;</span> <span class="c1">// 表示可以有不限制属性名的属性，但属性名需要是字符串，值可以是任意类型</span>
+  <span class="nx">say</span><span class="p">():</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// 函数类型，返回值是string (如无返回值时是 void)。  say()也可以加入参数类型检查，如say(p:number)</span>
+<span class="p">}</span>
+<span class="c1">// 和类型别名类似，不同的是 接口必须是一个对象，而别名可以直接是一个类型，如 type Girl = string</span>
+
+<span class="c1">// 接口的继承</span>
+<span class="kr">interface</span> <span class="nx">Teacher</span> <span class="kd">extends</span> <span class="nx">Girl</span> <span class="p">{</span>
+  <span class="nx">teach</span><span class="p">():</span> <span class="kr">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kd">const</span> <span class="nx">girl</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">大脚</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">age</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+  <span class="na">sex</span><span class="p">:</span> <span class="dl">'</span><span class="s1">女</span><span class="dl">'</span><span class="p">,</span>
+  <span class="nx">say</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">欢迎光临</span><span class="dl">'</span>
+  <span class="p">},</span>
+  <span class="nx">teach</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">教</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kd">const</span> <span class="nx">screenResume</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">,</span> <span class="nx">bust</span><span class="p">,</span> <span class="nx">sex</span> <span class="p">}:</span> <span class="nx">Girl</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">,</span> <span class="nx">bust</span><span class="p">,</span> <span class="nx">sex</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">getResume</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">,</span> <span class="nx">bust</span><span class="p">,</span> <span class="nx">teach</span><span class="p">}:</span> <span class="nx">Teacher</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">teach</span><span class="p">();</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">,</span> <span class="nx">bust</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nx">screenResume</span><span class="p">(</span><span class="nx">girl</span><span class="p">)</span>
+<span class="nx">getResume</span><span class="p">(</span><span class="nx">girl</span><span class="p">)</span>
+
+
+<span class="c1">// 接口在class类中的使用</span>
+<span class="kd">class</span> <span class="nx">xiaojjj</span> <span class="k">implements</span> <span class="nx">Girl</span> <span class="p">{</span>
+  <span class="nx">name</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">xiaojj</span><span class="dl">"</span>
+  <span class="nx">age</span> <span class="o">=</span> <span class="mi">18</span>
+  <span class="nx">bust</span> <span class="o">=</span> <span class="mi">98</span>
+  <span class="nx">sex</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">女</span><span class="dl">'</span>
+  <span class="nx">say</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">欢迎光临</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>可索引的类型</strong></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">Arr</span> <span class="p">{</span>
+    <span class="p">[</span><span class="nx">index</span><span class="p">:</span> <span class="kr">number</span><span class="p">]:</span><span class="kr">string</span>   <span class="c1">// 表示通过索引访问数据时返回的类型是string</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">myArr</span><span class="p">:</span><span class="nx">Arr</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">1</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">2</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">3</span><span class="dl">'</span><span class="p">]</span>
+<span class="kd">const</span> <span class="nx">myStr</span><span class="p">:</span><span class="kr">string</span> <span class="o">=</span> <span class="nx">myArr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="es6-class类中应用ts">ES6 class类中应用TS</h2>
+
+<h3 id="class类的修饰器">class类的修饰器</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 类的修饰器：</span>
+<span class="c1">// public (公共) 允许内外部使用</span>
+<span class="c1">// protected (受保护的) 允许在内部和继承内使用</span>
+<span class="c1">// private (私有) 允许在内部使用，但不能在继承中使用</span>
+
+<span class="c1">// 类的内部和外部，{}内属于内部，外面是外部</span>
+<span class="kd">class</span> <span class="nx">Person</span> <span class="p">{</span>
+   <span class="c1">// public 内外都可以使用，可省略，不写时默认public。 protected只允许内部使用</span>
+  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span> <span class="c1">// 这里的string注释是TS使用的</span>
+  <span class="k">private</span> <span class="nx">age</span><span class="p">:</span> <span class="mi">18</span>
+  <span class="k">public</span> <span class="nx">sayHello</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">say hello</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">Teacher2</span> <span class="kd">extends</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="nx">sayBye</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> say bye</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// protected 可以在继承中使用到</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+<span class="nx">person</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span> <span class="c1">// 在类的外部定义</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h3 id="class类的构造函数中使用类型校验">class类的构造函数中使用类型校验</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Person2</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="k">public</span> <span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">Teacher3</span> <span class="kd">extends</span> <span class="nx">Person2</span><span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="k">public</span> <span class="nx">age</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="dl">'</span><span class="s1">test-name</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// 这里传的值是给Person2的构造函数。即使父类没有构造函数，子类的构造函数内也要写super()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">teacher3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Teacher3</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">teacher3</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">teacher3</span><span class="p">.</span><span class="nx">age</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="class类的gettersetter和static">class类的getter、setter和static</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Xjj</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="k">private</span> <span class="nx">_age</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+  <span class="kd">get</span> <span class="nx">age</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_age</span> <span class="o">-</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="p">}</span>  <span class="c1">// 访问器属性，以属性的形式访问age，并可以对属性进行包装</span>
+  <span class="kd">set</span> <span class="nx">age</span><span class="p">(</span><span class="nx">age</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_age</span> <span class="o">=</span> <span class="nx">age</span><span class="o">+</span><span class="mi">3</span><span class="p">;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">dj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Xjj</span><span class="p">(</span><span class="mi">28</span><span class="p">);</span>
+<span class="nx">dj</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">25</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dj</span><span class="p">.</span><span class="nx">age</span><span class="p">)</span>
+
+
+<span class="c1">// 静态属性 static。  静态属性指不需要通过实例化，直接通过Girl.prop的方式就可以访问到属性</span>
+<span class="kd">class</span> <span class="nx">Girl</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="nx">sayLove</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">I love you</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// const girl = new Girl()</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">Girl</span><span class="p">.</span><span class="nx">sayLove</span><span class="p">())</span>
+
+</code></pre></div></div>
+
+<h3 id="class类的只读属性">class类的只读属性</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 只读属性</span>
+<span class="kd">class</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">readonly</span> <span class="nx">_name</span><span class="p">:</span> <span class="kr">string</span> <span class="c1">// 只读属性</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="dl">'</span><span class="s1">testName</span><span class="dl">'</span><span class="p">);</span>
+<span class="c1">// person._name = '222'; // 不能修改只读属性</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person</span><span class="p">.</span><span class="nx">_name</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="抽象类">抽象类</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">/</span> <span class="nx">抽象类</span>
+<span class="kd">abstract</span> <span class="kd">class</span> <span class="nx">Girls</span> <span class="p">{</span>
+  <span class="kd">abstract</span> <span class="nx">skill</span><span class="p">();</span> <span class="c1">// 注意这里只是定义抽象方法，而不具有方法的实现</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">Waiter</span> <span class="kd">extends</span> <span class="nx">Girls</span><span class="p">{</span> <span class="c1">// 继承了抽象类之后要 实现抽象类内的成员</span>
+  <span class="nx">skill</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">大爷1</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">BaseTeacher</span> <span class="kd">extends</span> <span class="nx">Girls</span><span class="p">{</span>
+  <span class="nx">skill</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">大爷2</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">SeniorTeacher</span> <span class="kd">extends</span> <span class="nx">Girls</span><span class="p">{</span>
+  <span class="nx">skill</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">大爷3</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="联合类型和类型保护">联合类型和类型保护</h2>
+
+<p><strong>联合类型</strong> 指某个参数可以是多种类型。</p>
+
+<p><strong>类型保护</strong> 指参数属于某个类型才有相应的操作。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">Waiter</span> <span class="p">{</span>
+  <span class="nl">anjiao</span><span class="p">:</span> <span class="nx">boolean</span>
+  <span class="nx">say</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="kr">interface</span> <span class="nx">Teacher</span> <span class="p">{</span>
+  <span class="nl">anjiao</span><span class="p">:</span> <span class="nx">boolean</span>
+  <span class="nx">skill</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">judgeWho</span><span class="p">(</span><span class="nx">animal</span><span class="p">:</span> <span class="p">(</span><span class="nx">Waiter</span> <span class="o">|</span> <span class="nx">Teacher</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// 联合类型</span>
+  <span class="c1">// 第一种断言方法</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">animal</span><span class="p">.</span><span class="nx">anjiao</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// (animal as Teacher) 的意思是：断言 animal 是 Teacher类型</span>
+    <span class="p">(</span><span class="nx">animal</span> <span class="k">as</span> <span class="nx">Teacher</span><span class="p">).</span><span class="nx">skill</span><span class="p">()</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="p">(</span><span class="nx">animal</span> <span class="k">as</span> <span class="nx">Waiter</span><span class="p">).</span><span class="nx">say</span><span class="p">()</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 第二种断言方法</span>
+  <span class="k">if</span> <span class="p">(</span><span class="dl">'</span><span class="s1">skill</span><span class="dl">'</span> <span class="k">in</span> <span class="nx">animal</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">animal</span><span class="p">.</span><span class="nx">skill</span><span class="p">()</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">animal</span><span class="p">.</span><span class="nx">say</span><span class="p">()</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 第三种类型保护方法是使用typeof来判断 (代码省略)</span>
+<span class="p">}</span>
+
+
+<span class="kd">class</span> <span class="nx">NumberObj</span> <span class="p">{</span>
+  <span class="nl">count</span><span class="p">:</span> <span class="kr">number</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">addObj</span><span class="p">(</span><span class="nx">first</span><span class="p">:</span> <span class="nx">object</span> <span class="o">|</span> <span class="nx">NumberObj</span><span class="p">,</span> <span class="nx">second</span><span class="p">:</span> <span class="nx">object</span> <span class="o">|</span> <span class="nx">NumberObj</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 联合类型</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">first</span> <span class="k">instanceof</span> <span class="nx">NumberObj</span> <span class="o">&amp;&amp;</span> <span class="nx">second</span> <span class="k">instanceof</span> <span class="nx">NumberObj</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 类型保护</span>
+    <span class="k">return</span> <span class="nx">first</span><span class="p">.</span><span class="nx">count</span> <span class="o">+</span> <span class="nx">second</span><span class="p">.</span><span class="nx">count</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h2 id="枚举">枚举</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Enum枚举类型   (个人理解枚举：约定一组可选的常量。 使用常量名表示某个值的含义，增强可读性。)</span>
+
+<span class="c1">// js写法</span>
+<span class="c1">// const Status = {</span>
+<span class="c1">//   MASSAGE: 0,</span>
+<span class="c1">//   SPA: 1,</span>
+<span class="c1">//   DABAOJIAN: 2</span>
+<span class="c1">// }</span>
+
+<span class="c1">// ts写法</span>
+<span class="kr">enum</span> <span class="nx">Status</span> <span class="p">{</span>
+  <span class="nx">MASSAGE</span><span class="p">,</span>  <span class="c1">// 如果想从1开始，给MASSAGE = 1, 即可</span>
+  <span class="nx">SPA</span><span class="p">,</span>
+  <span class="nx">DABAOJIAN</span>
+<span class="p">}</span> <span class="c1">// 默认赋值 0 、1、2</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">Status</span><span class="p">.</span><span class="nx">MASSAGE</span><span class="p">,</span> <span class="nx">Status</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c1">// 0, MASSAGE  可以通过下标反查</span>
+
+<span class="kd">function</span> <span class="nx">getStatus</span><span class="p">(</span><span class="nx">status</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="nx">Status</span><span class="p">.</span><span class="nx">MASSAGE</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">massage</span><span class="dl">'</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="nx">Status</span><span class="p">.</span><span class="nx">SPA</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">spa</span><span class="dl">'</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="nx">Status</span><span class="p">.</span><span class="nx">DABAOJIAN</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">dabaojian</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">getStatus</span><span class="p">(</span><span class="nx">Status</span><span class="p">.</span><span class="nx">SPA</span><span class="p">)</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h2 id="泛型">泛型</h2>
+
+<p>泛型，最简单的理解：泛指的类型。（类似函数中的形参与实参）</p>
+
+<h3 id="函数中的泛型使用">函数中的泛型使用</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// function join(first: string | number, second: string | number) {</span>
+<span class="c1">//   return `${first}${second}`</span>
+<span class="c1">// }</span>
+<span class="c1">// join('jspang', 1); // 如果我想第一个参数是字符串，第二个也必须是字符串，这么就用到泛型</span>
+
+
+<span class="c1">// 泛型使用，如同定义形参，在调用时指定类型</span>
+<span class="kd">function</span> <span class="nx">join</span><span class="o">&lt;</span><span class="nx">JSPang</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">first</span><span class="p">:</span> <span class="nx">JSPang</span><span class="p">,</span> <span class="nx">second</span><span class="p">:</span> <span class="nx">JSPang</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="nx">first</span><span class="p">}${</span><span class="nx">second</span><span class="p">}</span><span class="s2">`</span>
+<span class="p">}</span>
+
+<span class="nx">join</span><span class="o">&lt;</span><span class="kr">string</span><span class="o">&gt;</span><span class="p">(</span><span class="dl">'</span><span class="s1">jspang</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">join</span><span class="o">&lt;</span><span class="kr">number</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">22</span><span class="p">);</span>
+
+<span class="c1">// 泛型中数组的使用</span>
+<span class="kd">function</span> <span class="nx">myFun</span><span class="o">&lt;</span><span class="nx">ANY</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span><span class="nx">ANY</span><span class="p">[])</span> <span class="p">{</span> <span class="c1">// ANY[] or Array&lt;ANY&gt;</span>
+  <span class="k">return</span> <span class="nx">params</span>
+<span class="p">}</span>
+<span class="nx">myFun</span><span class="o">&lt;</span><span class="kr">string</span><span class="o">&gt;</span><span class="p">([</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">])</span>
+
+
+<span class="c1">// 两个类型参数的使用（工作中，常用T表示泛型）</span>
+<span class="kd">function</span> <span class="nx">join2</span><span class="o">&lt;</span><span class="nx">T</span><span class="p">,</span><span class="nx">P</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">first</span><span class="p">:</span> <span class="nx">T</span><span class="p">,</span> <span class="nx">second</span><span class="p">:</span> <span class="nx">P</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="nx">first</span><span class="p">}${</span><span class="nx">second</span><span class="p">}</span><span class="s2">`</span>
+<span class="p">}</span>
+
+<span class="nx">join2</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span><span class="kr">number</span><span class="o">&gt;</span><span class="p">(</span><span class="dl">'</span><span class="s1">jspang</span><span class="dl">'</span><span class="p">,</span> <span class="mi">123</span><span class="p">);</span>
+<span class="nx">join2</span><span class="o">&lt;</span><span class="kr">number</span><span class="p">,</span> <span class="kr">string</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="dl">'</span><span class="s1">22</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">join2</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="dl">'</span><span class="s1">22</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// 泛型也支持类型推断 （鼠标移到函数名有提示）</span>
+
+</code></pre></div></div>
+
+<h3 id="class类中使用泛型">class类中使用泛型</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// class SelectGirl {</span>
+<span class="c1">//   constructor(private girls: string[] | number[]) { } // private 私有的参数，外部无法修改</span>
+<span class="c1">//   getGirl(index: number): string | number {</span>
+<span class="c1">//     return this.girls[index]</span>
+<span class="c1">//   }</span>
+<span class="c1">// }</span>
+
+<span class="c1">// 使用泛型</span>
+<span class="kd">class</span> <span class="nx">SelectGirl</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="p">{</span>   <span class="c1">// 泛型的约束: &lt;T extends number | string&gt;</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="k">private</span> <span class="na">girls</span><span class="p">:</span> <span class="nx">T</span><span class="p">[])</span> <span class="p">{</span> <span class="p">}</span> <span class="c1">// private 私有的参数，外部无法修改</span>
+  <span class="nx">getGirl</span><span class="p">(</span><span class="na">index</span><span class="p">:</span> <span class="kr">number</span><span class="p">):</span> <span class="nx">T</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">girls</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// const selectGirl = new SelectGirl&lt;string&gt;(['大脚', 'xiaohong', 'xiaobai'])</span>
+<span class="kd">const</span> <span class="nx">selectGirl</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SelectGirl</span><span class="o">&lt;</span><span class="kr">number</span><span class="o">&gt;</span><span class="p">([</span><span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">])</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">selectGirl</span><span class="p">.</span><span class="nx">getGirl</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+
+<span class="c1">// 泛型中的继承</span>
+<span class="kr">interface</span> <span class="nx">Girl</span> <span class="p">{</span>
+  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span>
+<span class="p">}</span>
+<span class="kd">class</span> <span class="nx">SelectGirl2</span><span class="o">&lt;</span><span class="nx">T</span> <span class="kd">extends</span> <span class="nx">Girl</span><span class="o">&gt;</span> <span class="p">{</span> <span class="c1">// 泛型T中必须有一个name属性，继承自Girl接口</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="k">private</span> <span class="na">girls</span><span class="p">:</span> <span class="nx">T</span><span class="p">[])</span> <span class="p">{</span> <span class="p">}</span> <span class="c1">// private 私有的参数，外部无法修改</span>
+  <span class="nx">getGirl</span><span class="p">(</span><span class="na">index</span><span class="p">:</span> <span class="kr">number</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">girls</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">name</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">selectGirl2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SelectGirl2</span><span class="p">([</span>
+  <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">大脚1</span><span class="dl">'</span><span class="p">},</span>
+  <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">大脚2</span><span class="dl">'</span><span class="p">},</span>
+  <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">大脚3</span><span class="dl">'</span><span class="p">}</span>
+<span class="p">])</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">selectGirl2</span><span class="p">.</span><span class="nx">getGirl</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+</code></pre></div></div>
+
+<h2 id="配置文件tsconfigjson">配置文件tsconfig.json</h2>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">此文件由命令</span><span class="w"> </span><span class="err">tsc</span><span class="w"> </span><span class="err">-init</span><span class="w"> </span><span class="err">生成</span><span class="w">
+</span><span class="err">//</span><span class="w"> </span><span class="err">直接运行</span><span class="w"> </span><span class="err">tsc</span><span class="w"> </span><span class="err">命令就会运用此配置文件</span><span class="w">
+</span><span class="err">//</span><span class="w"> </span><span class="err">选项详解：https://www.tslang.cn/docs/handbook/compiler-options.html</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="nl">"include"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"demo15-1.ts"</span><span class="p">],</span><span class="w">              </span><span class="err">//</span><span class="w"> </span><span class="err">要编译的指定文件，不配置此项时运行tsc默认编译全部</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="nl">"files"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"demo15-1.ts"</span><span class="p">],</span><span class="w">                </span><span class="err">//</span><span class="w"> </span><span class="err">和include类似</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="nl">"exclude"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"demo15-3.ts"</span><span class="p">],</span><span class="w">              </span><span class="err">//</span><span class="w"> </span><span class="err">要排除编译的指定文件</span><span class="w">
+  </span><span class="nl">"compilerOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">编译选项</span><span class="w">
+    </span><span class="err">/*</span><span class="w"> </span><span class="err">基本选项</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"incremental"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                   </span><span class="err">/*</span><span class="w"> </span><span class="err">启用增量编译</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="nl">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"es5"</span><span class="p">,</span><span class="w">                          </span><span class="err">/*</span><span class="w"> </span><span class="err">指定</span><span class="w"> </span><span class="err">ECMAScript</span><span class="w"> </span><span class="err">目标版本:</span><span class="w"> </span><span class="err">'ES</span><span class="mi">3</span><span class="err">'</span><span class="w"> </span><span class="err">(default)</span><span class="p">,</span><span class="w"> </span><span class="err">'ES</span><span class="mi">5</span><span class="err">'</span><span class="p">,</span><span class="w"> </span><span class="err">'ES</span><span class="mi">2015</span><span class="err">'</span><span class="p">,</span><span class="w"> </span><span class="err">'ES</span><span class="mi">2016</span><span class="err">'</span><span class="p">,</span><span class="w"> </span><span class="err">'ES</span><span class="mi">2017</span><span class="err">'</span><span class="p">,</span><span class="w"> </span><span class="err">'ES</span><span class="mi">2018</span><span class="err">'</span><span class="p">,</span><span class="w"> </span><span class="err">'ES</span><span class="mi">2019</span><span class="err">'</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'ESNEXT'.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="nl">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"commonjs"</span><span class="p">,</span><span class="w">                     </span><span class="err">/*</span><span class="w"> </span><span class="err">指定模块代码生成:</span><span class="w"> </span><span class="err">'none'</span><span class="p">,</span><span class="w"> </span><span class="err">'commonjs'</span><span class="p">,</span><span class="w"> </span><span class="err">'amd'</span><span class="p">,</span><span class="w"> </span><span class="err">'system'</span><span class="p">,</span><span class="w"> </span><span class="err">'umd'</span><span class="p">,</span><span class="w"> </span><span class="err">'es</span><span class="mi">2015</span><span class="err">'</span><span class="p">,</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'ESNext'.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"lib"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">                             </span><span class="err">/*</span><span class="w"> </span><span class="err">指定要包含在编译中的库文件.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"allowJs"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                       </span><span class="err">/*</span><span class="w"> </span><span class="err">允许编译javascript文件*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"checkJs"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                       </span><span class="err">/*</span><span class="w"> </span><span class="err">报告.js文件中的错误。</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"jsx"</span><span class="p">:</span><span class="w"> </span><span class="s2">"preserve"</span><span class="p">,</span><span class="w">                     </span><span class="err">/*</span><span class="w"> </span><span class="err">指定</span><span class="w"> </span><span class="err">JSX代码生成:</span><span class="w"> </span><span class="err">'preserve'</span><span class="p">,</span><span class="w"> </span><span class="err">'react-native'</span><span class="p">,</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'react'.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"declaration"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                   </span><span class="err">/*</span><span class="w"> </span><span class="err">生成相应的</span><span class="w"> </span><span class="err">.d.ts文件</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"declarationMap"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                </span><span class="err">/*</span><span class="w"> </span><span class="err">为每个相应的</span><span class="w"> </span><span class="err">.d.ts文件生成一个sourcemap</span><span class="w"> </span><span class="err">(编译后代码对源码的映射)*/</span><span class="w">
+    </span><span class="nl">"sourceMap"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                        </span><span class="err">/*</span><span class="w"> </span><span class="err">生成源文件与输出文件的映射关系文件(.map)。*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"outFile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./"</span><span class="p">,</span><span class="w">                       </span><span class="err">/*</span><span class="w"> </span><span class="err">将输出文件合并为一个文件.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="nl">"outDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./build"</span><span class="p">,</span><span class="w">                      </span><span class="err">/*</span><span class="w"> </span><span class="err">输出的js文件目录。</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="nl">"rootDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./src"</span><span class="p">,</span><span class="w">                       </span><span class="err">/*</span><span class="w"> </span><span class="err">ts源文件目录。</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"composite"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                     </span><span class="err">/*</span><span class="w"> </span><span class="err">启用</span><span class="w"> </span><span class="err">项目编译</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"tsBuildInfoFile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./"</span><span class="p">,</span><span class="w">               </span><span class="err">/*</span><span class="w"> </span><span class="err">指定用于存储增量编译信息的文件</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"removeComments"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                </span><span class="err">/*</span><span class="w"> </span><span class="err">不输出注释到编译结果.（删除所有注释，除了以</span><span class="w"> </span><span class="err">/!*开头的版权信息。）</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"noEmit"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                        </span><span class="err">/*</span><span class="w"> </span><span class="err">不发出输出.Do</span><span class="w"> </span><span class="err">not</span><span class="w"> </span><span class="err">emit</span><span class="w"> </span><span class="err">outputs.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"importHelpers"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                 </span><span class="err">/*</span><span class="w"> </span><span class="err">从“tslib”导入发出助手.</span><span class="w"> </span><span class="err">Import</span><span class="w"> </span><span class="err">emit</span><span class="w"> </span><span class="err">helpers</span><span class="w"> </span><span class="err">from</span><span class="w"> </span><span class="err">'tslib'.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"downlevelIteration"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">            </span><span class="err">/*</span><span class="w"> </span><span class="err">Provide</span><span class="w"> </span><span class="err">full</span><span class="w"> </span><span class="err">support</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">iterables</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">'for-of'</span><span class="p">,</span><span class="w"> </span><span class="err">spread</span><span class="p">,</span><span class="w"> </span><span class="err">and</span><span class="w"> </span><span class="err">destructuring</span><span class="w"> </span><span class="err">when</span><span class="w"> </span><span class="err">targeting</span><span class="w"> </span><span class="err">'ES</span><span class="mi">5</span><span class="err">'</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'ES</span><span class="mi">3</span><span class="err">'.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"isolatedModules"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">               </span><span class="err">/*</span><span class="w"> </span><span class="err">将每个文件作为单独的模块（与“ts.transpileModule”类似）</span><span class="w"> </span><span class="err">*/</span><span class="w">
+
+    </span><span class="err">/*</span><span class="w"> </span><span class="err">严格的类型检查选项</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="nl">"strict"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                           </span><span class="err">/*</span><span class="w"> </span><span class="err">启用所有严格类型检查选项。</span><span class="w"> </span><span class="err">打开此选项后，下面这些选项就不需要单独设置*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"noImplicitAny"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                 </span><span class="err">/*</span><span class="w"> </span><span class="err">对隐含的“any”类型的表达式和声明引发错误.</span><span class="w"> </span><span class="err">(为</span><span class="kc">false</span><span class="err">时允许any不用特意声明)*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"strictNullChecks"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">              </span><span class="err">/*</span><span class="w"> </span><span class="err">启用严格的</span><span class="kc">null</span><span class="err">检查.</span><span class="w"> </span><span class="err">(为</span><span class="kc">false</span><span class="err">时允许赋值为</span><span class="kc">null</span><span class="err">)*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"strictFunctionTypes"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">           </span><span class="err">/*</span><span class="w"> </span><span class="err">启用严格检查函数类型.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"strictBindCallApply"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">           </span><span class="err">/*</span><span class="w"> </span><span class="err">启用函数上严格的“bind”、“call”和“apply”方法.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"strictPropertyInitialization"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">  </span><span class="err">/*</span><span class="w"> </span><span class="err">启用</span><span class="w"> </span><span class="err">严格检查类中的属性初始化.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"noImplicitThis"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                </span><span class="err">/*</span><span class="w"> </span><span class="err">在隐含的“any”类型的“this”表达式上引发错误。</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"alwaysStrict"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                  </span><span class="err">/*</span><span class="w"> </span><span class="err">以严格模式解析并为每个源文件发出“use</span><span class="w"> </span><span class="err">strict”。</span><span class="w"> </span><span class="err">*/</span><span class="w">
+
+    </span><span class="err">/*</span><span class="w"> </span><span class="err">附加检查。Additional</span><span class="w"> </span><span class="err">Checks</span><span class="w">  </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"noUnusedLocals"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                </span><span class="err">/*</span><span class="w"> </span><span class="err">若有未使用的局部变量则抛错</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"noUnusedParameters"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">            </span><span class="err">/*</span><span class="w"> </span><span class="err">若有未使用的参数则抛错。</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"noImplicitReturns"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">             </span><span class="err">/*</span><span class="w"> </span><span class="err">不是函数的所有返回路径都有返回值时报错。*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"noFallthroughCasesInSwitch"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">    </span><span class="err">/*</span><span class="w"> </span><span class="err">报告switch语句的fallthrough错误。（即，不允许switch的case语句贯穿）</span><span class="w"> </span><span class="err">*/</span><span class="w">
+
+    </span><span class="err">/*</span><span class="w"> </span><span class="err">模块解析选项</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"moduleResolution"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span><span class="w">            </span><span class="err">/*</span><span class="w"> </span><span class="err">决定如何处理模块：'node'</span><span class="w"> </span><span class="err">(Node.js)</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'classic'</span><span class="w"> </span><span class="err">(TypeScript</span><span class="w"> </span><span class="err">pre</span><span class="mf">-1.6</span><span class="err">).</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"baseUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./"</span><span class="p">,</span><span class="w">                       </span><span class="err">/*</span><span class="w"> </span><span class="err">用于解析非绝对模块名称的基础目录。</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"paths"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">                           </span><span class="err">/*</span><span class="w"> </span><span class="err">模块名到基于</span><span class="w"> </span><span class="err">baseUrl的路径映射的列表。</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"rootDirs"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">                        </span><span class="err">/*</span><span class="w"> </span><span class="err">List</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">root</span><span class="w"> </span><span class="err">folders</span><span class="w"> </span><span class="err">whose</span><span class="w"> </span><span class="err">combined</span><span class="w"> </span><span class="err">content</span><span class="w"> </span><span class="err">represents</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">structure</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">project</span><span class="w"> </span><span class="err">at</span><span class="w"> </span><span class="err">runtime.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"typeRoots"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">                       </span><span class="err">/*</span><span class="w"> </span><span class="err">List</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">folders</span><span class="w"> </span><span class="err">to</span><span class="w"> </span><span class="err">include</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">definitions</span><span class="w"> </span><span class="err">from.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"types"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">                           </span><span class="err">/*</span><span class="w"> </span><span class="err">要包含的类型声明文件名列表</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"allowSyntheticDefaultImports"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">  </span><span class="err">/*</span><span class="w"> </span><span class="err">Allow</span><span class="w"> </span><span class="err">default</span><span class="w"> </span><span class="err">imports</span><span class="w"> </span><span class="err">from</span><span class="w"> </span><span class="err">modules</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">no</span><span class="w"> </span><span class="err">default</span><span class="w"> </span><span class="err">export.</span><span class="w"> </span><span class="err">This</span><span class="w"> </span><span class="err">does</span><span class="w"> </span><span class="err">not</span><span class="w"> </span><span class="err">affect</span><span class="w"> </span><span class="err">code</span><span class="w"> </span><span class="err">emit</span><span class="p">,</span><span class="w"> </span><span class="err">just</span><span class="w"> </span><span class="err">typechecking.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="nl">"esModuleInterop"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">                   </span><span class="err">/*</span><span class="w"> </span><span class="err">启用s</span><span class="w"> </span><span class="err">emit</span><span class="w"> </span><span class="err">interoperability</span><span class="w"> </span><span class="err">between</span><span class="w"> </span><span class="err">CommonJS</span><span class="w"> </span><span class="err">and</span><span class="w"> </span><span class="err">ES</span><span class="w"> </span><span class="err">Modules</span><span class="w"> </span><span class="err">via</span><span class="w"> </span><span class="err">creation</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">namespace</span><span class="w"> </span><span class="err">objects</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">all</span><span class="w"> </span><span class="err">imports.</span><span class="w"> </span><span class="err">Implies</span><span class="w"> </span><span class="err">'allowSyntheticDefaultImports'.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"preserveSymlinks"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">              </span><span class="err">/*</span><span class="w"> </span><span class="err">Do</span><span class="w"> </span><span class="err">not</span><span class="w"> </span><span class="err">resolve</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">real</span><span class="w"> </span><span class="err">path</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">symlinks.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"allowUmdGlobalAccess"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">          </span><span class="err">/*</span><span class="w"> </span><span class="err">Allow</span><span class="w"> </span><span class="err">accessing</span><span class="w"> </span><span class="err">UMD</span><span class="w"> </span><span class="err">globals</span><span class="w"> </span><span class="err">from</span><span class="w"> </span><span class="err">modules.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+
+    </span><span class="err">/*</span><span class="w"> </span><span class="err">Source</span><span class="w"> </span><span class="err">Map</span><span class="w"> </span><span class="err">Options</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"sourceRoot"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">                      </span><span class="err">/*</span><span class="w"> </span><span class="err">Specify</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">location</span><span class="w"> </span><span class="err">where</span><span class="w"> </span><span class="err">debugger</span><span class="w"> </span><span class="err">should</span><span class="w"> </span><span class="err">locate</span><span class="w"> </span><span class="err">TypeScript</span><span class="w"> </span><span class="err">files</span><span class="w"> </span><span class="err">instead</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">source</span><span class="w"> </span><span class="err">locations.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"mapRoot"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">                         </span><span class="err">/*</span><span class="w"> </span><span class="err">Specify</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">location</span><span class="w"> </span><span class="err">where</span><span class="w"> </span><span class="err">debugger</span><span class="w"> </span><span class="err">should</span><span class="w"> </span><span class="err">locate</span><span class="w"> </span><span class="err">map</span><span class="w"> </span><span class="err">files</span><span class="w"> </span><span class="err">instead</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">generated</span><span class="w"> </span><span class="err">locations.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"inlineSourceMap"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">               </span><span class="err">/*</span><span class="w"> </span><span class="err">Emit</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">single</span><span class="w"> </span><span class="err">file</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">source</span><span class="w"> </span><span class="err">maps</span><span class="w"> </span><span class="err">instead</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">having</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">separate</span><span class="w"> </span><span class="err">file.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"inlineSources"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                 </span><span class="err">/*</span><span class="w"> </span><span class="err">Emit</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">source</span><span class="w"> </span><span class="err">alongside</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">sourcemaps</span><span class="w"> </span><span class="err">within</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">single</span><span class="w"> </span><span class="err">file;</span><span class="w"> </span><span class="err">requires</span><span class="w"> </span><span class="err">'--inlineSourceMap'</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'--sourceMap'</span><span class="w"> </span><span class="err">to</span><span class="w"> </span><span class="err">be</span><span class="w"> </span><span class="err">set.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+
+    </span><span class="err">/*</span><span class="w"> </span><span class="err">Experimental</span><span class="w"> </span><span class="err">Options</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"experimentalDecorators"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">        </span><span class="err">/*</span><span class="w"> </span><span class="err">启用s</span><span class="w"> </span><span class="err">experimental</span><span class="w"> </span><span class="err">support</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">ES</span><span class="mi">7</span><span class="w"> </span><span class="err">decorators.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="nl">"emitDecoratorMetadata"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">         </span><span class="err">/*</span><span class="w"> </span><span class="err">启用s</span><span class="w"> </span><span class="err">experimental</span><span class="w"> </span><span class="err">support</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">emitting</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">metadata</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">decorators.</span><span class="w"> </span><span class="err">*/</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre></div></div>

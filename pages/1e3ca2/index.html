@@ -1,0 +1,190 @@
+<h1 id="04-state--生命周期">04. State &amp; 生命周期</h1>
+
+<p>State 与 props 类似，但是 <strong>state 是私有的，并且完全受控于当前组件.</strong></p>
+
+<blockquote>
+  <p>State类似于vue中的data选项</p>
+</blockquote>
+
+<h2 id="将函数组件转换成-class-组件">将函数组件转换成 class 组件</h2>
+
+<blockquote>
+  <p>在没有useState钩子函数之前，是通过class组件管理State ？</p>
+</blockquote>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Clock</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+    	<span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      	<span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, world<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>It is <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">date</span><span class="p">.</span><span class="nx">toLocalTimeString</span><span class="p">()</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>每次组件更新时 <code class="language-plaintext highlighter-rouge">render</code> 方法都会被调用，但只要在相同的 DOM 节点中渲染 <code class="language-plaintext highlighter-rouge">&lt;Clock /&gt;</code> ，就<strong>仅有一个 <code class="language-plaintext highlighter-rouge">Clock</code> 组件的 class 实例被创建使用</strong>。这就使得我们可以使用如 state 或生命周期方法等很多其他特性。</p>
+
+<blockquote>
+  <p>单例模式？</p>
+</blockquote>
+
+<h2 id="向-class-组件中添加局部的-state">向 class 组件中添加局部的 state</h2>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Clock</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="c1">// 第二步：添加构造函数，并给 this.state 赋初始值</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="c1">// 通过super将props传递到父类构造函数中</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span><span class="na">date</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()}</span>
+  <span class="p">}</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 第一步：render 方法内，将 this.props 替换成 this.state</span>
+    <span class="k">return</span> <span class="p">(</span>
+    	<span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      	<span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, world<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>It is <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">date</span><span class="p">.</span><span class="nx">toLocalTimeString</span><span class="p">()</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nc">Clock</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="将生命周期方法添加到-class-中">将生命周期方法添加到 Class 中</h2>
+
+<p>在具有许多组件的应用程序中，当组件被销毁时释放所占用的资源是非常重要的。</p>
+
+<p>当 <code class="language-plaintext highlighter-rouge">Clock</code> 组件第一次被渲染到 DOM 中的时候，就为其<a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval">设置一个计时器</a>。这在 React 中被称为“<strong>挂载（mount）</strong>”。</p>
+
+<p>同时，当 DOM 中 <code class="language-plaintext highlighter-rouge">Clock</code> 组件被删除的时候，应该<a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/clearInterval">清除计时器</a>。这在 React 中被称为“<strong>卸载（unmount）</strong>”。</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Clock</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span><span class="na">date</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()};</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 挂载 - 挂载完成后执行</span>
+  <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 组件挂载后开启定时器</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">timerID</span> <span class="o">=</span> <span class="nx">serInterval</span><span class="p">(</span> <span class="c1">// 可以向this添加任意属性字段</span>
+    	<span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">tick</span><span class="p">(),</span> <span class="mi">1000</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 卸载</span>
+  <span class="nx">componentWillUnmount</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 组件卸载后清除定时器，释放内存</span>
+    <span class="nx">clearInterval</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">timerID</span><span class="p">)</span>
+  <span class="p">}</span>
+
+  <span class="nx">tick</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+      <span class="na">date</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, world!<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>It is <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">date</span><span class="p">.</span><span class="nx">toLocaleTimeString</span><span class="p">()</span><span class="si">}</span>.<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nc">Clock</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">root</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="正确地使用-state">正确地使用 State</h2>
+
+<p>关于 <code class="language-plaintext highlighter-rouge">setState()</code> 你应该了解三件事：</p>
+
+<h3 id="不要直接修改-state">不要直接修改 State</h3>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// Wrong 不要直接修改state</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">comment</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Hello</span><span class="dl">'</span>
+
+<span class="c1">// Correct 应使用 setState() 方法</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">comment</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Hello</span><span class="dl">'</span><span class="p">})</span>
+</code></pre></div></div>
+
+<p><strong>构造函数是唯一可以给 <code class="language-plaintext highlighter-rouge">this.state</code> 直接赋值的地方</strong></p>
+
+<blockquote>
+  <p>setState是React内部方法，使state更新具有响应式？</p>
+</blockquote>
+
+<h3 id="state-的更新可能是异步的">State 的更新可能是异步的</h3>
+
+<p>出于性能考虑，React 可能会把多个 <code class="language-plaintext highlighter-rouge">setState()</code> 调用合并成一个调用。</p>
+
+<p>因为 <code class="language-plaintext highlighter-rouge">this.props</code> 和 <code class="language-plaintext highlighter-rouge">this.state</code> 可能会异步更新，所以你<strong>不要依赖他们的值来更新下一个状态</strong>。</p>
+
+<p>要<strong>解决这个问题，可以让 <code class="language-plaintext highlighter-rouge">setState()</code> 接收一个函数而不是一个对象</strong>。这个函数用上一个 state 作为第一个参数，将此次更新被应用时的 props 做为第二个参数：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Correct</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">((</span><span class="nx">state</span><span class="p">,</span> <span class="nx">props</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+  <span class="na">counter</span><span class="p">:</span> <span class="nx">state</span><span class="p">.</span><span class="nx">counter</span> <span class="o">+</span> <span class="nx">props</span><span class="p">.</span><span class="nx">increment</span>
+<span class="p">}));</span>
+</code></pre></div></div>
+
+<h3 id="state-的更新会被合并">State 的更新会被合并</h3>
+
+<p>当你调用 <code class="language-plaintext highlighter-rouge">setState()</code> 的时候，React 会把你提供的对象合并到当前的 state</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">posts</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="na">comments</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+
+<span class="c1">// 分别调用setState单独更新state下的属性</span>
+ <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fetchPosts</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+        <span class="na">posts</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">posts</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+
+    <span class="nx">fetchComments</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+        <span class="na">comments</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">comments</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>这里的合并是浅合并，所以 <code class="language-plaintext highlighter-rouge">this.setState({comments})</code> 完整保留了 <code class="language-plaintext highlighter-rouge">this.state.posts</code>， 但是完全替换了 <code class="language-plaintext highlighter-rouge">this.state.comments</code>。</p>
+
+<h2 id="数据是向下流动的单向数据流">数据是向下流动的（单向数据流）</h2>
+
+<p>不管是父组件或是子组件都无法知道某个组件是有状态的还是无状态的，并且它们也并不关心它是函数组件还是 class 组件。</p>
+
+<p>这就是为什么称 <strong>state 为局部的</strong>或是封装的的原因。除了拥有并设置了它的组件，<strong>其他组件都无法访问</strong>。</p>
+
+<p>组件可以选择把它的 state 作为 props 向下传递到它的子组件中：</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="nc">FormattedDate</span> <span class="na">date</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">date</span><span class="si">}</span> <span class="p">/&gt;</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">FormattedDate</code> 组件会在其 props 中接收参数 <code class="language-plaintext highlighter-rouge">date</code>，但是<strong>组件本身无法知道它是来自于 <code class="language-plaintext highlighter-rouge">Clock</code> 的 state，或是 <code class="language-plaintext highlighter-rouge">Clock</code> 的 props，还是手动输入的</strong>。</p>
+
+<p>这通常会被叫做“自上而下”或是<strong>“单向”的数据流</strong>。任何的 <strong>state 总是所属于特定的组件</strong>，而且从该 state 派生的任何数据或 UI 只能影响树中“低于”它们的组件。</p>
+
+<p>如果你把一个以组件构成的树想象成一个 props 的数据瀑布的话，那么每一个组件的 state 就像是在任意一点上给瀑布增加额外的水源，但是它只能向下流动。</p>
+
+<h4 id="每个组件都是真正独立的">每个组件都是真正独立的。</h4>

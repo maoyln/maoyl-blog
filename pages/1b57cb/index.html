@@ -1,0 +1,134 @@
+<h2 id="拖拽操作">拖拽操作</h2>
+
+<blockquote>
+  <p>文章根据自己实际操作及理解编写，更加完善的文档请查阅<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/HTML_Drag_and_Drop_API/Drag_operations#drageffects">官方文档</a></p>
+</blockquote>
+
+<h2 id="相关api">相关API</h2>
+
+<h3 id="draggable">draggable</h3>
+
+<ul>
+  <li>
+    <p>用于标识元素是否允许使用拖动</p>
+
+    <ul>
+      <li>true，表示元素可以被拖动</li>
+      <li>false，表示元素不可以被拖动</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ondrag">onDrag</h3>
+
+<ul>
+  <li>拖拽元素或选中的文本时持续触发</li>
+</ul>
+
+<h3 id="ondragstart">onDragStart</h3>
+
+<ul>
+  <li>开始拖拽时触发一次</li>
+</ul>
+
+<h3 id="ondragend">onDragEnd</h3>
+
+<ul>
+  <li>拖拽结束出发一次</li>
+</ul>
+
+<h3 id="ondragenter">onDragEnter</h3>
+
+<ul>
+  <li>当拖拽元素或选中的文本到一个可释放目标时触发一次</li>
+</ul>
+
+<h3 id="ondragover">onDragOver</h3>
+
+<ul>
+  <li>当元素或选中的文本被拖到一个可释放目标上时触发（每100毫秒触发一次）</li>
+</ul>
+
+<h3 id="ondragleave">onDragLeave</h3>
+
+<ul>
+  <li>当拖拽元素或选中的文本离开一个可释放目标时触发一次</li>
+</ul>
+
+<h3 id="ondrop">onDrop</h3>
+
+<ul>
+  <li>
+    <p>当元素或选中的文本在可释放目标上被释放时触发</p>
+  </li>
+  <li>
+    <p>由于onDragOver用了节流(100ms执行一次),所以使用此api需要配合onDragOver配合使用,具体代码如下</p>
+  </li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">div</span>
+  <span class="nx">onDragOver</span><span class="o">=</span><span class="p">{(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// 阻止冒泡-必加</span>
+    <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="p">}}</span>
+  <span class="nx">onDrop</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">onDrop事件触发</span><span class="dl">"</span><span class="p">);</span>
+  <span class="p">}}</span>
+<span class="o">&gt;&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<h2 id="设置拖拽反馈图像">设置拖拽反馈图像</h2>
+
+<blockquote>
+  <p>拖动时自定义图标可以使用该方法</p>
+</blockquote>
+
+<p>当拖拽发生时，会生成拖拽目标的一个半透明图像（触发”dragstart (en-US)” 事件的元素），并在拖拽过程中跟踪鼠标指针。这个图像是自动创建的，所以你不需要自己创建它。但是，你可以使用 setDragImage() 方法来自定义拖拽反馈图像。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">event</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">setDragImage</span><span class="p">(</span><span class="nx">image</span><span class="p">,</span> <span class="nx">xOffset</span><span class="p">,</span> <span class="nx">yOffset</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>这三个参数都是必要的。第一个是图像的引用。这个引用通常是一个 <code class="language-plaintext highlighter-rouge">&lt;img&gt;</code>元素，但也可以是<code class="language-plaintext highlighter-rouge">&lt;canvas&gt;</code>或任何其他元素。生成的反馈图像就是该图像在屏幕上的样子，以图像原始的大小绘制。setDragImage() 方法的第二、三个参数是图像位置相对于鼠标指针位置的偏移量。</p>
+
+<h4 id="实例详解">实例详解</h4>
+
+<h5 id="下面官方给的例子">下面官方给的例子</h5>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">dragWithCustomImage</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="dl">"</span><span class="s2">http://www.w3.org/1999/xhtml</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">canvas</span><span class="dl">"</span><span class="p">);</span>
+  <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">getContext</span><span class="p">(</span><span class="dl">"</span><span class="s2">2d</span><span class="dl">"</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+  <span class="kd">var</span> <span class="nx">dt</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">;</span>
+  <span class="nx">dt</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="dl">'</span><span class="s1">text/plain</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Data to Drag</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">dt</span><span class="p">.</span><span class="nx">setDragImage</span><span class="p">(</span><span class="nx">canvas</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上述方法拖拽的过程中可能实现不了我们预期的效果，因为拖拽是瞬间的事情，而绘制拖拽的图标需要时间，我们开始拖拽的时候还没有图标还没有绘制完成，拖拽图标就不会改变；</p>
+
+<h6 id="优化方案">优化方案</h6>
+
+<p>先准备好会在所需图标，拖拽开始的时候直接使用即可</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">const</span> <span class="nx">createElementImg</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// var imgNode = document.createElement( 'img' );</span>
+    <span class="kd">const</span> <span class="na">imgNode</span><span class="p">:</span> <span class="nx">any</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Image</span><span class="p">();</span>
+    <span class="nx">imgNode</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">dragIcon</span><span class="p">;</span>
+    <span class="nx">dragIconRef</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">imgNode</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="cm">/**
+   * 开始拖拽callback
+   */</span>
+  <span class="kd">const</span> <span class="nx">handleDragStartCallback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">type</span><span class="p">:</span> <span class="nx">any</span><span class="p">,</span> <span class="nx">event</span><span class="p">:</span> <span class="nx">any</span><span class="p">,</span> <span class="nx">info</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">setDragImage</span><span class="p">(</span><span class="nx">dragIconRef</span><span class="p">.</span><span class="nx">current</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">开始拖拽</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">};</span>
+</code></pre></div></div>

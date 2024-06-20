@@ -1,0 +1,55 @@
+<h1 id="放慢脚步删改重做提升效率的新姿势">放慢脚步：删改重做，提升效率的新姿势</h1>
+
+<p>在日常使用中，我们有个功能是常常需要用到的，就是删除；前面我们学了 <code class="language-plaintext highlighter-rouge">d</code> <code class="language-plaintext highlighter-rouge">c</code> 这些指令，但是我们要进行删除一行中的某些字符时，要么得先用 <code class="language-plaintext highlighter-rouge">v</code> 选中内容然后 <code class="language-plaintext highlighter-rouge">d</code> 或 <code class="language-plaintext highlighter-rouge">c</code>，不然只能用键盘上的退格（删除）键。但是键盘的删除有几个问题：</p>
+
+<ul>
+  <li>键盘的 Delete 按键太远，每次按都要移动手掌</li>
+  <li>删除按键是单字符删除，删除效率低</li>
+  <li>系统的删除与 vim 的配合不够契合</li>
+</ul>
+
+<p>既然如此，我们来看看 vim 是如何解决这些问题的。</p>
+
+<h2 id="删除">删除</h2>
+
+<p>对于删除，可以使用一下指令（命令模式中）：</p>
+
+<ul>
+  <li>x：删除当前光标所在字符</li>
+  <li>X：删除当前光标所在字符的前一个字符</li>
+  <li>s：删除当前光标所在字符并进入 insert mode</li>
+  <li>S：删除当前光标所在行的除缩进外的所有内容并进入 insert mode</li>
+</ul>
+
+<h2 id="替换">替换</h2>
+
+<p>对于有些情况下，我们可能要修改部分字符，比如修改某个函数的名称；虽然我们可以先删除，再重新渐入，但是在 vim 中有更好的方法：</p>
+
+<ul>
+  <li>r + 字符：替换当前光标所在字符</li>
+  <li>R + 字符：替换当前光标开始的多个字符</li>
+</ul>
+
+<h2 id="撤销重做">撤销/重做</h2>
+<p>对于一些误操作，我们常常需要撤销或重做，大部分软件中都有这个操作，vim 也不例外：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">u</code>：撤销一次操作的内容
+  :::info 提示
+  normal mode =&gt; insert mode =&gt; normal mode 为一次操作，或在 insert mode 中进行了光标移动也会增加一次
+  :::</li>
+  <li><code class="language-plaintext highlighter-rouge">ctrl + r</code>：重做</li>
+</ul>
+
+<h2 id="小训练">小训练</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">bbb</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// this is is a description</span>
+  <span class="c1">//</span>
+  <span class="c1">//   another descriptttion </span>
+  <span class="kd">const</span> <span class="nx">timer</span>   <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">((</span> <span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">that</span><span class="p">)</span> <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">cool!</span><span class="dl">'</span><span class="p">)</span>
+    <span class="c1">// awosome man !</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
