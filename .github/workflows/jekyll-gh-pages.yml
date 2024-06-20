@@ -1,36 +1,36 @@
-name: Jekyll Site CI
+name: Build and Deploy Jekyll Site
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # 或者您希望部署的分支
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '2.7' # 根据您的项目需要调整 Ruby 版本
+        ruby-version: '2.7'
+
+    - name: Update RubyGems
+      run: gem update --system
+
+    - name: Install specific bundler version
+      run: gem install bundler:1.17.2
 
     - name: Install dependencies
-      run: |
-        gem install bundler:1.17.2
-        bundle install
+      run: bundle install
 
     - name: Build site
       run: bundle exec jekyll build
 
     - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
