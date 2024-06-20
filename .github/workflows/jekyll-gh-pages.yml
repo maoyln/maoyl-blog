@@ -18,11 +18,8 @@ jobs:
       with:
         ruby-version: '2.7'
 
-    - name: Update RubyGems
-      run: gem update --system
-
-    - name: Install specific bundler version
-      run: gem install bundler:1.17.2
+    - name: Install Bundler
+      run: gem install bundler
 
     - name: Install dependencies
       run: bundle install
