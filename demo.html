@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="container">
+    <ul class="ul-box"id="ul-box">
+      <li>形成天才的决定因素应该是勤奋。郭沫若。</li>
+      <li>学习很多东西的诀窍是不要一次学习很多东西。洛克。</li>
+      <li>知道自己的鞋子在哪里。西班牙。</li>
+      <li>我们唯一不会纠正的缺点就是弱。拉罗什福科。</li>
+    </ul>
+  
+    <div class="btn-box" id="btn-box">
+      <input type="button" class="btn add-btn"id="add" value="添加" />
+      <input type="button" class="btn remove-btn" id="remove" value="删除" />
+    </div>
+  </div>
+<script>
+  let mrmy = [
+    '形成天才的决定因素应该是勤奋。郭沫若。',
+    '学习很多东西的诀窍是不要一次学习很多东西。洛克。',
+    '知道自己的鞋子在哪里。西班牙。',
+    '我们唯一不会纠正的缺点就是弱。拉罗什福科。',
+    '我这个人走得很慢，但我从不退步。亚伯拉罕林肯。',
+    '不要问成功的秘诀，尽全力做你应该做的事。美华纳。',
+    '学而不思则无视，思而不学则危险。孔子。',
+    '学问异常珍贵，从任何源泉吸收都不可耻。阿卜日法拉兹。',
+    '只有在人群中间，才能认识自己。德国。',
+    '重复别人说的话，只需要教育挑战别人说的话，就需要头脑。玛丽佩蒂博恩普尔。',
+    '优秀的人的一大优点是在不利和困难的遭遇中百折不饶。贝多芬。',
+    '自己的饮食量自己知道。苏联。',
+    '如果我们接受最坏的东西，就没有损失。卡内基。',
+    '书到使用为止恨少，事情不难。陆游。',
+    '书籍将我们引入最美好的社会，让我们认识每个时代的伟大智者。史美尔斯。',
+    '熟读唐诗三百首，不作诗也会吟。孙浆。',
+    '谁和我一样学习，谁和我一样成功。莫扎特。',
+    '要掌握书，不要为生而读，不要为读。布尔沃。',
+    '要知道对好事的称赞过于夸张，也会引起人们的反感蔑视和嫉妒。培根。',
+    '工作勤奋，荒废的行为是思考，随行破坏。韩愈。',
+    '一切节约归结为时间节约。马克思。',
+    '意志的命运往往背道而驰，决心到最后全部推倒。莎士比亚。',
+    '学习是劳动，是充满思想的劳动。乌申斯基。',
+    '不可能让整个人生舒适愉快。因为人类必须有应对逆境的态度。卢梭。',
+    '把抱怨环境的心态，化为上进的力量，才是成功的保证。罗曼罗兰。',
+    '知者不如好者，好者不如乐者。孔子。',
+    '勇敢、大胆、坚定的决心可以抵抗武器的精良。达芬奇。',
+    '意志是强烈的盲人，靠着明亮的跛子肩膀。叔叔本华。',
+    '永远躺在泥坑里的人，才不会再掉进坑里。黑格尔。',
+    '希望的灯熄灭后，生活瞬间变成了黑暗。普利姆昌德。',
+    '希望是人生的保姆。科策布。',
+    '天下的事情经常陷入困境，输给奢侈。陆游。',
+    '生命不等于呼吸，生命是活动。卢梭。',
+    '伟大的事业，需要决心、能力、组织和责任感。易于生活。',
+    '唯一的书是不朽的。乔。',
+    '为中华崛起读书。周恩来。',
+    '书不仅是生活，更是现在、过去和未来文化生活的源泉。库法耶夫。',
+    '生命不可能有两次，但很多人连一次都不擅长度过。吕凯特。',
+  ];
+  window.onload = function(){
+    var addBtn = document.getElementById('add');
+    var removeBtn = document.getElementById('remove');
+    var oUl = document.getElementById('ul-box');
+    var aLi = oUl.getElementsByTagName('li');
+    var num = 4;
+    
+    //事件委托，添加的子元素也有事件
+    oUl.onmouseover = function(ev){
+      var ev = ev || window.event;
+      var target = ev.target || ev.srcElement;
+      if(target.nodeName.toLowerCase() == 'li'){
+        target.style.background = '#ff00ff';
+      }
+    };
+    // 鼠标移出
+    oUl.onmouseout = function(ev){
+      var ev = ev || window.event;
+      var target = ev.target || ev.srcElement;
+      if(target.nodeName.toLowerCase() == 'li'){
+        target.style.background = '#ffffff';
+      }
+    };
+    
+    //添加新节点
+    addBtn.onclick = function(){
+      num++;
+      var oLi = document.createElement('li');
+      oLi.innerHTML = mrmy[num];
+      oUl.appendChild(oLi);
+    };
+
+    //删除新节点
+    removeBtn.onclick = function(){
+      if (!!!num) {
+        alert('删除上瘾？ 赶紧添加个个吧');
+        return;
+      }
+      num--;
+      oUl.removeChild(oUl.lastElementChild);
+    };
+  }
+</script>
+<style>
+  .container {
+    background: url('/img/autumn-scenery.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+  }
+  .ul-box {
+    width: 100%;
+  }
+  .ul-box>li {
+    list-style-type: none;
+    box-sizing: border-box;
+    color:#0000ff;
+    text-shadow:#ff4d4f 3px 4px 5px;
+    font-size: 20px;
+    line-height: 1.1em;
+    letter-spacing: 3px;
+    text-align: center;
+    padding: 5px;
+    margin-left: -80px;
+  }
+
+  .btn-box {
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-box .btn {
+    color: #fff;
+    border-color: #1890ff;
+    background: #1890ff;
+    text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+    box-shadow: 0 2px #0000000b;
+  }
+
+  .btn-box .add-btn {
+    border-color: #1890ff;
+    background: #1890ff;
+  }
+
+  .btn-box .remove-btn {
+    border-color: #ff4d4f;
+    background: #ff4d4f;
+  }
+</style>
+</body>
+</html>

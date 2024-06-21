@@ -1,0 +1,162 @@
+<h1 id="flex布局案例-骰子">flex布局案例-骰子</h1>
+
+<blockquote>
+  <p>可用<kbd>F12</kbd>开发者工具查看元素及样式，可打开codepen在线编辑代码。</p>
+</blockquote>
+
+<p>::: demo [vanilla]</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"box2"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"first-face"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"second-face"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"third-face"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"fourth-face"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"fifth-face"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"sixth-face"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"pip"</span><span class="nt">&gt;&lt;/span&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+<span class="nt">&lt;style&gt;</span>
+  <span class="c">/* 一 */</span>
+  <span class="nc">.first-face</span> <span class="p">{</span> <span class="c">/* 形成上下左右居中 */</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+    <span class="c">/* 项目在主轴上居中 */</span>
+    <span class="nl">justify-content</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+    <span class="c">/* 项目在交叉轴上居中 */</span>
+    <span class="nl">align-items</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c">/* 二 */</span>
+  <span class="nc">.second-face</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+    <span class="c">/* 两侧对齐 */</span>
+    <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-between</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.second-face</span> <span class="nc">.pip</span><span class="nd">:nth-of-type</span><span class="o">(</span><span class="err">2</span><span class="o">)</span> <span class="p">{</span>
+    <span class="c">/* 居下 */</span>
+    <span class="nl">align-self</span><span class="p">:</span> <span class="n">flex-end</span><span class="p">;</span>
+  <span class="p">}</span><span class="c">/* 三 */</span>
+  <span class="nc">.third-face</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+    <span class="c">/* 两侧对齐 */</span>
+    <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-between</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.third-face</span> <span class="nc">.pip</span><span class="nd">:nth-of-type</span><span class="o">(</span><span class="err">2</span><span class="o">)</span> <span class="p">{</span>
+    <span class="c">/* 居中 */</span>
+    <span class="nl">align-self</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.third-face</span> <span class="nc">.pip</span><span class="nd">:nth-of-type</span><span class="o">(</span><span class="err">3</span><span class="o">)</span> <span class="p">{</span>
+    <span class="c">/* 居下 */</span>
+    <span class="nl">align-self</span><span class="p">:</span> <span class="n">flex-end</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c">/* 四 、六*/</span>
+  <span class="nc">.fourth-face</span><span class="o">,</span>
+  <span class="nc">.sixth-face</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+    <span class="c">/* 两侧对齐 */</span>
+    <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-between</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.fourth-face</span> <span class="nc">.column</span><span class="o">,</span>
+  <span class="nc">.sixth-face</span> <span class="nc">.column</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+    <span class="c">/* 纵向排列 */</span>
+    <span class="nl">flex-direction</span><span class="p">:</span> <span class="n">column</span><span class="p">;</span>
+    <span class="c">/* 两侧对齐 */</span>
+    <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-between</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c">/* 五 */</span>
+  <span class="nc">.fifth-face</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+    <span class="c">/* 两侧对齐 */</span>
+    <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-between</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.fifth-face</span> <span class="nc">.column</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+    <span class="c">/* 纵向排列 */</span>
+    <span class="nl">flex-direction</span><span class="p">:</span> <span class="n">column</span><span class="p">;</span>
+    <span class="c">/* 两侧对齐 */</span>
+    <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-between</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.fifth-face</span> <span class="nc">.column</span><span class="nd">:nth-of-type</span><span class="o">(</span><span class="err">2</span><span class="o">)</span> <span class="p">{</span>
+    <span class="c">/* 居中对齐 */</span>
+    <span class="nl">justify-content</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="c">/* 基础样式 */</span>
+<span class="nc">.box2</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="c">/* 项目在交叉轴上居中 */</span>
+  <span class="nl">align-items</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="c">/* 项目在主轴上居中 */</span>
+  <span class="nl">justify-content</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="nl">vertical-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="c">/* 允许项目换行 */</span>
+  <span class="nl">flex-wrap</span><span class="p">:</span> <span class="n">wrap</span><span class="p">;</span>  <span class="c">/* 项目是多行时以交叉轴中心对齐 */</span>
+  <span class="nl">align-content</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="nl">font-family</span><span class="p">:</span> <span class="s2">'Open Sans'</span><span class="p">,</span> <span class="nb">sans-serif</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c">/* 类名包含face的元素 */</span>
+<span class="o">[</span><span class="nt">class</span><span class="err">$</span><span class="o">=</span><span class="s1">"face"</span><span class="o">]</span> <span class="p">{</span>
+  <span class="nl">margin</span><span class="p">:</span> <span class="m">5px</span><span class="p">;</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">4px</span><span class="p">;</span>  <span class="nl">background-color</span><span class="p">:</span> <span class="m">#e7e7e7</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">104px</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">104px</span><span class="p">;</span>
+  <span class="nl">object-fit</span><span class="p">:</span> <span class="n">contain</span><span class="p">;</span>  <span class="nl">box-shadow</span><span class="p">:</span>
+    <span class="nb">inset</span> <span class="m">0</span> <span class="m">5px</span> <span class="no">white</span><span class="p">,</span>
+    <span class="nb">inset</span> <span class="m">0</span> <span class="m">-5px</span> <span class="m">#bbb</span><span class="p">,</span>
+    <span class="nb">inset</span> <span class="m">5px</span> <span class="m">0</span> <span class="m">#d7d7d7</span><span class="p">,</span>
+    <span class="nb">inset</span> <span class="m">-5px</span> <span class="m">0</span> <span class="m">#d7d7d7</span><span class="p">;</span>  <span class="nl">border-radius</span><span class="p">:</span> <span class="m">10%</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.pip</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="nb">block</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">24px</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">24px</span><span class="p">;</span>
+  <span class="nl">border-radius</span><span class="p">:</span> <span class="m">50%</span><span class="p">;</span>
+  <span class="nl">margin</span><span class="p">:</span> <span class="m">4px</span><span class="p">;</span>  <span class="nl">background-color</span><span class="p">:</span> <span class="m">#333</span><span class="p">;</span>
+  <span class="nl">box-shadow</span><span class="p">:</span> <span class="nb">inset</span> <span class="m">0</span> <span class="m">3px</span> <span class="m">#111</span><span class="p">,</span> <span class="nb">inset</span> <span class="m">0</span> <span class="m">-3px</span> <span class="m">#555</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">&lt;/style&gt;</span>
+</code></pre></div></div>
+<p>:::</p>
+
+<blockquote>
+  <p>参考：<a href="http://www.ruanyifeng.com/blog/2015/07/flex-examples.html">http://www.ruanyifeng.com/blog/2015/07/flex-examples.html</a></p>
+</blockquote>

@@ -1,0 +1,63 @@
+<h1 id="js获取和修改url参数">JS获取和修改url参数</h1>
+
+<h2 id="获取url参数">获取url参数</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+ * 获取url里的参数
+ * @param arg 参数名
+ * @returns
+ */</span>
+<span class="kd">function</span> <span class="nx">getURLString</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">reg</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="dl">"</span><span class="s2">(^|&amp;)</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">arg</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">=([^&amp;]*)(&amp;|$)</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">i</span><span class="dl">"</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">match</span><span class="p">(</span><span class="nx">reg</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">r</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nx">unescape</span><span class="p">(</span><span class="nx">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="修改url参数">修改url参数</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+ * url地址修改
+ * @param url 待修改url
+ * @param arg 修改的参数名
+ * @param arg_val 修改的具体值
+ * @returns {String}
+ */</span>
+<span class="kd">function</span> <span class="nx">changeURLArg</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">arg</span><span class="p">,</span> <span class="nx">arg_val</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">pattern</span> <span class="o">=</span> <span class="nx">arg</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">=([^&amp;]*)</span><span class="dl">'</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">replaceText</span> <span class="o">=</span> <span class="nx">arg</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">=</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">arg_val</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">pattern</span><span class="p">))</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">tmp</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">/(</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">arg</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">=)([^&amp;]*)/gi</span><span class="dl">'</span><span class="p">;</span>
+        <span class="nx">tmp</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="nx">tmp</span><span class="p">),</span> <span class="nx">replaceText</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">tmp</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="dl">'</span><span class="s1">[</span><span class="se">\</span><span class="s1">?]</span><span class="dl">'</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">url</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">&amp;</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">replaceText</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">url</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">?</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">replaceText</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="不刷新页面修改url参数">不刷新页面修改url参数</h2>
+
+<p><a href="https://www.cnblogs.com/wuting/p/8946927.html">https://www.cnblogs.com/wuting/p/8946927.html</a></p>
+
+<h2 id="url-的编码和解码">URL 的编码和解码</h2>
+
+<p>比如，UTF-8 的操作系统上，<code class="language-plaintext highlighter-rouge">http://www.example.com/q=春节</code>这个 URL 之中，汉字“春节”不是 URL 的合法字符，所以被浏览器自动转成<code class="language-plaintext highlighter-rouge">http://www.example.com/q=%E6%98%A5%E8%8A%82</code>。其中，“春”转成了<code class="language-plaintext highlighter-rouge">%E6%98%A5</code>，“节”转成了<code class="language-plaintext highlighter-rouge">%E8%8A%82</code>。这是因为“春”和“节”的 UTF-8 编码分别是<code class="language-plaintext highlighter-rouge">E6 98 A5</code>和<code class="language-plaintext highlighter-rouge">E8 8A 82</code>，将每个字节前面加上百分号，就构成了 URL 编码。</p>
+
+<p>JavaScript 提供四个 URL 的编码/解码方法。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">encodeURI()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">encodeURIComponent()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">decodeURI()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">decodeURIComponent()</code></li>
+</ul>
+
+<p><a href="https://maoyln.com/pages/bab4930124ad2c10/#_2、url-的编码和解码">查看文档</a></p>
+
