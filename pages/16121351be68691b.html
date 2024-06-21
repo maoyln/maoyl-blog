@@ -1,0 +1,449 @@
+<h1 id="异步遍历器">异步遍历器</h1>
+
+<h2 id="同步遍历器的问题">同步遍历器的问题</h2>
+
+<p>《遍历器》一章说过，Iterator 接口是一种数据遍历的协议，只要调用遍历器对象的<code class="language-plaintext highlighter-rouge">next</code>方法，就会得到一个对象，表示当前遍历指针所在的那个位置的信息。<code class="language-plaintext highlighter-rouge">next</code>方法返回的对象的结构是<code class="language-plaintext highlighter-rouge">{value, done}</code>，其中<code class="language-plaintext highlighter-rouge">value</code>表示当前的数据的值，<code class="language-plaintext highlighter-rouge">done</code>是一个布尔值，表示遍历是否结束。
+<!-- more --></p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">idMaker</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">next</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="p">{</span> <span class="na">value</span><span class="p">:</span> <span class="nx">index</span><span class="o">++</span><span class="p">,</span> <span class="na">done</span><span class="p">:</span> <span class="kc">false</span> <span class="p">};</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">it</span> <span class="o">=</span> <span class="nx">idMaker</span><span class="p">();</span>
+
+<span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">value</span> <span class="c1">// 0</span>
+<span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">value</span> <span class="c1">// 1</span>
+<span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">value</span> <span class="c1">// 2</span>
+<span class="c1">// ...</span>
+</code></pre></div></div>
+
+<p>上面代码中，变量<code class="language-plaintext highlighter-rouge">it</code>是一个遍历器（iterator）。每次调用<code class="language-plaintext highlighter-rouge">it.next()</code>方法，就返回一个对象，表示当前遍历位置的信息。</p>
+
+<p>这里隐含着一个规定，<code class="language-plaintext highlighter-rouge">it.next()</code>方法必须是同步的，只要调用就必须立刻返回值。也就是说，一旦执行<code class="language-plaintext highlighter-rouge">it.next()</code>方法，就必须同步地得到<code class="language-plaintext highlighter-rouge">value</code>和<code class="language-plaintext highlighter-rouge">done</code>这两个属性。如果遍历指针正好指向同步操作，当然没有问题，但对于异步操作，就不太合适了。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">idMaker</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">next</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">resolve</span><span class="p">({</span> <span class="na">value</span><span class="p">:</span> <span class="nx">index</span><span class="o">++</span><span class="p">,</span> <span class="na">done</span><span class="p">:</span> <span class="kc">false</span> <span class="p">});</span>
+        <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">next()</code>方法返回的是一个 Promise 对象，这样就不行，不符合 Iterator 协议，只要代码里面包含异步操作都不行。也就是说，Iterator 协议里面<code class="language-plaintext highlighter-rouge">next()</code>方法只能包含同步操作。</p>
+
+<p>目前的解决方法是，将异步操作包装成 Thunk 函数或者 Promise 对象，即<code class="language-plaintext highlighter-rouge">next()</code>方法返回值的<code class="language-plaintext highlighter-rouge">value</code>属性是一个 Thunk 函数或者 Promise 对象，等待以后返回真正的值，而<code class="language-plaintext highlighter-rouge">done</code>属性则还是同步产生的。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">idMaker</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">next</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="na">value</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span> <span class="o">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">resolve</span><span class="p">(</span><span class="nx">index</span><span class="o">++</span><span class="p">),</span> <span class="mi">1000</span><span class="p">)),</span>
+        <span class="na">done</span><span class="p">:</span> <span class="kc">false</span>
+      <span class="p">};</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">it</span> <span class="o">=</span> <span class="nx">idMaker</span><span class="p">();</span>
+
+<span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">value</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">o</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">))</span> <span class="c1">// 1</span>
+<span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">value</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">o</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">))</span> <span class="c1">// 2</span>
+<span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">value</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">o</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">))</span> <span class="c1">// 3</span>
+<span class="c1">// ...</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">value</code>属性的返回值是一个 Promise 对象，用来放置异步操作。但是这样写很麻烦，不太符合直觉，语义也比较绕。</p>
+
+<p>ES2018 <a href="https://github.com/tc39/proposal-async-iteration">引入</a>了“异步遍历器”（Async Iterator），为异步操作提供原生的遍历器接口，即<code class="language-plaintext highlighter-rouge">value</code>和<code class="language-plaintext highlighter-rouge">done</code>这两个属性都是异步产生。</p>
+
+<h2 id="异步遍历的接口">异步遍历的接口</h2>
+
+<p>异步遍历器的最大的语法特点，就是调用遍历器的<code class="language-plaintext highlighter-rouge">next</code>方法，返回的是一个 Promise 对象。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">asyncIterator</span>
+  <span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span>
+    <span class="p">({</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">done</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="cm">/* ... */</span>
+  <span class="p">);</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">asyncIterator</code>是一个异步遍历器，调用<code class="language-plaintext highlighter-rouge">next</code>方法以后，返回一个 Promise 对象。因此，可以使用<code class="language-plaintext highlighter-rouge">then</code>方法指定，这个 Promise 对象的状态变为<code class="language-plaintext highlighter-rouge">resolve</code>以后的回调函数。回调函数的参数，则是一个具有<code class="language-plaintext highlighter-rouge">value</code>和<code class="language-plaintext highlighter-rouge">done</code>两个属性的对象，这个跟同步遍历器是一样的。</p>
+
+<p>我们知道，一个对象的同步遍历器的接口，部署在<code class="language-plaintext highlighter-rouge">Symbol.iterator</code>属性上面。同样地，对象的异步遍历器接口，部署在<code class="language-plaintext highlighter-rouge">Symbol.asyncIterator</code>属性上面。不管是什么样的对象，只要它的<code class="language-plaintext highlighter-rouge">Symbol.asyncIterator</code>属性有值，就表示应该对它进行异步遍历。</p>
+
+<p>下面是一个异步遍历器的例子。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">asyncIterable</span> <span class="o">=</span> <span class="nx">createAsyncIterable</span><span class="p">([</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">]);</span>
+<span class="kd">const</span> <span class="nx">asyncIterator</span> <span class="o">=</span> <span class="nx">asyncIterable</span><span class="p">[</span><span class="nb">Symbol</span><span class="p">.</span><span class="nx">asyncIterator</span><span class="p">]();</span>
+
+<span class="nx">asyncIterator</span>
+<span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">iterResult1</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">iterResult1</span><span class="p">);</span> <span class="c1">// { value: 'a', done: false }</span>
+  <span class="k">return</span> <span class="nx">asyncIterator</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">iterResult2</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">iterResult2</span><span class="p">);</span> <span class="c1">// { value: 'b', done: false }</span>
+  <span class="k">return</span> <span class="nx">asyncIterator</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">iterResult3</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">iterResult3</span><span class="p">);</span> <span class="c1">// { value: undefined, done: true }</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>上面代码中，异步遍历器其实返回了两次值。第一次调用的时候，返回一个 Promise 对象；等到 Promise 对象<code class="language-plaintext highlighter-rouge">resolve</code>了，再返回一个表示当前数据成员信息的对象。这就是说，异步遍历器与同步遍历器最终行为是一致的，只是会先返回 Promise 对象，作为中介。</p>
+
+<p>由于异步遍历器的<code class="language-plaintext highlighter-rouge">next</code>方法，返回的是一个 Promise 对象。因此，可以把它放在<code class="language-plaintext highlighter-rouge">await</code>命令后面。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">asyncIterable</span> <span class="o">=</span> <span class="nx">createAsyncIterable</span><span class="p">([</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">]);</span>
+  <span class="kd">const</span> <span class="nx">asyncIterator</span> <span class="o">=</span> <span class="nx">asyncIterable</span><span class="p">[</span><span class="nb">Symbol</span><span class="p">.</span><span class="nx">asyncIterator</span><span class="p">]();</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">await</span> <span class="nx">asyncIterator</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+  <span class="c1">// { value: 'a', done: false }</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">await</span> <span class="nx">asyncIterator</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+  <span class="c1">// { value: 'b', done: false }</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">await</span> <span class="nx">asyncIterator</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+  <span class="c1">// { value: undefined, done: true }</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">next</code>方法用<code class="language-plaintext highlighter-rouge">await</code>处理以后，就不必使用<code class="language-plaintext highlighter-rouge">then</code>方法了。整个流程已经很接近同步处理了。</p>
+
+<p>注意，异步遍历器的<code class="language-plaintext highlighter-rouge">next</code>方法是可以连续调用的，不必等到上一步产生的 Promise 对象<code class="language-plaintext highlighter-rouge">resolve</code>以后再调用。这种情况下，<code class="language-plaintext highlighter-rouge">next</code>方法会累积起来，自动按照每一步的顺序运行下去。下面是一个例子，把所有的<code class="language-plaintext highlighter-rouge">next</code>方法放在<code class="language-plaintext highlighter-rouge">Promise.all</code>方法里面。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">asyncIterable</span> <span class="o">=</span> <span class="nx">createAsyncIterable</span><span class="p">([</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">]);</span>
+<span class="kd">const</span> <span class="nx">asyncIterator</span> <span class="o">=</span> <span class="nx">asyncIterable</span><span class="p">[</span><span class="nb">Symbol</span><span class="p">.</span><span class="nx">asyncIterator</span><span class="p">]();</span>
+<span class="kd">const</span> <span class="p">[{</span><span class="na">value</span><span class="p">:</span> <span class="nx">v1</span><span class="p">},</span> <span class="p">{</span><span class="na">value</span><span class="p">:</span> <span class="nx">v2</span><span class="p">}]</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+  <span class="nx">asyncIterator</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">asyncIterator</span><span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+<span class="p">]);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">v1</span><span class="p">,</span> <span class="nx">v2</span><span class="p">);</span> <span class="c1">// a b</span>
+</code></pre></div></div>
+
+<p>另一种用法是一次性调用所有的<code class="language-plaintext highlighter-rouge">next</code>方法，然后<code class="language-plaintext highlighter-rouge">await</code>最后一步操作。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">runner</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">openFile</span><span class="p">(</span><span class="dl">'</span><span class="s1">someFile.txt</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">writer</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">writer</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="dl">'</span><span class="s1">world</span><span class="dl">'</span><span class="p">);</span>
+  <span class="k">await</span> <span class="nx">writer</span><span class="p">.</span><span class="k">return</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="nx">runner</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="for-awaitof">for await…of</h2>
+
+<p>前面介绍过，<code class="language-plaintext highlighter-rouge">for...of</code>循环用于遍历同步的 Iterator 接口。新引入的<code class="language-plaintext highlighter-rouge">for await...of</code>循环，则是用于遍历异步的 Iterator 接口。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="k">await</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">createAsyncIterable</span><span class="p">([</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">]))</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// a</span>
+<span class="c1">// b</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">createAsyncIterable()</code>返回一个拥有异步遍历器接口的对象，<code class="language-plaintext highlighter-rouge">for...of</code>循环自动调用这个对象的异步遍历器的<code class="language-plaintext highlighter-rouge">next</code>方法，会得到一个 Promise 对象。<code class="language-plaintext highlighter-rouge">await</code>用来处理这个 Promise 对象，一旦<code class="language-plaintext highlighter-rouge">resolve</code>，就把得到的值（<code class="language-plaintext highlighter-rouge">x</code>）传入<code class="language-plaintext highlighter-rouge">for...of</code>的循环体。</p>
+
+<p><code class="language-plaintext highlighter-rouge">for await...of</code>循环的一个用途，是部署了 asyncIterable 操作的异步接口，可以直接放入这个循环。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">body</span> <span class="o">=</span> <span class="dl">''</span><span class="p">;</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="k">await</span><span class="p">(</span><span class="kd">const</span> <span class="nx">data</span> <span class="k">of</span> <span class="nx">req</span><span class="p">)</span> <span class="nx">body</span> <span class="o">+=</span> <span class="nx">data</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">parsed</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">body</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">got</span><span class="dl">'</span><span class="p">,</span> <span class="nx">parsed</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">req</code>是一个 asyncIterable 对象，用来异步读取数据。可以看到，使用<code class="language-plaintext highlighter-rouge">for await...of</code>循环以后，代码会非常简洁。</p>
+
+<p>如果<code class="language-plaintext highlighter-rouge">next</code>方法返回的 Promise 对象被<code class="language-plaintext highlighter-rouge">reject</code>，<code class="language-plaintext highlighter-rouge">for await...of</code>就会报错，要用<code class="language-plaintext highlighter-rouge">try...catch</code>捕捉。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="k">await</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">createRejectingIterable</span><span class="p">())</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>注意，<code class="language-plaintext highlighter-rouge">for await...of</code>循环也可以用于同步遍历器。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="k">async</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="k">await</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">x</span> <span class="k">of</span> <span class="p">[</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">])</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">})();</span>
+<span class="c1">// a</span>
+<span class="c1">// b</span>
+</code></pre></div></div>
+
+<p>Node v10 支持异步遍历器，Stream 就部署了这个接口。下面是读取文件的传统写法与异步遍历器写法的差异。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 传统写法</span>
+<span class="kd">function</span> <span class="nx">main</span><span class="p">(</span><span class="nx">inputFilePath</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">readStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span>
+    <span class="nx">inputFilePath</span><span class="p">,</span>
+    <span class="p">{</span> <span class="na">encoding</span><span class="p">:</span> <span class="dl">'</span><span class="s1">utf8</span><span class="dl">'</span><span class="p">,</span> <span class="na">highWaterMark</span><span class="p">:</span> <span class="mi">1024</span> <span class="p">}</span>
+  <span class="p">);</span>
+  <span class="nx">readStream</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">&gt;&gt;&gt; </span><span class="dl">'</span><span class="o">+</span><span class="nx">chunk</span><span class="p">);</span>
+  <span class="p">});</span>
+  <span class="nx">readStream</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">end</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">### DONE ###</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// 异步遍历器写法</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">main</span><span class="p">(</span><span class="nx">inputFilePath</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">readStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span>
+    <span class="nx">inputFilePath</span><span class="p">,</span>
+    <span class="p">{</span> <span class="na">encoding</span><span class="p">:</span> <span class="dl">'</span><span class="s1">utf8</span><span class="dl">'</span><span class="p">,</span> <span class="na">highWaterMark</span><span class="p">:</span> <span class="mi">1024</span> <span class="p">}</span>
+  <span class="p">);</span>
+
+  <span class="k">for</span> <span class="k">await</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">chunk</span> <span class="k">of</span> <span class="nx">readStream</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">&gt;&gt;&gt; </span><span class="dl">'</span><span class="o">+</span><span class="nx">chunk</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">### DONE ###</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="异步-generator-函数">异步 Generator 函数</h2>
+
+<p>就像 Generator 函数返回一个同步遍历器对象一样，异步 Generator 函数的作用，是返回一个异步遍历器对象。</p>
+
+<p>在语法上，异步 Generator 函数就是<code class="language-plaintext highlighter-rouge">async</code>函数与 Generator 函数的结合。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">gen</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">yield</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">genObj</span> <span class="o">=</span> <span class="nx">gen</span><span class="p">();</span>
+<span class="nx">genObj</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">));</span>
+<span class="c1">// { value: 'hello', done: false }</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">gen</code>是一个异步 Generator 函数，执行后返回一个异步 Iterator 对象。对该对象调用<code class="language-plaintext highlighter-rouge">next</code>方法，返回一个 Promise 对象。</p>
+
+<p>异步遍历器的设计目的之一，就是 Generator 函数处理同步操作和异步操作时，能够使用同一套接口。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 同步 Generator 函数</span>
+<span class="kd">function</span><span class="o">*</span> <span class="nx">map</span><span class="p">(</span><span class="nx">iterable</span><span class="p">,</span> <span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">iterable</span><span class="p">[</span><span class="nb">Symbol</span><span class="p">.</span><span class="nx">iterator</span><span class="p">]();</span>
+  <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span><span class="nx">value</span><span class="p">,</span> <span class="nx">done</span><span class="p">}</span> <span class="o">=</span> <span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">yield</span> <span class="nx">func</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 异步 Generator 函数</span>
+<span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">map</span><span class="p">(</span><span class="nx">iterable</span><span class="p">,</span> <span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">iterable</span><span class="p">[</span><span class="nb">Symbol</span><span class="p">.</span><span class="nx">asyncIterator</span><span class="p">]();</span>
+  <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span><span class="nx">value</span><span class="p">,</span> <span class="nx">done</span><span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">yield</span> <span class="nx">func</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">map</code>是一个 Generator 函数，第一个参数是可遍历对象<code class="language-plaintext highlighter-rouge">iterable</code>，第二个参数是一个回调函数<code class="language-plaintext highlighter-rouge">func</code>。<code class="language-plaintext highlighter-rouge">map</code>的作用是将<code class="language-plaintext highlighter-rouge">iterable</code>每一步返回的值，使用<code class="language-plaintext highlighter-rouge">func</code>进行处理。上面有两个版本的<code class="language-plaintext highlighter-rouge">map</code>，前一个处理同步遍历器，后一个处理异步遍历器，可以看到两个版本的写法基本上是一致的。</p>
+
+<p>下面是另一个异步 Generator 函数的例子。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">readLines</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">file</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fileOpen</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
+
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nx">file</span><span class="p">.</span><span class="nx">EOF</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">yield</span> <span class="k">await</span> <span class="nx">file</span><span class="p">.</span><span class="nx">readLine</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">file</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，异步操作前面使用<code class="language-plaintext highlighter-rouge">await</code>关键字标明，即<code class="language-plaintext highlighter-rouge">await</code>后面的操作，应该返回 Promise 对象。凡是使用<code class="language-plaintext highlighter-rouge">yield</code>关键字的地方，就是<code class="language-plaintext highlighter-rouge">next</code>方法停下来的地方，它后面的表达式的值（即<code class="language-plaintext highlighter-rouge">await file.readLine()</code>的值），会作为<code class="language-plaintext highlighter-rouge">next()</code>返回对象的<code class="language-plaintext highlighter-rouge">value</code>属性，这一点是与同步 Generator 函数一致的。</p>
+
+<p>异步 Generator 函数内部，能够同时使用<code class="language-plaintext highlighter-rouge">await</code>和<code class="language-plaintext highlighter-rouge">yield</code>命令。可以这样理解，<code class="language-plaintext highlighter-rouge">await</code>命令用于将外部操作产生的值输入函数内部，<code class="language-plaintext highlighter-rouge">yield</code>命令用于将函数内部的值输出。</p>
+
+<p>上面代码定义的异步 Generator 函数的用法如下。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="k">async</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="k">await</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">line</span> <span class="k">of</span> <span class="nx">readLines</span><span class="p">(</span><span class="nx">filePath</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">line</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">})()</span>
+</code></pre></div></div>
+
+<p>异步 Generator 函数可以与<code class="language-plaintext highlighter-rouge">for await...of</code>循环结合起来使用。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">prefixLines</span><span class="p">(</span><span class="nx">asyncIterable</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="k">await</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">line</span> <span class="k">of</span> <span class="nx">asyncIterable</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">yield</span> <span class="dl">'</span><span class="s1">&gt; </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">line</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>异步 Generator 函数的返回值是一个异步 Iterator，即每次调用它的<code class="language-plaintext highlighter-rouge">next</code>方法，会返回一个 Promise 对象，也就是说，跟在<code class="language-plaintext highlighter-rouge">yield</code>命令后面的，应该是一个 Promise 对象。如果像上面那个例子那样，<code class="language-plaintext highlighter-rouge">yield</code>命令后面是一个字符串，会被自动包装成一个 Promise 对象。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">fetchRandom</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">https://www.random.org/decimal-fractions/</span><span class="dl">'</span>
+    <span class="o">+</span> <span class="dl">'</span><span class="s1">?num=1&amp;dec=10&amp;col=1&amp;format=plain&amp;rnd=new</span><span class="dl">'</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">asyncGenerator</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Start</span><span class="dl">'</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetchRandom</span><span class="p">();</span> <span class="c1">// (A)</span>
+  <span class="k">yield</span> <span class="dl">'</span><span class="s1">Result: </span><span class="dl">'</span> <span class="o">+</span> <span class="k">await</span> <span class="nx">result</span><span class="p">.</span><span class="nx">text</span><span class="p">();</span> <span class="c1">// (B)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Done</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">ag</span> <span class="o">=</span> <span class="nx">asyncGenerator</span><span class="p">();</span>
+<span class="nx">ag</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">then</span><span class="p">(({</span><span class="nx">value</span><span class="p">,</span> <span class="nx">done</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">ag</code>是<code class="language-plaintext highlighter-rouge">asyncGenerator</code>函数返回的异步遍历器对象。调用<code class="language-plaintext highlighter-rouge">ag.next()</code>以后，上面代码的执行顺序如下。</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">ag.next()</code>立刻返回一个 Promise 对象。</li>
+  <li><code class="language-plaintext highlighter-rouge">asyncGenerator</code>函数开始执行，打印出<code class="language-plaintext highlighter-rouge">Start</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">await</code>命令返回一个 Promise 对象，<code class="language-plaintext highlighter-rouge">asyncGenerator</code>函数停在这里。</li>
+  <li>A 处变成 fulfilled 状态，产生的值放入<code class="language-plaintext highlighter-rouge">result</code>变量，<code class="language-plaintext highlighter-rouge">asyncGenerator</code>函数继续往下执行。</li>
+  <li>函数在 B 处的<code class="language-plaintext highlighter-rouge">yield</code>暂停执行，一旦<code class="language-plaintext highlighter-rouge">yield</code>命令取到值，<code class="language-plaintext highlighter-rouge">ag.next()</code>返回的那个 Promise 对象变成 fulfilled 状态。</li>
+  <li><code class="language-plaintext highlighter-rouge">ag.next()</code>后面的<code class="language-plaintext highlighter-rouge">then</code>方法指定的回调函数开始执行。该回调函数的参数是一个对象<code class="language-plaintext highlighter-rouge">{value, done}</code>，其中<code class="language-plaintext highlighter-rouge">value</code>的值是<code class="language-plaintext highlighter-rouge">yield</code>命令后面的那个表达式的值，<code class="language-plaintext highlighter-rouge">done</code>的值是<code class="language-plaintext highlighter-rouge">false</code>。</li>
+</ol>
+
+<p>A 和 B 两行的作用类似于下面的代码。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">fetchRandom</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">result</span> <span class="o">=&gt;</span> <span class="nx">result</span><span class="p">.</span><span class="nx">text</span><span class="p">())</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">result</span> <span class="o">=&gt;</span> <span class="p">{</span>
+     <span class="nx">resolve</span><span class="p">({</span>
+       <span class="na">value</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Result: </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">result</span><span class="p">,</span>
+       <span class="na">done</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+     <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>如果异步 Generator 函数抛出错误，会导致 Promise 对象的状态变为<code class="language-plaintext highlighter-rouge">reject</code>，然后抛出的错误被<code class="language-plaintext highlighter-rouge">catch</code>方法捕获。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">asyncGenerator</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Problem!</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">asyncGenerator</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">err</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">));</span> <span class="c1">// Error: Problem!</span>
+</code></pre></div></div>
+
+<p>注意，普通的 async 函数返回的是一个 Promise 对象，而异步 Generator 函数返回的是一个异步 Iterator 对象。可以这样理解，async 函数和异步 Generator 函数，是封装异步操作的两种方法，都用来达到同一种目的。区别在于，前者自带执行器，后者通过<code class="language-plaintext highlighter-rouge">for await...of</code>执行，或者自己编写执行器。下面就是一个异步 Generator 函数的执行器。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">takeAsync</span><span class="p">(</span><span class="nx">asyncIterable</span><span class="p">,</span> <span class="nx">count</span> <span class="o">=</span> <span class="kc">Infinity</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="kd">const</span> <span class="nx">iterator</span> <span class="o">=</span> <span class="nx">asyncIterable</span><span class="p">[</span><span class="nb">Symbol</span><span class="p">.</span><span class="nx">asyncIterator</span><span class="p">]();</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span><span class="nx">value</span><span class="p">,</span> <span class="nx">done</span><span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">iterator</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+    <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，异步 Generator 函数产生的异步遍历器，会通过<code class="language-plaintext highlighter-rouge">while</code>循环自动执行，每当<code class="language-plaintext highlighter-rouge">await iterator.next()</code>完成，就会进入下一轮循环。一旦<code class="language-plaintext highlighter-rouge">done</code>属性变为<code class="language-plaintext highlighter-rouge">true</code>，就会跳出循环，异步遍历器执行结束。</p>
+
+<p>下面是这个自动执行器的一个使用实例。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">gen</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">yield</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">;</span>
+    <span class="k">yield</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">;</span>
+    <span class="k">yield</span> <span class="dl">'</span><span class="s1">c</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="k">await</span> <span class="nx">takeAsync</span><span class="p">(</span><span class="nx">gen</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="nx">f</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span> <span class="c1">// ['a', 'b', 'c']</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>异步 Generator 函数出现以后，JavaScript 就有了四种函数形式：普通函数、async 函数、Generator 函数和异步 Generator 函数。请注意区分每种函数的不同之处。基本上，如果是一系列按照顺序执行的异步操作（比如读取文件，然后写入新内容，再存入硬盘），可以使用 async 函数；如果是一系列产生相同数据结构的异步操作（比如一行一行读取文件），可以使用异步 Generator 函数。</p>
+
+<p>异步 Generator 函数也可以通过<code class="language-plaintext highlighter-rouge">next</code>方法的参数，接收外部传入的数据。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">openFile</span><span class="p">(</span><span class="dl">'</span><span class="s1">someFile.txt</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">writer</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// 立即执行</span>
+<span class="nx">writer</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="dl">'</span><span class="s1">world</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// 立即执行</span>
+<span class="k">await</span> <span class="nx">writer</span><span class="p">.</span><span class="k">return</span><span class="p">();</span> <span class="c1">// 等待写入结束</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">openFile</code>是一个异步 Generator 函数。<code class="language-plaintext highlighter-rouge">next</code>方法的参数，向该函数内部的操作传入数据。每次<code class="language-plaintext highlighter-rouge">next</code>方法都是同步执行的，最后的<code class="language-plaintext highlighter-rouge">await</code>命令用于等待整个写入操作结束。</p>
+
+<p>最后，同步的数据结构，也可以使用异步 Generator 函数。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">createAsyncIterable</span><span class="p">(</span><span class="nx">syncIterable</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">elem</span> <span class="k">of</span> <span class="nx">syncIterable</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">yield</span> <span class="nx">elem</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，由于没有异步操作，所以也就没有使用<code class="language-plaintext highlighter-rouge">await</code>关键字。</p>
+
+<h2 id="yield-语句">yield* 语句</h2>
+
+<p><code class="language-plaintext highlighter-rouge">yield*</code>语句也可以跟一个异步遍历器。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">gen1</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">yield</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">;</span>
+  <span class="k">yield</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">async</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">gen2</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// result 最终会等于 2</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">yield</span><span class="o">*</span> <span class="nx">gen1</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">gen2</code>函数里面的<code class="language-plaintext highlighter-rouge">result</code>变量，最后的值是<code class="language-plaintext highlighter-rouge">2</code>。</p>
+
+<p>与同步 Generator 函数一样，<code class="language-plaintext highlighter-rouge">for await...of</code>循环会展开<code class="language-plaintext highlighter-rouge">yield*</code>。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="k">async</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="k">await</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">gen2</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">})();</span>
+<span class="c1">// a</span>
+<span class="c1">// b</span>
+</code></pre></div></div>

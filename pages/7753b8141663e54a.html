@@ -1,0 +1,149 @@
+<h1 id="自定义参数序列化">自定义参数序列化</h1>
+
+<h2 id="需求分析">需求分析</h2>
+
+<p>在之前的章节，我们对请求的 url 参数做了处理，我们会解析传入的 params 对象，根据一定的规则把它解析成字符串，然后添加在 url 后面。在解析的过程中，我们会对字符串 encode，但是对于一些特殊字符比如 <code class="language-plaintext highlighter-rouge">@</code>、<code class="language-plaintext highlighter-rouge">+</code> 等却不转义，这是 axios 库的默认解析规则。当然，我们也希望自己定义解析规则，于是我们希望 <code class="language-plaintext highlighter-rouge">ts-axios</code> 能在请求配置中允许我们配置一个 <code class="language-plaintext highlighter-rouge">paramsSerializer</code> 函数来自定义参数的解析规则，该函数接受 <code class="language-plaintext highlighter-rouge">params</code> 参数，返回值作为解析后的结果，如下：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/get</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="na">c</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">c</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">},</span>
+  <span class="nx">paramsSerializer</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">qs</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> <span class="p">{</span> <span class="na">arrayFormat</span><span class="p">:</span> <span class="dl">'</span><span class="s1">brackets</span><span class="dl">'</span> <span class="p">})</span>
+  <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h2 id="代码实现">代码实现</h2>
+
+<p>首先修改一下类型定义。</p>
+
+<p><code class="language-plaintext highlighter-rouge">types/index.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AxiosRequestConfig</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="nl">paramsSerializer</span><span class="p">?:</span> <span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kr">string</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>然后修改 <code class="language-plaintext highlighter-rouge">buildURL</code> 函数的实现。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/url.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">buildURL</span><span class="p">(</span>
+  <span class="nx">url</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+  <span class="nx">params</span><span class="p">?:</span> <span class="kr">any</span><span class="p">,</span>
+  <span class="nx">paramsSerializer</span><span class="p">?:</span> <span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kr">string</span>
+<span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">url</span>
+  <span class="p">}</span>
+
+  <span class="kd">let</span> <span class="nx">serializedParams</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">paramsSerializer</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">serializedParams</span> <span class="o">=</span> <span class="nx">paramsSerializer</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">isURLSearchParams</span><span class="p">(</span><span class="nx">params</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">serializedParams</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="na">parts</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">params</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">key</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">params</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">val</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">||</span> <span class="k">typeof</span> <span class="nx">val</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">undefined</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span>
+      <span class="p">}</span>
+      <span class="kd">let</span> <span class="nx">values</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">values</span> <span class="o">=</span> <span class="nx">val</span>
+        <span class="nx">key</span> <span class="o">+=</span> <span class="dl">'</span><span class="s1">[]</span><span class="dl">'</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">values</span> <span class="o">=</span> <span class="p">[</span><span class="nx">val</span><span class="p">]</span>
+      <span class="p">}</span>
+      <span class="nx">values</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">val</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">isDate</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">val</span> <span class="o">=</span> <span class="nx">val</span><span class="p">.</span><span class="nx">toISOString</span><span class="p">()</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">isPlainObject</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">val</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nx">parts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">encode</span><span class="p">(</span><span class="nx">key</span><span class="p">)}</span><span class="s2">=</span><span class="p">${</span><span class="nx">encode</span><span class="p">(</span><span class="nx">val</span><span class="p">)}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">})</span>
+    <span class="p">})</span>
+
+    <span class="nx">serializedParams</span> <span class="o">=</span> <span class="nx">parts</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">&amp;</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">serializedParams</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">markIndex</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">'</span><span class="s1">#</span><span class="dl">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">markIndex</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">markIndex</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">url</span> <span class="o">+=</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">'</span><span class="s1">?</span><span class="dl">'</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">?</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">&amp;</span><span class="dl">'</span><span class="p">)</span> <span class="o">+</span> <span class="nx">serializedParams</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">url</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这里我们给 <code class="language-plaintext highlighter-rouge">buildURL</code> 函数新增了 <code class="language-plaintext highlighter-rouge">paramsSerializer</code> 可选参数，另外我们还新增了对 <code class="language-plaintext highlighter-rouge">params</code> 类型判断，如果它是一个 <code class="language-plaintext highlighter-rouge">URLSearchParams</code> 对象实例的话，我们直接返回它 <code class="language-plaintext highlighter-rouge">toString</code> 后的结果。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/util.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">isURLSearchParams</span><span class="p">(</span><span class="nx">val</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nx">val</span> <span class="k">is</span> <span class="nx">URLSearchParams</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">typeof</span> <span class="nx">val</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">undefined</span><span class="dl">'</span> <span class="o">&amp;&amp;</span> <span class="nx">val</span> <span class="k">instanceof</span> <span class="nx">URLSearchParams</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>最后我们要修改 <code class="language-plaintext highlighter-rouge">buildURL</code> 调用的逻辑。</p>
+
+<p><code class="language-plaintext highlighter-rouge">core/dispatchRequest.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">transformURL</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">paramsSerializer</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">config</span>
+  <span class="k">return</span> <span class="nx">buildURL</span><span class="p">(</span><span class="nx">url</span><span class="o">!</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">paramsSerializer</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="demo-编写">demo 编写</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/get</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">params</span><span class="p">:</span> <span class="k">new</span> <span class="nx">URLSearchParams</span><span class="p">(</span><span class="dl">'</span><span class="s1">a=b&amp;c=d</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/get</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="na">c</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">c</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="kd">const</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+  <span class="nx">paramsSerializer</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">qs</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> <span class="p">{</span> <span class="na">arrayFormat</span><span class="p">:</span> <span class="dl">'</span><span class="s1">brackets</span><span class="dl">'</span> <span class="p">})</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">instance</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/get</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="na">c</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">c</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>我们编写了 3 种情况的请求，第一种满足请求的 params 参数是 <code class="language-plaintext highlighter-rouge">URLSearchParams</code> 对象类型的。后两种请求的结果主要区别在于前者并没有对 <code class="language-plaintext highlighter-rouge">[]</code> 转义，而后者会转义。</p>
+
+<p>至此，<code class="language-plaintext highlighter-rouge">ts-axios</code> 实现了自定义参数序列化功能，用户可以配置 <code class="language-plaintext highlighter-rouge">paramsSerializer</code> 自定义参数序列化规则。下一节课我们来实现 <code class="language-plaintext highlighter-rouge">ts-axios</code> 对 <code class="language-plaintext highlighter-rouge">baseURL</code> 的支持。</p>

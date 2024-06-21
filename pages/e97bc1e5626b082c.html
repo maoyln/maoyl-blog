@@ -1,0 +1,758 @@
+<h1 id="装饰器">装饰器</h1>
+
+<p>[说明] Decorator 提案经过了大幅修改，目前还没有定案，不知道语法会不会再变。下面的内容完全依据以前的提案，已经有点过时了。等待定案以后，需要完全重写。</p>
+
+<p>装饰器（Decorator）是一种与类（class）相关的语法，用来注释或修改类和类方法。许多面向对象的语言都有这项功能，目前有一个<a href="https://github.com/tc39/proposal-decorators">提案</a>将其引入了 ECMAScript。
+<!-- more -->
+装饰器是一种函数，写成<code class="language-plaintext highlighter-rouge">@ + 函数名</code>。它可以放在类和类方法的定义前面。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@</span><span class="nd">frozen</span> <span class="kd">class</span> <span class="nx">Foo</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">configurable</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">enumerable</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+  <span class="nx">method</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="p">@</span><span class="nd">throttle</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+  <span class="nx">expensiveMethod</span><span class="p">()</span> <span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码一共使用了四个装饰器，一个用在类本身，另外三个用在类方法。它们不仅增加了代码的可读性，清晰地表达了意图，而且提供一种方便的手段，增加或修改类的功能。</p>
+
+<h2 id="类的装饰">类的装饰</h2>
+
+<p>装饰器可以用来装饰整个类。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@</span><span class="nd">testable</span>
+<span class="kd">class</span> <span class="nx">MyTestableClass</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">testable</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">target</span><span class="p">.</span><span class="nx">isTestable</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">MyTestableClass</span><span class="p">.</span><span class="nx">isTestable</span> <span class="c1">// true</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">@testable</code>就是一个装饰器。它修改了<code class="language-plaintext highlighter-rouge">MyTestableClass</code>这个类的行为，为它加上了静态属性<code class="language-plaintext highlighter-rouge">isTestable</code>。<code class="language-plaintext highlighter-rouge">testable</code>函数的参数<code class="language-plaintext highlighter-rouge">target</code>是<code class="language-plaintext highlighter-rouge">MyTestableClass</code>类本身。</p>
+
+<p>基本上，装饰器的行为就是下面这样。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@</span><span class="nd">decorator</span>
+<span class="kd">class</span> <span class="nx">A</span> <span class="p">{}</span>
+
+<span class="c1">// 等同于</span>
+
+<span class="kd">class</span> <span class="nx">A</span> <span class="p">{}</span>
+<span class="nx">A</span> <span class="o">=</span> <span class="nx">decorator</span><span class="p">(</span><span class="nx">A</span><span class="p">)</span> <span class="o">||</span> <span class="nx">A</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>也就是说，装饰器是一个对类进行处理的函数。装饰器函数的第一个参数，就是所要装饰的目标类。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">testable</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">testable</code>函数的参数<code class="language-plaintext highlighter-rouge">target</code>，就是会被装饰的类。</p>
+
+<p>如果觉得一个参数不够用，可以在装饰器外面再封装一层函数。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">testable</span><span class="p">(</span><span class="nx">isTestable</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">target</span><span class="p">.</span><span class="nx">isTestable</span> <span class="o">=</span> <span class="nx">isTestable</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="nd">testable</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nx">MyTestableClass</span> <span class="p">{}</span>
+<span class="nx">MyTestableClass</span><span class="p">.</span><span class="nx">isTestable</span> <span class="c1">// true</span>
+
+<span class="p">@</span><span class="nd">testable</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{}</span>
+<span class="nx">MyClass</span><span class="p">.</span><span class="nx">isTestable</span> <span class="c1">// false</span>
+</code></pre></div></div>
+
+<p>上面代码中，装饰器<code class="language-plaintext highlighter-rouge">testable</code>可以接受参数，这就等于可以修改装饰器的行为。</p>
+
+<p>注意，装饰器对类的行为的改变，是代码编译时发生的，而不是在运行时。这意味着，装饰器能在编译阶段运行代码。也就是说，装饰器本质就是编译时执行的函数。</p>
+
+<p>前面的例子是为类添加一个静态属性，如果想添加实例属性，可以通过目标类的<code class="language-plaintext highlighter-rouge">prototype</code>对象操作。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">testable</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">target</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">isTestable</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="nd">testable</span>
+<span class="kd">class</span> <span class="nx">MyTestableClass</span> <span class="p">{}</span>
+
+<span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyTestableClass</span><span class="p">();</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">isTestable</span> <span class="c1">// true</span>
+</code></pre></div></div>
+
+<p>上面代码中，装饰器函数<code class="language-plaintext highlighter-rouge">testable</code>是在目标类的<code class="language-plaintext highlighter-rouge">prototype</code>对象上添加属性，因此就可以在实例上调用。</p>
+
+<p>下面是另外一个例子。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// mixins.js</span>
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">mixins</span><span class="p">(...</span><span class="nx">list</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">target</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">...</span><span class="nx">list</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// main.js</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">mixins</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./mixins</span><span class="dl">'</span>
+
+<span class="kd">const</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">@</span><span class="nd">mixins</span><span class="p">(</span><span class="nx">Foo</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{}</span>
+
+<span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">foo</span><span class="p">()</span> <span class="c1">// 'foo'</span>
+</code></pre></div></div>
+
+<p>上面代码通过装饰器<code class="language-plaintext highlighter-rouge">mixins</code>，把<code class="language-plaintext highlighter-rouge">Foo</code>对象的方法添加到了<code class="language-plaintext highlighter-rouge">MyClass</code>的实例上面。可以用<code class="language-plaintext highlighter-rouge">Object.assign()</code>模拟这个功能。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{}</span>
+
+<span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="nx">Foo</span><span class="p">);</span>
+
+<span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">foo</span><span class="p">()</span> <span class="c1">// 'foo'</span>
+</code></pre></div></div>
+
+<p>实际开发中，React 与 Redux 库结合使用时，常常需要写成下面这样。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">MyReactComponent</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">connect</span><span class="p">(</span><span class="nx">mapStateToProps</span><span class="p">,</span> <span class="nx">mapDispatchToProps</span><span class="p">)(</span><span class="nx">MyReactComponent</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>有了装饰器，就可以改写上面的代码。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@</span><span class="nd">connect</span><span class="p">(</span><span class="nx">mapStateToProps</span><span class="p">,</span> <span class="nx">mapDispatchToProps</span><span class="p">)</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">MyReactComponent</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{}</span>
+</code></pre></div></div>
+
+<p>相对来说，后一种写法看上去更容易理解。</p>
+
+<h2 id="方法的装饰">方法的装饰</h2>
+
+<p>装饰器不仅可以装饰类，还可以装饰类的属性。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">readonly</span>
+  <span class="nx">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">first</span><span class="p">}</span><span class="s2"> </span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">last</span><span class="p">}</span><span class="s2">`</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，装饰器<code class="language-plaintext highlighter-rouge">readonly</code>用来装饰“类”的<code class="language-plaintext highlighter-rouge">name</code>方法。</p>
+
+<p>装饰器函数<code class="language-plaintext highlighter-rouge">readonly</code>一共可以接受三个参数。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">readonly</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">descriptor</span><span class="p">){</span>
+  <span class="c1">// descriptor对象原来的值如下</span>
+  <span class="c1">// {</span>
+  <span class="c1">//   value: specifiedFunction,</span>
+  <span class="c1">//   enumerable: false,</span>
+  <span class="c1">//   configurable: true,</span>
+  <span class="c1">//   writable: true</span>
+  <span class="c1">// };</span>
+  <span class="nx">descriptor</span><span class="p">.</span><span class="nx">writable</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">descriptor</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">readonly</span><span class="p">(</span><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">,</span> <span class="nx">descriptor</span><span class="p">);</span>
+<span class="c1">// 类似于</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">,</span> <span class="nx">descriptor</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>装饰器第一个参数是类的原型对象，上例是<code class="language-plaintext highlighter-rouge">Person.prototype</code>，装饰器的本意是要“装饰”类的实例，但是这个时候实例还没生成，所以只能去装饰原型（这不同于类的装饰，那种情况时<code class="language-plaintext highlighter-rouge">target</code>参数指的是类本身）；第二个参数是所要装饰的属性名，第三个参数是该属性的描述对象。</p>
+
+<p>另外，上面代码说明，装饰器（readonly）会修改属性的描述对象（descriptor），然后被修改的描述对象再用来定义属性。</p>
+
+<p>下面是另一个例子，修改属性描述对象的<code class="language-plaintext highlighter-rouge">enumerable</code>属性，使得该属性不可遍历。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">nonenumerable</span>
+  <span class="kd">get</span> <span class="nx">kidCount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">nonenumerable</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">descriptor</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">descriptor</span><span class="p">.</span><span class="nx">enumerable</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">descriptor</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>下面的<code class="language-plaintext highlighter-rouge">@log</code>装饰器，可以起到输出日志的作用。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nb">Math</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">log</span>
+  <span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">log</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">descriptor</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">oldValue</span> <span class="o">=</span> <span class="nx">descriptor</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+
+  <span class="nx">descriptor</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Calling </span><span class="p">${</span><span class="nx">name</span><span class="p">}</span><span class="s2"> with`</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">oldValue</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">descriptor</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">math</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Math</span><span class="p">();</span>
+
+<span class="c1">// passed parameters should get logged now</span>
+<span class="nx">math</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">@log</code>装饰器的作用就是在执行原始的操作之前，执行一次<code class="language-plaintext highlighter-rouge">console.log</code>，从而达到输出日志的目的。</p>
+
+<p>装饰器有注释的作用。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@</span><span class="nd">testable</span>
+<span class="kd">class</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">readonly</span>
+  <span class="p">@</span><span class="nd">nonenumerable</span>
+  <span class="nx">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">first</span><span class="p">}</span><span class="s2"> </span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">last</span><span class="p">}</span><span class="s2">`</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>从上面代码中，我们一眼就能看出，<code class="language-plaintext highlighter-rouge">Person</code>类是可测试的，而<code class="language-plaintext highlighter-rouge">name</code>方法是只读和不可枚举的。</p>
+
+<p>下面是使用 Decorator 写法的<a href="https://github.com/ionic-team/stencil">组件</a>，看上去一目了然。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">tag</span><span class="p">:</span> <span class="dl">'</span><span class="s1">my-component</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">styleUrl</span><span class="p">:</span> <span class="dl">'</span><span class="s1">my-component.scss</span><span class="dl">'</span>
+<span class="p">})</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Prop</span><span class="p">()</span> <span class="nx">first</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span>
+  <span class="p">@</span><span class="nd">Prop</span><span class="p">()</span> <span class="nx">last</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span>
+  <span class="p">@</span><span class="nd">State</span><span class="p">()</span> <span class="nx">isVisible</span><span class="p">:</span> <span class="nx">boolean</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Hello</span><span class="p">,</span> <span class="nx">my</span> <span class="nx">name</span> <span class="nx">is</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">first</span><span class="p">}</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">last</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>如果同一个方法有多个装饰器，会像剥洋葱一样，先从外到内进入，然后由内向外执行。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">dec</span><span class="p">(</span><span class="nx">id</span><span class="p">){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">evaluated</span><span class="dl">'</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="nx">descriptor</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">executed</span><span class="dl">'</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">Example</span> <span class="p">{</span>
+    <span class="p">@</span><span class="nd">dec</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">@</span><span class="nd">dec</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="nx">method</span><span class="p">(){}</span>
+<span class="p">}</span>
+<span class="c1">// evaluated 1</span>
+<span class="c1">// evaluated 2</span>
+<span class="c1">// executed 2</span>
+<span class="c1">// executed 1</span>
+</code></pre></div></div>
+
+<p>上面代码中，外层装饰器<code class="language-plaintext highlighter-rouge">@dec(1)</code>先进入，但是内层装饰器<code class="language-plaintext highlighter-rouge">@dec(2)</code>先执行。</p>
+
+<p>除了注释，装饰器还能用来类型检查。所以，对于类来说，这项功能相当有用。从长期来看，它将是 JavaScript 代码静态分析的重要工具。</p>
+
+<h2 id="为什么装饰器不能用于函数">为什么装饰器不能用于函数？</h2>
+
+<p>装饰器只能用于类和类的方法，不能用于函数，因为存在函数提升。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">@</span><span class="nd">add</span>
+<span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面的代码，意图是执行后<code class="language-plaintext highlighter-rouge">counter</code>等于 1，但是实际上结果是<code class="language-plaintext highlighter-rouge">counter</code>等于 0。因为函数提升，使得实际执行的代码是下面这样。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@</span><span class="nd">add</span>
+<span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">counter</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">add</span><span class="p">;</span>
+
+<span class="nx">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>下面是另一个例子。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">readOnly</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">some-decorator</span><span class="dl">"</span><span class="p">);</span>
+
+<span class="p">@</span><span class="nd">readOnly</span>
+<span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码也有问题，因为实际执行是下面这样。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">readOnly</span><span class="p">;</span>
+
+<span class="p">@</span><span class="nd">readOnly</span>
+<span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="nx">readOnly</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">some-decorator</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>总之，由于存在函数提升，使得装饰器不能用于函数。类是不会提升的，所以就没有这方面的问题。</p>
+
+<p>另一方面，如果一定要装饰函数，可以采用高阶函数的形式直接执行。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">doSomething</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello, </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">name</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">loggingDecorator</span><span class="p">(</span><span class="nx">wrapped</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Starting</span><span class="dl">'</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">wrapped</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Finished</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">wrapped</span> <span class="o">=</span> <span class="nx">loggingDecorator</span><span class="p">(</span><span class="nx">doSomething</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="core-decoratorsjs">core-decorators.js</h2>
+
+<p><a href="https://github.com/jayphelps/core-decorators.js">core-decorators.js</a>是一个第三方模块，提供了几个常见的装饰器，通过它可以更好地理解装饰器。</p>
+
+<p><strong>（1）@autobind</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">autobind</code>装饰器使得方法中的<code class="language-plaintext highlighter-rouge">this</code>对象，绑定原始对象。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">autobind</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">core-decorators</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">autobind</span>
+  <span class="nx">getPerson</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+<span class="kd">let</span> <span class="nx">getPerson</span> <span class="o">=</span> <span class="nx">person</span><span class="p">.</span><span class="nx">getPerson</span><span class="p">;</span>
+
+<span class="nx">getPerson</span><span class="p">()</span> <span class="o">===</span> <span class="nx">person</span><span class="p">;</span>
+<span class="c1">// true</span>
+</code></pre></div></div>
+
+<p><strong>（2）@readonly</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">readonly</code>装饰器使得属性或方法不可写。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">readonly</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">core-decorators</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">Meal</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">readonly</span>
+  <span class="nx">entree</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">steak</span><span class="dl">'</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">dinner</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Meal</span><span class="p">();</span>
+<span class="nx">dinner</span><span class="p">.</span><span class="nx">entree</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">salmon</span><span class="dl">'</span><span class="p">;</span>
+<span class="c1">// Cannot assign to read only property 'entree' of [object Object]</span>
+</code></pre></div></div>
+
+<p><strong>（3）@override</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">override</code>装饰器检查子类的方法，是否正确覆盖了父类的同名方法，如果不正确会报错。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">override</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">core-decorators</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">Parent</span> <span class="p">{</span>
+  <span class="nx">speak</span><span class="p">(</span><span class="nx">first</span><span class="p">,</span> <span class="nx">second</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">Child</span> <span class="kd">extends</span> <span class="nx">Parent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">override</span>
+  <span class="nx">speak</span><span class="p">()</span> <span class="p">{}</span>
+  <span class="c1">// SyntaxError: Child#speak() does not properly override Parent#speak(first, second)</span>
+<span class="p">}</span>
+
+<span class="c1">// or</span>
+
+<span class="kd">class</span> <span class="nx">Child</span> <span class="kd">extends</span> <span class="nx">Parent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">override</span>
+  <span class="nx">speaks</span><span class="p">()</span> <span class="p">{}</span>
+  <span class="c1">// SyntaxError: No descriptor matching Child#speaks() was found on the prototype chain.</span>
+  <span class="c1">//</span>
+  <span class="c1">//   Did you mean "speak"?</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>（4）@deprecate (别名@deprecated)</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">deprecate</code>或<code class="language-plaintext highlighter-rouge">deprecated</code>装饰器在控制台显示一条警告，表示该方法将废除。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">deprecate</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">core-decorators</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">deprecate</span>
+  <span class="nx">facepalm</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="p">@</span><span class="nd">deprecate</span><span class="p">(</span><span class="dl">'</span><span class="s1">We stopped facepalming</span><span class="dl">'</span><span class="p">)</span>
+  <span class="nx">facepalmHard</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="p">@</span><span class="nd">deprecate</span><span class="p">(</span><span class="dl">'</span><span class="s1">We stopped facepalming</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://knowyourmeme.com/memes/facepalm</span><span class="dl">'</span> <span class="p">})</span>
+  <span class="nx">facepalmHarder</span><span class="p">()</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+
+<span class="nx">person</span><span class="p">.</span><span class="nx">facepalm</span><span class="p">();</span>
+<span class="c1">// DEPRECATION Person#facepalm: This function will be removed in future versions.</span>
+
+<span class="nx">person</span><span class="p">.</span><span class="nx">facepalmHard</span><span class="p">();</span>
+<span class="c1">// DEPRECATION Person#facepalmHard: We stopped facepalming</span>
+
+<span class="nx">person</span><span class="p">.</span><span class="nx">facepalmHarder</span><span class="p">();</span>
+<span class="c1">// DEPRECATION Person#facepalmHarder: We stopped facepalming</span>
+<span class="c1">//</span>
+<span class="c1">//     See http://knowyourmeme.com/memes/facepalm for more details.</span>
+<span class="c1">//</span>
+</code></pre></div></div>
+
+<p><strong>（5）@suppressWarnings</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">suppressWarnings</code>装饰器抑制<code class="language-plaintext highlighter-rouge">deprecated</code>装饰器导致的<code class="language-plaintext highlighter-rouge">console.warn()</code>调用。但是，异步代码发出的调用除外。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">suppressWarnings</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">core-decorators</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">deprecated</span>
+  <span class="nx">facepalm</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="p">@</span><span class="nd">suppressWarnings</span>
+  <span class="nx">facepalmWithoutWarning</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">facepalm</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+
+<span class="nx">person</span><span class="p">.</span><span class="nx">facepalmWithoutWarning</span><span class="p">();</span>
+<span class="c1">// no warning is logged</span>
+</code></pre></div></div>
+
+<h2 id="使用装饰器实现自动发布事件">使用装饰器实现自动发布事件</h2>
+
+<p>我们可以使用装饰器，使得对象的方法被调用时，自动发出一个事件。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">postal</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">postal/lib/postal.lodash</span><span class="dl">"</span><span class="p">);</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">publish</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">channel</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">channelName</span> <span class="o">=</span> <span class="nx">channel</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">msgChannel</span> <span class="o">=</span> <span class="nx">postal</span><span class="p">.</span><span class="nx">channel</span><span class="p">(</span><span class="nx">channelName</span><span class="p">);</span>
+  <span class="nx">msgChannel</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">v</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">频道: </span><span class="dl">'</span><span class="p">,</span> <span class="nx">channelName</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">事件: </span><span class="dl">'</span><span class="p">,</span> <span class="nx">topic</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">数据: </span><span class="dl">'</span><span class="p">,</span> <span class="nx">v</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">descriptor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">fn</span> <span class="o">=</span> <span class="nx">descriptor</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+
+    <span class="nx">descriptor</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+      <span class="nx">msgChannel</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">value</span><span class="p">);</span>
+    <span class="p">};</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码定义了一个名为<code class="language-plaintext highlighter-rouge">publish</code>的装饰器，它通过改写<code class="language-plaintext highlighter-rouge">descriptor.value</code>，使得原方法被调用时，会自动发出一个事件。它使用的事件“发布/订阅”库是<a href="https://github.com/postaljs/postal.js">Postal.js</a>。</p>
+
+<p>它的用法如下。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// index.js</span>
+<span class="k">import</span> <span class="nx">publish</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./publish</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">FooComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo.some.message</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">component</span><span class="dl">'</span><span class="p">)</span>
+  <span class="nx">someMethod</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="na">my</span><span class="p">:</span> <span class="dl">'</span><span class="s1">data</span><span class="dl">'</span> <span class="p">};</span>
+  <span class="p">}</span>
+  <span class="p">@</span><span class="nd">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo.some.other</span><span class="dl">'</span><span class="p">)</span>
+  <span class="nx">anotherMethod</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">foo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FooComponent</span><span class="p">();</span>
+
+<span class="nx">foo</span><span class="p">.</span><span class="nx">someMethod</span><span class="p">();</span>
+<span class="nx">foo</span><span class="p">.</span><span class="nx">anotherMethod</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>以后，只要调用<code class="language-plaintext highlighter-rouge">someMethod</code>或者<code class="language-plaintext highlighter-rouge">anotherMethod</code>，就会自动发出一个事件。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bash-node index.js
+频道:  component
+事件:  foo.some.message
+数据:  <span class="o">{</span> my: <span class="s1">'data'</span> <span class="o">}</span>
+
+频道:  /
+事件:  foo.some.other
+数据:  undefined
+</code></pre></div></div>
+
+<h2 id="mixin">Mixin</h2>
+
+<p>在装饰器的基础上，可以实现<code class="language-plaintext highlighter-rouge">Mixin</code>模式。所谓<code class="language-plaintext highlighter-rouge">Mixin</code>模式，就是对象继承的一种替代方案，中文译为“混入”（mix in），意为在一个对象之中混入另外一个对象的方法。</p>
+
+<p>请看下面的例子。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{}</span>
+
+<span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="nx">Foo</span><span class="p">);</span>
+
+<span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">foo</span><span class="p">()</span> <span class="c1">// 'foo'</span>
+</code></pre></div></div>
+
+<p>上面代码之中，对象<code class="language-plaintext highlighter-rouge">Foo</code>有一个<code class="language-plaintext highlighter-rouge">foo</code>方法，通过<code class="language-plaintext highlighter-rouge">Object.assign</code>方法，可以将<code class="language-plaintext highlighter-rouge">foo</code>方法“混入”<code class="language-plaintext highlighter-rouge">MyClass</code>类，导致<code class="language-plaintext highlighter-rouge">MyClass</code>的实例<code class="language-plaintext highlighter-rouge">obj</code>对象都具有<code class="language-plaintext highlighter-rouge">foo</code>方法。这就是“混入”模式的一个简单实现。</p>
+
+<p>下面，我们部署一个通用脚本<code class="language-plaintext highlighter-rouge">mixins.js</code>，将 Mixin 写成一个装饰器。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">mixins</span><span class="p">(...</span><span class="nx">list</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">target</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">...</span><span class="nx">list</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>然后，就可以使用上面这个装饰器，为类“混入”各种方法。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">mixins</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./mixins</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">@</span><span class="nd">mixins</span><span class="p">(</span><span class="nx">Foo</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{}</span>
+
+<span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">foo</span><span class="p">()</span> <span class="c1">// "foo"</span>
+</code></pre></div></div>
+
+<p>通过<code class="language-plaintext highlighter-rouge">mixins</code>这个装饰器，实现了在<code class="language-plaintext highlighter-rouge">MyClass</code>类上面“混入”<code class="language-plaintext highlighter-rouge">Foo</code>对象的<code class="language-plaintext highlighter-rouge">foo</code>方法。</p>
+
+<p>不过，上面的方法会改写<code class="language-plaintext highlighter-rouge">MyClass</code>类的<code class="language-plaintext highlighter-rouge">prototype</code>对象，如果不喜欢这一点，也可以通过类的继承实现 Mixin。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">MyClass</span> <span class="kd">extends</span> <span class="nx">MyBaseClass</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">MyClass</code>继承了<code class="language-plaintext highlighter-rouge">MyBaseClass</code>。如果我们想在<code class="language-plaintext highlighter-rouge">MyClass</code>里面“混入”一个<code class="language-plaintext highlighter-rouge">foo</code>方法，一个办法是在<code class="language-plaintext highlighter-rouge">MyClass</code>和<code class="language-plaintext highlighter-rouge">MyBaseClass</code>之间插入一个混入类，这个类具有<code class="language-plaintext highlighter-rouge">foo</code>方法，并且继承了<code class="language-plaintext highlighter-rouge">MyBaseClass</code>的所有方法，然后<code class="language-plaintext highlighter-rouge">MyClass</code>再继承这个类。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">MyMixin</span> <span class="o">=</span> <span class="p">(</span><span class="nx">superclass</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kd">class</span> <span class="kd">extends</span> <span class="nx">superclass</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo from MyMixin</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">MyMixin</code>是一个混入类生成器，接受<code class="language-plaintext highlighter-rouge">superclass</code>作为参数，然后返回一个继承<code class="language-plaintext highlighter-rouge">superclass</code>的子类，该子类包含一个<code class="language-plaintext highlighter-rouge">foo</code>方法。</p>
+
+<p>接着，目标类再去继承这个混入类，就达到了“混入”<code class="language-plaintext highlighter-rouge">foo</code>方法的目的。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">MyClass</span> <span class="kd">extends</span> <span class="nx">MyMixin</span><span class="p">(</span><span class="nx">MyBaseClass</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">c</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">c</span><span class="p">.</span><span class="nx">foo</span><span class="p">();</span> <span class="c1">// "foo from MyMixin"</span>
+</code></pre></div></div>
+
+<p>如果需要“混入”多个方法，就生成多个混入类。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">MyClass</span> <span class="kd">extends</span> <span class="nx">Mixin1</span><span class="p">(</span><span class="nx">Mixin2</span><span class="p">(</span><span class="nx">MyBaseClass</span><span class="p">))</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这种写法的一个好处，是可以调用<code class="language-plaintext highlighter-rouge">super</code>，因此可以避免在“混入”过程中覆盖父类的同名方法。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">Mixin1</span> <span class="o">=</span> <span class="p">(</span><span class="nx">superclass</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kd">class</span> <span class="kd">extends</span> <span class="nx">superclass</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo from Mixin1</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">super</span><span class="p">.</span><span class="nx">foo</span><span class="p">)</span> <span class="k">super</span><span class="p">.</span><span class="nx">foo</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">let</span> <span class="nx">Mixin2</span> <span class="o">=</span> <span class="p">(</span><span class="nx">superclass</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kd">class</span> <span class="kd">extends</span> <span class="nx">superclass</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo from Mixin2</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">super</span><span class="p">.</span><span class="nx">foo</span><span class="p">)</span> <span class="k">super</span><span class="p">.</span><span class="nx">foo</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">class</span> <span class="nx">S</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo from S</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">C</span> <span class="kd">extends</span> <span class="nx">Mixin1</span><span class="p">(</span><span class="nx">Mixin2</span><span class="p">(</span><span class="nx">S</span><span class="p">))</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo from C</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">super</span><span class="p">.</span><span class="nx">foo</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上面代码中，每一次<code class="language-plaintext highlighter-rouge">混入</code>发生时，都调用了父类的<code class="language-plaintext highlighter-rouge">super.foo</code>方法，导致父类的同名方法没有被覆盖，行为被保留了下来。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">new</span> <span class="nx">C</span><span class="p">().</span><span class="nx">foo</span><span class="p">()</span>
+<span class="c1">// foo from C</span>
+<span class="c1">// foo from Mixin1</span>
+<span class="c1">// foo from Mixin2</span>
+<span class="c1">// foo from S</span>
+</code></pre></div></div>
+
+<h2 id="trait">Trait</h2>
+
+<p>Trait 也是一种装饰器，效果与 Mixin 类似，但是提供更多功能，比如防止同名方法的冲突、排除混入某些方法、为混入的方法起别名等等。</p>
+
+<p>下面采用<a href="https://github.com/CocktailJS/traits-decorator">traits-decorator</a>这个第三方模块作为例子。这个模块提供的<code class="language-plaintext highlighter-rouge">traits</code>装饰器，不仅可以接受对象，还可以接受 ES6 类作为参数。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">traits</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">traits-decorator</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">TFoo</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">TBar</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">bar</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">@</span><span class="nd">traits</span><span class="p">(</span><span class="nx">TFoo</span><span class="p">,</span> <span class="nx">TBar</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{</span> <span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">foo</span><span class="p">()</span> <span class="c1">// foo</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">bar</span><span class="p">()</span> <span class="c1">// bar</span>
+</code></pre></div></div>
+
+<p>上面代码中，通过<code class="language-plaintext highlighter-rouge">traits</code>装饰器，在<code class="language-plaintext highlighter-rouge">MyClass</code>类上面“混入”了<code class="language-plaintext highlighter-rouge">TFoo</code>类的<code class="language-plaintext highlighter-rouge">foo</code>方法和<code class="language-plaintext highlighter-rouge">TBar</code>对象的<code class="language-plaintext highlighter-rouge">bar</code>方法。</p>
+
+<p>Trait 不允许“混入”同名方法。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">traits</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">traits-decorator</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">TFoo</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">TBar</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">bar</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">)</span> <span class="p">},</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">@</span><span class="nd">traits</span><span class="p">(</span><span class="nx">TFoo</span><span class="p">,</span> <span class="nx">TBar</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{</span> <span class="p">}</span>
+<span class="c1">// 报错</span>
+<span class="c1">// throw new Error('Method named: ' + methodName + ' is defined twice.');</span>
+<span class="c1">//        ^</span>
+<span class="c1">// Error: Method named: foo is defined twice.</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">TFoo</code>和<code class="language-plaintext highlighter-rouge">TBar</code>都有<code class="language-plaintext highlighter-rouge">foo</code>方法，结果<code class="language-plaintext highlighter-rouge">traits</code>装饰器报错。</p>
+
+<p>一种解决方法是排除<code class="language-plaintext highlighter-rouge">TBar</code>的<code class="language-plaintext highlighter-rouge">foo</code>方法。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">traits</span><span class="p">,</span> <span class="nx">excludes</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">traits-decorator</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">TFoo</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">TBar</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">bar</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">)</span> <span class="p">},</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">@</span><span class="nd">traits</span><span class="p">(</span><span class="nx">TFoo</span><span class="p">,</span> <span class="nx">TBar</span><span class="p">::</span><span class="nx">excludes</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">))</span>
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{</span> <span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">foo</span><span class="p">()</span> <span class="c1">// foo</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">bar</span><span class="p">()</span> <span class="c1">// bar</span>
+</code></pre></div></div>
+
+<p>上面代码使用绑定运算符（::）在<code class="language-plaintext highlighter-rouge">TBar</code>上排除<code class="language-plaintext highlighter-rouge">foo</code>方法，混入时就不会报错了。</p>
+
+<p>另一种方法是为<code class="language-plaintext highlighter-rouge">TBar</code>的<code class="language-plaintext highlighter-rouge">foo</code>方法起一个别名。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">traits</span><span class="p">,</span> <span class="nx">alias</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">traits-decorator</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">TFoo</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">TBar</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">bar</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">)</span> <span class="p">},</span>
+  <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">@</span><span class="nd">traits</span><span class="p">(</span><span class="nx">TFoo</span><span class="p">,</span> <span class="nx">TBar</span><span class="p">::</span><span class="nx">alias</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">aliasFoo</span><span class="dl">'</span><span class="p">}))</span>
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{</span> <span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">foo</span><span class="p">()</span> <span class="c1">// foo</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">aliasFoo</span><span class="p">()</span> <span class="c1">// foo</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">bar</span><span class="p">()</span> <span class="c1">// bar</span>
+</code></pre></div></div>
+
+<p>上面代码为<code class="language-plaintext highlighter-rouge">TBar</code>的<code class="language-plaintext highlighter-rouge">foo</code>方法起了别名<code class="language-plaintext highlighter-rouge">aliasFoo</code>，于是<code class="language-plaintext highlighter-rouge">MyClass</code>也可以混入<code class="language-plaintext highlighter-rouge">TBar</code>的<code class="language-plaintext highlighter-rouge">foo</code>方法了。</p>
+
+<p><code class="language-plaintext highlighter-rouge">alias</code>和<code class="language-plaintext highlighter-rouge">excludes</code>方法，可以结合起来使用。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@</span><span class="nd">traits</span><span class="p">(</span><span class="nx">TExample</span><span class="p">::</span><span class="nx">excludes</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">)::</span><span class="nx">alias</span><span class="p">({</span><span class="na">baz</span><span class="p">:</span><span class="dl">'</span><span class="s1">exampleBaz</span><span class="dl">'</span><span class="p">}))</span>
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{}</span>
+</code></pre></div></div>
+
+<p>上面代码排除了<code class="language-plaintext highlighter-rouge">TExample</code>的<code class="language-plaintext highlighter-rouge">foo</code>方法和<code class="language-plaintext highlighter-rouge">bar</code>方法，为<code class="language-plaintext highlighter-rouge">baz</code>方法起了别名<code class="language-plaintext highlighter-rouge">exampleBaz</code>。</p>
+
+<p><code class="language-plaintext highlighter-rouge">as</code>方法则为上面的代码提供了另一种写法。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@</span><span class="nd">traits</span><span class="p">(</span><span class="nx">TExample</span><span class="p">::</span><span class="k">as</span><span class="p">({</span><span class="na">excludes</span><span class="p">:[</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">],</span> <span class="na">alias</span><span class="p">:</span> <span class="p">{</span><span class="na">baz</span><span class="p">:</span> <span class="dl">'</span><span class="s1">exampleBaz</span><span class="dl">'</span><span class="p">}}))</span>
+<span class="kd">class</span> <span class="nx">MyClass</span> <span class="p">{}</span>
+</code></pre></div></div>

@@ -1,0 +1,136 @@
+<h1 id="使用gitalk实现静态博客无后台评论系统">使用Gitalk实现静态博客无后台评论系统</h1>
+
+<h2 id="前言">前言</h2>
+
+<p>Gitalk，一个基于 Github Issue 和 Preact 开发的评论插件。</p>
+
+<p>下面我们来用它在vuepress搭建的博客中搭建评论区吧</p>
+
+<!-- more -->
+
+<h2 id="准备">准备</h2>
+
+<p>使用一个新的东西首先当然是要了解它</p>
+
+<p>Gitalk demo：<a href="https://gitalk.github.io/">https://gitalk.github.io/</a></p>
+
+<p>Gitalk github：<a href="https://github.com/gitalk/gitalk">https://github.com/gitalk/gitalk</a></p>
+
+<h2 id="实现">实现</h2>
+
+<p>如何实现？最好的方法我认为是看<a href="https://github.com/gitalk/gitalk/blob/master/readme-cn.md">官方文档</a>，这里我只是记录一下实现的步骤。</p>
+
+<p>使用一个别人已经开发好的 <a href="https://github.com/dongyuanxin/vuepress-plugin-comment">vuepress-plugin-comment</a> 插件来帮助我们把Gitalk应用到vuepress搭建的静态博客。</p>
+
+<h3 id="安装">安装</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install</span> <span class="nt">--save</span> vuepress-plugin-comment
+</code></pre></div></div>
+
+<h3 id="使用">使用</h3>
+
+<p><code class="language-plaintext highlighter-rouge">options</code>的配置和<code class="language-plaintext highlighter-rouge">Gitalk</code>的配置相同</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">[</span>
+      <span class="dl">'</span><span class="s1">vuepress-plugin-comment</span><span class="dl">'</span><span class="p">,</span>
+      <span class="p">{</span>
+        <span class="na">choosen</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gitalk</span><span class="dl">'</span><span class="p">,</span> 
+        <span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">clientID</span><span class="p">:</span> <span class="dl">'</span><span class="s1">GitHub Application Client ID</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">clientSecret</span><span class="p">:</span> <span class="dl">'</span><span class="s1">GitHub Application Client Secret</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">repo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">GitHub repo</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">owner</span><span class="p">:</span> <span class="dl">'</span><span class="s1">GitHub repo owner</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">admin</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">GitHub repo owner and collaborators, only these guys can initialize github issues</span><span class="dl">'</span><span class="p">],</span>
+          <span class="na">distractionFreeMode</span><span class="p">:</span> <span class="kc">false</span> 
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>需要 <strong>GitHub Application</strong>，如果没有 <a href="https://github.com/settings/applications/new">点击这里申请</a>，<code class="language-plaintext highlighter-rouge">Authorization callback URL</code> 填写当前使用插件页面的域名。</p>
+
+<p><img src="https://raw.githubusercontent.com/xugaoyi/image_store/master/blog/QQ%E6%88%AA%E5%9B%BE20191220124134.jpg" alt="" /></p>
+
+<p>申请完成就会得 Client ID 和 Client Secret。然后把对应参数填写到配置中，例：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">[</span>
+      <span class="dl">'</span><span class="s1">vuepress-plugin-comment</span><span class="dl">'</span><span class="p">,</span>
+      <span class="p">{</span>
+        <span class="na">choosen</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gitalk</span><span class="dl">'</span><span class="p">,</span> 
+        <span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">clientID</span><span class="p">:</span> <span class="dl">'</span><span class="s1">a6e*******4709b88b</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">clientSecret</span><span class="p">:</span> <span class="dl">'</span><span class="s1">f0e***************beb8b2d54d7241</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">repo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">blog</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// GitHub 仓库</span>
+          <span class="na">owner</span><span class="p">:</span> <span class="dl">'</span><span class="s1">maoyln</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// GitHub仓库所有者</span>
+          <span class="na">admin</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">maoyln</span><span class="dl">'</span><span class="p">],</span> <span class="c1">// 对仓库有写权限的人</span>
+          <span class="na">distractionFreeMode</span><span class="p">:</span> <span class="kc">false</span> 
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>配置好之后重启项目就发现页面上多了一个评论区，说明评论功能实现啦。但还是有一些bug，继续完善它~</p>
+
+<h3 id="bug修复">BUG修复</h3>
+
+<p><strong>评论区与博客样式不匹配</strong></p>
+
+<p>解决办法：新增全局样式文件<code class="language-plaintext highlighter-rouge">.vuepress/styles/index.styl</code>，写入样式</p>
+
+<pre><code class="language-stylus">#vuepress-plugin-comment
+  max-width $contentWidth
+  margin 0 auto
+  padding 2rem 2.5rem
+  @media (max-width: $MQNarrow)
+    padding 2rem
+  @media (max-width: $MQMobileNarrow)
+    padding 1.5rem
+</code></pre>
+
+<p><strong>评论区出现 Error: Validation Failed.</strong></p>
+
+<p>问题分析：当页面 链接过长  或 存在中文链接，导致整个链接字符串长度超过50时，会造成请求issues接口失败，出现422状态码。（中文链接会自动转码，变得很长，id参数默认取的是链接，长度不能超过50）</p>
+
+<p>解决办法：手动设置id取值，限制长度不超过50。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+ <span class="nl">choosen</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gitalk</span><span class="dl">'</span><span class="p">,</span> 
+ <span class="nx">options</span><span class="p">:</span> <span class="p">{</span>
+   <span class="p">...</span>
+   <span class="nx">id</span><span class="p">:</span> <span class="dl">"</span><span class="s2">&lt;%- (window.location.origin + (frontmatter.to.path || window.location.pathname)).slice(-50) %&gt;</span><span class="dl">"</span><span class="p">,</span> <span class="c1">//  页面的唯一标识,长度不能超过50</span>
+   <span class="nx">title</span><span class="p">:</span> <span class="dl">"</span><span class="s2">「评论」&lt;%- document.title %&gt;</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// GitHub issue 的标题</span>
+   <span class="nx">labels</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">Gitalk</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Comment</span><span class="dl">"</span><span class="p">],</span> <span class="c1">// GitHub issue 的标签</span>
+   <span class="nx">body</span><span class="p">:</span><span class="dl">"</span><span class="s2">&lt;%- document.title %&gt;：&lt;%- window.location.origin + (frontmatter.to.path || window.location.pathname) %&gt;</span><span class="dl">"</span> <span class="c1">// GitHub issue 的内容</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>访问变量时，如 <code class="language-plaintext highlighter-rouge">$frontmatter</code> 或 <code class="language-plaintext highlighter-rouge">window</code>等，请使用  <strong>EJS</strong> 语法。因为在配置中不能使用回调函数，会被vuepress过滤，因此使用 <strong>EJS</strong> 语法。 ——插件作者文档说明</p>
+
+</blockquote>
+
+<p><strong>切换页面后评论区内容还是上一个页面的评论</strong></p>
+
+<p>解决：id在获取<code class="language-plaintext highlighter-rouge">path</code>时使用 <code class="language-plaintext highlighter-rouge">frontmatter.to.path</code>，插件内置了 ``frontmatter.from<code class="language-plaintext highlighter-rouge">、</code>frontmatter.to`。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+ <span class="nl">choosen</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gitalk</span><span class="dl">'</span><span class="p">,</span> 
+ <span class="nx">options</span><span class="p">:</span> <span class="p">{</span>
+   <span class="p">...</span>
+   <span class="nx">id</span><span class="p">:</span> <span class="dl">"</span><span class="s2">&lt;%- (window.location.origin + (frontmatter.to.path || window.location.pathname)).slice(-50) %&gt;</span><span class="dl">"</span><span class="p">,</span> <span class="c1">//  页面的唯一标识,长度不能超过50</span>
+   <span class="nx">title</span><span class="p">:</span> <span class="dl">"</span><span class="s2">「评论」&lt;%- document.title %&gt;</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// GitHub issue 的标题</span>
+   <span class="nx">labels</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">Gitalk</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Comment</span><span class="dl">"</span><span class="p">],</span> <span class="c1">// GitHub issue 的标签</span>
+   <span class="nx">body</span><span class="p">:</span><span class="dl">"</span><span class="s2">&lt;%- document.title %&gt;：&lt;%- window.location.origin + (frontmatter.to.path || window.location.pathname) %&gt;</span><span class="dl">"</span> <span class="c1">// GitHub issue 的内容</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+

@@ -1,0 +1,69 @@
+<h1 id="baseurl">baseURL</h1>
+
+<h2 id="需求分析">需求分析</h2>
+
+<p>有些时候，我们会请求某个域名下的多个接口，我们不希望每次发送请求都填写完整的 url，希望可以配置一个 <code class="language-plaintext highlighter-rouge">baseURL</code>，之后都可以传相对路径。如下：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+  <span class="na">baseURL</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://some-domain.com/api</span><span class="dl">'</span>
+<span class="p">})</span>
+
+<span class="nx">instance</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/get</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">instance</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/post</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>我们一旦配置了 <code class="language-plaintext highlighter-rouge">baseURL</code>，之后请求传入的 <code class="language-plaintext highlighter-rouge">url</code> 都会和我们的 <code class="language-plaintext highlighter-rouge">baseURL</code> 拼接成完整的绝对地址，除非请求传入的 <code class="language-plaintext highlighter-rouge">url</code> 已经是绝对地址。</p>
+
+<h2 id="代码实现">代码实现</h2>
+
+<p>首先修改一下类型定义。</p>
+
+<p><code class="language-plaintext highlighter-rouge">types/index.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AxiosRequestConfig</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="nl">baseURL</span><span class="p">?:</span> <span class="kr">string</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>接下来实现 2 个辅助函数。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/url.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">isAbsoluteURL</span><span class="p">(</span><span class="nx">url</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nx">boolean</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="sr">/^</span><span class="se">([</span><span class="sr">a-z</span><span class="se">][</span><span class="sr">a-z</span><span class="se">\d\+\-\.]</span><span class="sr">*:</span><span class="se">)?\/\/</span><span class="sr">/i</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">combineURL</span><span class="p">(</span><span class="nx">baseURL</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">relativeURL</span><span class="p">?:</span> <span class="kr">string</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">relativeURL</span> <span class="p">?</span> <span class="nx">baseURL</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">\/</span><span class="sr">+$/</span><span class="p">,</span> <span class="dl">''</span><span class="p">)</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">/</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">relativeURL</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^</span><span class="se">\/</span><span class="sr">+/</span><span class="p">,</span> <span class="dl">''</span><span class="p">)</span> <span class="p">:</span> <span class="nx">baseURL</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>最后我们来调用这俩个辅助函数。</p>
+
+<p><code class="language-plaintext highlighter-rouge">core/dispatchRequest.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">transformURL</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="p">{</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">paramsSerializer</span><span class="p">,</span> <span class="nx">baseURL</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">config</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">baseURL</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">isAbsoluteURL</span><span class="p">(</span><span class="nx">url</span><span class="o">!</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">url</span> <span class="o">=</span> <span class="nx">combineURL</span><span class="p">(</span><span class="nx">baseURL</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">buildURL</span><span class="p">(</span><span class="nx">url</span><span class="o">!</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">paramsSerializer</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="demo-编写">demo 编写</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+  <span class="na">baseURL</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://img.mukewang.com/</span><span class="dl">'</span>
+<span class="p">})</span>
+
+<span class="nx">instance</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">5cc01a7b0001a33718720632.jpg</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">instance</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://img.mukewang.com/szimg/5becd5ad0001b89306000338-360-202.jpg</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>这个 demo 非常简单，我们请求了慕课网的 2 张图片，注意当第二个请求 <code class="language-plaintext highlighter-rouge">url</code> 已经是绝对地址的时候，我们并不会再去拼接 <code class="language-plaintext highlighter-rouge">baseURL</code>。</p>
+
+<p>至此，<code class="language-plaintext highlighter-rouge">ts-axios</code> 就实现了 <code class="language-plaintext highlighter-rouge">baseURL</code> 的配置功能，接下来我们来实现 <code class="language-plaintext highlighter-rouge">ts-axios</code> 的静态方法扩展。</p>
