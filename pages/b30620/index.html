@@ -1,576 +1,358 @@
-<h1 id="vuex">Vuex</h1>
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Vuex | Maoyl&#39;s blog</title>
+    <meta name="generator" content="VuePress 1.8.0">
+    <link rel="icon" href="/maoyl-blog/img/favicon.ico">
+    <link href="/maoyl-blog/baidu_verify_code-4axo0NWIC9.html">
+    <meta name="description" content="web前端技术博客,简洁至上,专注web前端学习与总结。JavaScript,js,ES6,TypeScript,vue,python,css3,html5,Node,git,github等技术文章。">
+    <meta name="keywords" content="maoyl,maoyln,前端博客,个人技术博客,前端,前端开发,前端框架,web前端,前端面试题,技术文档,学习,面试,JavaScript,js,ES6,TypeScript,vue,python,css3,html5,Node,git,github,markdown">
+    <meta name="baidu-site-verification" content="7F55weZDDc">
+    <meta name="theme-color" content="#11a8cd">
+    
+    <link rel="preload" href="/maoyl-blog/assets/css/0.styles.55c90ad1.css" as="style"><link rel="preload" href="/maoyl-blog/assets/js/app.e3e7351e.js" as="script"><link rel="preload" href="/maoyl-blog/assets/js/2.3d567811.js" as="script"><link rel="preload" href="/maoyl-blog/assets/js/289.b742075f.js" as="script"><link rel="prefetch" href="/maoyl-blog/assets/js/10.7d50cba2.js"><link rel="prefetch" href="/maoyl-blog/assets/js/100.997bf19b.js"><link rel="prefetch" href="/maoyl-blog/assets/js/101.3096c612.js"><link rel="prefetch" href="/maoyl-blog/assets/js/102.e5f28346.js"><link rel="prefetch" href="/maoyl-blog/assets/js/103.37c92e86.js"><link rel="prefetch" href="/maoyl-blog/assets/js/104.aa87238f.js"><link rel="prefetch" href="/maoyl-blog/assets/js/105.dddbc510.js"><link rel="prefetch" href="/maoyl-blog/assets/js/106.7bf7a641.js"><link rel="prefetch" href="/maoyl-blog/assets/js/107.10b470c6.js"><link rel="prefetch" href="/maoyl-blog/assets/js/108.21f07985.js"><link rel="prefetch" href="/maoyl-blog/assets/js/109.31a185de.js"><link rel="prefetch" href="/maoyl-blog/assets/js/11.db628af5.js"><link rel="prefetch" href="/maoyl-blog/assets/js/110.77306f36.js"><link rel="prefetch" href="/maoyl-blog/assets/js/111.df3730d6.js"><link rel="prefetch" href="/maoyl-blog/assets/js/112.fbef731e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/113.84ed3278.js"><link rel="prefetch" href="/maoyl-blog/assets/js/114.df252627.js"><link rel="prefetch" href="/maoyl-blog/assets/js/115.f8c63c91.js"><link rel="prefetch" href="/maoyl-blog/assets/js/116.707a81b5.js"><link rel="prefetch" href="/maoyl-blog/assets/js/117.3520c4fe.js"><link rel="prefetch" href="/maoyl-blog/assets/js/118.13820b3e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/119.5d0efa81.js"><link rel="prefetch" href="/maoyl-blog/assets/js/12.c79ee674.js"><link rel="prefetch" href="/maoyl-blog/assets/js/120.c17ff88e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/121.e6d234ec.js"><link rel="prefetch" href="/maoyl-blog/assets/js/122.6914740c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/123.1d14ba9a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/124.5c79ad48.js"><link rel="prefetch" href="/maoyl-blog/assets/js/125.3c605766.js"><link rel="prefetch" href="/maoyl-blog/assets/js/126.f07954cb.js"><link rel="prefetch" href="/maoyl-blog/assets/js/127.6dd485cc.js"><link rel="prefetch" href="/maoyl-blog/assets/js/128.5cea2586.js"><link rel="prefetch" href="/maoyl-blog/assets/js/129.ec502362.js"><link rel="prefetch" href="/maoyl-blog/assets/js/13.7edc067b.js"><link rel="prefetch" href="/maoyl-blog/assets/js/130.85fb5101.js"><link rel="prefetch" href="/maoyl-blog/assets/js/131.cf602637.js"><link rel="prefetch" href="/maoyl-blog/assets/js/132.b656e18d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/133.21e21727.js"><link rel="prefetch" href="/maoyl-blog/assets/js/134.7ed8343d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/135.cbc8e95c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/136.89cb504a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/137.dd00b919.js"><link rel="prefetch" href="/maoyl-blog/assets/js/138.482cb35e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/139.e53153fd.js"><link rel="prefetch" href="/maoyl-blog/assets/js/14.60496011.js"><link rel="prefetch" href="/maoyl-blog/assets/js/140.34c2b5cc.js"><link rel="prefetch" href="/maoyl-blog/assets/js/141.252e6de0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/142.d38586fd.js"><link rel="prefetch" href="/maoyl-blog/assets/js/143.f0fe1920.js"><link rel="prefetch" href="/maoyl-blog/assets/js/144.1b5da677.js"><link rel="prefetch" href="/maoyl-blog/assets/js/145.5fb6d829.js"><link rel="prefetch" href="/maoyl-blog/assets/js/146.faaa6551.js"><link rel="prefetch" href="/maoyl-blog/assets/js/147.ff7ccf2a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/148.eb6845c2.js"><link rel="prefetch" href="/maoyl-blog/assets/js/149.6bca4cc0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/15.38d19c88.js"><link rel="prefetch" href="/maoyl-blog/assets/js/150.7bb92efa.js"><link rel="prefetch" href="/maoyl-blog/assets/js/151.ed49f54c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/152.b73485b9.js"><link rel="prefetch" href="/maoyl-blog/assets/js/153.4b875630.js"><link rel="prefetch" href="/maoyl-blog/assets/js/154.3192efe3.js"><link rel="prefetch" href="/maoyl-blog/assets/js/155.cb517609.js"><link rel="prefetch" href="/maoyl-blog/assets/js/156.ee4ac4a6.js"><link rel="prefetch" href="/maoyl-blog/assets/js/157.62c882e0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/158.0b493b81.js"><link rel="prefetch" href="/maoyl-blog/assets/js/159.7c5a6188.js"><link rel="prefetch" href="/maoyl-blog/assets/js/16.e9ea8c43.js"><link rel="prefetch" href="/maoyl-blog/assets/js/160.02ebbb80.js"><link rel="prefetch" href="/maoyl-blog/assets/js/161.9c7cc19d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/162.ff28af48.js"><link rel="prefetch" href="/maoyl-blog/assets/js/163.7477fff4.js"><link rel="prefetch" href="/maoyl-blog/assets/js/164.15187c02.js"><link rel="prefetch" href="/maoyl-blog/assets/js/165.ee741516.js"><link rel="prefetch" href="/maoyl-blog/assets/js/166.886b96d8.js"><link rel="prefetch" href="/maoyl-blog/assets/js/167.f55e8585.js"><link rel="prefetch" href="/maoyl-blog/assets/js/168.67fc56eb.js"><link rel="prefetch" href="/maoyl-blog/assets/js/169.c0d97d6c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/17.fd35d904.js"><link rel="prefetch" href="/maoyl-blog/assets/js/170.2f999dde.js"><link rel="prefetch" href="/maoyl-blog/assets/js/171.57f17b31.js"><link rel="prefetch" href="/maoyl-blog/assets/js/172.c7012e0b.js"><link rel="prefetch" href="/maoyl-blog/assets/js/173.f7d24fd6.js"><link rel="prefetch" href="/maoyl-blog/assets/js/174.3ff6c68e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/175.f4a90cd1.js"><link rel="prefetch" href="/maoyl-blog/assets/js/176.5950b761.js"><link rel="prefetch" href="/maoyl-blog/assets/js/177.9c454095.js"><link rel="prefetch" href="/maoyl-blog/assets/js/178.630bc433.js"><link rel="prefetch" href="/maoyl-blog/assets/js/179.3cd82e46.js"><link rel="prefetch" href="/maoyl-blog/assets/js/18.2658d91e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/180.cba3b8c0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/181.dd9a75c2.js"><link rel="prefetch" href="/maoyl-blog/assets/js/182.1e59ca80.js"><link rel="prefetch" href="/maoyl-blog/assets/js/183.3c8ba238.js"><link rel="prefetch" href="/maoyl-blog/assets/js/184.74a3a762.js"><link rel="prefetch" href="/maoyl-blog/assets/js/185.498bf848.js"><link rel="prefetch" href="/maoyl-blog/assets/js/186.81ffa112.js"><link rel="prefetch" href="/maoyl-blog/assets/js/187.b6990e78.js"><link rel="prefetch" href="/maoyl-blog/assets/js/188.9652d5c5.js"><link rel="prefetch" href="/maoyl-blog/assets/js/189.9135009e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/19.923c4f36.js"><link rel="prefetch" href="/maoyl-blog/assets/js/190.81542975.js"><link rel="prefetch" href="/maoyl-blog/assets/js/191.96780527.js"><link rel="prefetch" href="/maoyl-blog/assets/js/192.fa4dfcda.js"><link rel="prefetch" href="/maoyl-blog/assets/js/193.e335b392.js"><link rel="prefetch" href="/maoyl-blog/assets/js/194.85b53eed.js"><link rel="prefetch" href="/maoyl-blog/assets/js/195.cd525fce.js"><link rel="prefetch" href="/maoyl-blog/assets/js/196.83855382.js"><link rel="prefetch" href="/maoyl-blog/assets/js/197.00ab02d0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/198.b363f821.js"><link rel="prefetch" href="/maoyl-blog/assets/js/199.bf818eb3.js"><link rel="prefetch" href="/maoyl-blog/assets/js/20.18fbfc43.js"><link rel="prefetch" href="/maoyl-blog/assets/js/200.ff4213a5.js"><link rel="prefetch" href="/maoyl-blog/assets/js/201.5219ae3c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/202.70d0683b.js"><link rel="prefetch" href="/maoyl-blog/assets/js/203.701b3476.js"><link rel="prefetch" href="/maoyl-blog/assets/js/204.c5a42e8c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/205.2af3afbe.js"><link rel="prefetch" href="/maoyl-blog/assets/js/206.dd6db17d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/207.65c12d41.js"><link rel="prefetch" href="/maoyl-blog/assets/js/208.cc2411b1.js"><link rel="prefetch" href="/maoyl-blog/assets/js/209.c05ab7e7.js"><link rel="prefetch" href="/maoyl-blog/assets/js/21.c29a17da.js"><link rel="prefetch" href="/maoyl-blog/assets/js/210.b842a6e9.js"><link rel="prefetch" href="/maoyl-blog/assets/js/211.6f7e5f43.js"><link rel="prefetch" href="/maoyl-blog/assets/js/212.b53991a2.js"><link rel="prefetch" href="/maoyl-blog/assets/js/213.09a02f73.js"><link rel="prefetch" href="/maoyl-blog/assets/js/214.8aac7027.js"><link rel="prefetch" href="/maoyl-blog/assets/js/215.4ba008c0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/216.3effd3ca.js"><link rel="prefetch" href="/maoyl-blog/assets/js/217.9d513f5b.js"><link rel="prefetch" href="/maoyl-blog/assets/js/218.3e796673.js"><link rel="prefetch" href="/maoyl-blog/assets/js/219.1d0ac5a0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/22.3dc4d470.js"><link rel="prefetch" href="/maoyl-blog/assets/js/220.8740dfee.js"><link rel="prefetch" href="/maoyl-blog/assets/js/221.a01daaab.js"><link rel="prefetch" href="/maoyl-blog/assets/js/222.63cfc2b2.js"><link rel="prefetch" href="/maoyl-blog/assets/js/223.5a32abd9.js"><link rel="prefetch" href="/maoyl-blog/assets/js/224.e44c85fe.js"><link rel="prefetch" href="/maoyl-blog/assets/js/225.66e40c5d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/226.30066bee.js"><link rel="prefetch" href="/maoyl-blog/assets/js/227.3ce0dc36.js"><link rel="prefetch" href="/maoyl-blog/assets/js/228.fe4c4bb5.js"><link rel="prefetch" href="/maoyl-blog/assets/js/229.a6a6d00d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/23.5d347bf7.js"><link rel="prefetch" href="/maoyl-blog/assets/js/230.1bd4186a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/231.de5c480f.js"><link rel="prefetch" href="/maoyl-blog/assets/js/232.22574c64.js"><link rel="prefetch" href="/maoyl-blog/assets/js/233.398100ab.js"><link rel="prefetch" href="/maoyl-blog/assets/js/234.efd63fff.js"><link rel="prefetch" href="/maoyl-blog/assets/js/235.9be4ba2d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/236.9d77d6f9.js"><link rel="prefetch" href="/maoyl-blog/assets/js/237.1488ef6e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/238.a12a8058.js"><link rel="prefetch" href="/maoyl-blog/assets/js/239.1bf0426a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/24.0c90d606.js"><link rel="prefetch" href="/maoyl-blog/assets/js/240.ba88868c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/241.6314190a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/242.d11346b4.js"><link rel="prefetch" href="/maoyl-blog/assets/js/243.0fefb797.js"><link rel="prefetch" href="/maoyl-blog/assets/js/244.b389fe3a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/245.383b5236.js"><link rel="prefetch" href="/maoyl-blog/assets/js/246.cb3197ae.js"><link rel="prefetch" href="/maoyl-blog/assets/js/247.b19b75c9.js"><link rel="prefetch" href="/maoyl-blog/assets/js/248.981f8f80.js"><link rel="prefetch" href="/maoyl-blog/assets/js/249.7c99fb56.js"><link rel="prefetch" href="/maoyl-blog/assets/js/25.89e6f77c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/250.34e33f81.js"><link rel="prefetch" href="/maoyl-blog/assets/js/251.98b5aa4d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/252.657f6d99.js"><link rel="prefetch" href="/maoyl-blog/assets/js/253.bf6d44b4.js"><link rel="prefetch" href="/maoyl-blog/assets/js/254.56e333a5.js"><link rel="prefetch" href="/maoyl-blog/assets/js/255.2b846ac2.js"><link rel="prefetch" href="/maoyl-blog/assets/js/256.fdfc3301.js"><link rel="prefetch" href="/maoyl-blog/assets/js/257.e91f46df.js"><link rel="prefetch" href="/maoyl-blog/assets/js/258.c0eee87d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/259.4c16deab.js"><link rel="prefetch" href="/maoyl-blog/assets/js/26.815f2073.js"><link rel="prefetch" href="/maoyl-blog/assets/js/260.65c8985a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/261.0270a77a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/262.c5bd9cdd.js"><link rel="prefetch" href="/maoyl-blog/assets/js/263.46b104c6.js"><link rel="prefetch" href="/maoyl-blog/assets/js/264.f109e27d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/265.f37db034.js"><link rel="prefetch" href="/maoyl-blog/assets/js/266.521c1ffd.js"><link rel="prefetch" href="/maoyl-blog/assets/js/267.718cf658.js"><link rel="prefetch" href="/maoyl-blog/assets/js/268.50a94411.js"><link rel="prefetch" href="/maoyl-blog/assets/js/269.bf5e86dc.js"><link rel="prefetch" href="/maoyl-blog/assets/js/27.a64d9e46.js"><link rel="prefetch" href="/maoyl-blog/assets/js/270.739b9981.js"><link rel="prefetch" href="/maoyl-blog/assets/js/271.2a12da21.js"><link rel="prefetch" href="/maoyl-blog/assets/js/272.3dfa1091.js"><link rel="prefetch" href="/maoyl-blog/assets/js/273.fc9d6b75.js"><link rel="prefetch" href="/maoyl-blog/assets/js/274.3a8504f2.js"><link rel="prefetch" href="/maoyl-blog/assets/js/275.e4017043.js"><link rel="prefetch" href="/maoyl-blog/assets/js/276.73631207.js"><link rel="prefetch" href="/maoyl-blog/assets/js/277.9a121649.js"><link rel="prefetch" href="/maoyl-blog/assets/js/278.49cd4f4b.js"><link rel="prefetch" href="/maoyl-blog/assets/js/279.92c93399.js"><link rel="prefetch" href="/maoyl-blog/assets/js/28.70d6bde0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/280.0e3c5759.js"><link rel="prefetch" href="/maoyl-blog/assets/js/281.0e8cd105.js"><link rel="prefetch" href="/maoyl-blog/assets/js/282.3351d557.js"><link rel="prefetch" href="/maoyl-blog/assets/js/283.8c3b3d61.js"><link rel="prefetch" href="/maoyl-blog/assets/js/284.def938e3.js"><link rel="prefetch" href="/maoyl-blog/assets/js/285.5b27db7f.js"><link rel="prefetch" href="/maoyl-blog/assets/js/286.255a594b.js"><link rel="prefetch" href="/maoyl-blog/assets/js/287.003bd30a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/288.d01770d6.js"><link rel="prefetch" href="/maoyl-blog/assets/js/29.0c1a5482.js"><link rel="prefetch" href="/maoyl-blog/assets/js/290.d46951b3.js"><link rel="prefetch" href="/maoyl-blog/assets/js/291.79bd225f.js"><link rel="prefetch" href="/maoyl-blog/assets/js/292.e10076ee.js"><link rel="prefetch" href="/maoyl-blog/assets/js/293.2d83b7a0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/294.b75f7747.js"><link rel="prefetch" href="/maoyl-blog/assets/js/295.019d19f8.js"><link rel="prefetch" href="/maoyl-blog/assets/js/296.aebf2335.js"><link rel="prefetch" href="/maoyl-blog/assets/js/297.440564a6.js"><link rel="prefetch" href="/maoyl-blog/assets/js/298.21bd578f.js"><link rel="prefetch" href="/maoyl-blog/assets/js/299.5668e8fa.js"><link rel="prefetch" href="/maoyl-blog/assets/js/3.d5a4ef10.js"><link rel="prefetch" href="/maoyl-blog/assets/js/30.95814250.js"><link rel="prefetch" href="/maoyl-blog/assets/js/300.ae64546c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/301.410f5e6d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/302.58f0c4e0.js"><link rel="prefetch" href="/maoyl-blog/assets/js/31.07d45db5.js"><link rel="prefetch" href="/maoyl-blog/assets/js/32.6912e346.js"><link rel="prefetch" href="/maoyl-blog/assets/js/33.30b67099.js"><link rel="prefetch" href="/maoyl-blog/assets/js/34.bc2cd954.js"><link rel="prefetch" href="/maoyl-blog/assets/js/35.2288e57e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/36.a1cd7285.js"><link rel="prefetch" href="/maoyl-blog/assets/js/37.15eebe1d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/38.58e6a9f1.js"><link rel="prefetch" href="/maoyl-blog/assets/js/39.4a52aa36.js"><link rel="prefetch" href="/maoyl-blog/assets/js/4.2fca7be4.js"><link rel="prefetch" href="/maoyl-blog/assets/js/40.cc0ef40c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/41.0d59e401.js"><link rel="prefetch" href="/maoyl-blog/assets/js/42.8aaa44be.js"><link rel="prefetch" href="/maoyl-blog/assets/js/43.618bd49a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/44.3e08c975.js"><link rel="prefetch" href="/maoyl-blog/assets/js/45.c43ea459.js"><link rel="prefetch" href="/maoyl-blog/assets/js/46.5543bd4f.js"><link rel="prefetch" href="/maoyl-blog/assets/js/47.e9dc889c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/48.c6b5d825.js"><link rel="prefetch" href="/maoyl-blog/assets/js/49.177e2039.js"><link rel="prefetch" href="/maoyl-blog/assets/js/5.eed9bd1c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/50.caf9836b.js"><link rel="prefetch" href="/maoyl-blog/assets/js/51.0945e08f.js"><link rel="prefetch" href="/maoyl-blog/assets/js/52.45a4ad57.js"><link rel="prefetch" href="/maoyl-blog/assets/js/53.11ccd68c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/54.78212ec6.js"><link rel="prefetch" href="/maoyl-blog/assets/js/55.29ab8f48.js"><link rel="prefetch" href="/maoyl-blog/assets/js/56.ad38b87d.js"><link rel="prefetch" href="/maoyl-blog/assets/js/57.ab20b9be.js"><link rel="prefetch" href="/maoyl-blog/assets/js/58.b1bd3fc2.js"><link rel="prefetch" href="/maoyl-blog/assets/js/59.b0f88d6a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/6.60572c32.js"><link rel="prefetch" href="/maoyl-blog/assets/js/60.aa2354e8.js"><link rel="prefetch" href="/maoyl-blog/assets/js/61.c102720f.js"><link rel="prefetch" href="/maoyl-blog/assets/js/62.42e51337.js"><link rel="prefetch" href="/maoyl-blog/assets/js/63.08a2947e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/64.2a0d6552.js"><link rel="prefetch" href="/maoyl-blog/assets/js/65.ba0d1682.js"><link rel="prefetch" href="/maoyl-blog/assets/js/66.b00bbdf2.js"><link rel="prefetch" href="/maoyl-blog/assets/js/67.a3f97891.js"><link rel="prefetch" href="/maoyl-blog/assets/js/68.12f5d92c.js"><link rel="prefetch" href="/maoyl-blog/assets/js/69.ab6616bb.js"><link rel="prefetch" href="/maoyl-blog/assets/js/7.a66289f9.js"><link rel="prefetch" href="/maoyl-blog/assets/js/70.c10aeb1a.js"><link rel="prefetch" href="/maoyl-blog/assets/js/71.dd2ee292.js"><link rel="prefetch" href="/maoyl-blog/assets/js/72.81f803a9.js"><link rel="prefetch" href="/maoyl-blog/assets/js/73.f08439f7.js"><link rel="prefetch" href="/maoyl-blog/assets/js/74.3d323324.js"><link rel="prefetch" href="/maoyl-blog/assets/js/75.4894b372.js"><link rel="prefetch" href="/maoyl-blog/assets/js/76.83b1f023.js"><link rel="prefetch" href="/maoyl-blog/assets/js/77.07623e30.js"><link rel="prefetch" href="/maoyl-blog/assets/js/78.89d5b536.js"><link rel="prefetch" href="/maoyl-blog/assets/js/79.6595b059.js"><link rel="prefetch" href="/maoyl-blog/assets/js/8.a3684bd3.js"><link rel="prefetch" href="/maoyl-blog/assets/js/80.fc2bf7a5.js"><link rel="prefetch" href="/maoyl-blog/assets/js/81.ae894646.js"><link rel="prefetch" href="/maoyl-blog/assets/js/82.b760ef66.js"><link rel="prefetch" href="/maoyl-blog/assets/js/83.c3cbafaa.js"><link rel="prefetch" href="/maoyl-blog/assets/js/84.96d8af54.js"><link rel="prefetch" href="/maoyl-blog/assets/js/85.efff93a3.js"><link rel="prefetch" href="/maoyl-blog/assets/js/86.5c6a093e.js"><link rel="prefetch" href="/maoyl-blog/assets/js/87.ffb2c6ec.js"><link rel="prefetch" href="/maoyl-blog/assets/js/88.3e8ffcd3.js"><link rel="prefetch" href="/maoyl-blog/assets/js/89.fff86475.js"><link rel="prefetch" href="/maoyl-blog/assets/js/9.9fd0161b.js"><link rel="prefetch" href="/maoyl-blog/assets/js/90.39157b16.js"><link rel="prefetch" href="/maoyl-blog/assets/js/91.7c47b7ef.js"><link rel="prefetch" href="/maoyl-blog/assets/js/92.790eb1f4.js"><link rel="prefetch" href="/maoyl-blog/assets/js/93.5154507f.js"><link rel="prefetch" href="/maoyl-blog/assets/js/94.dc8c4f65.js"><link rel="prefetch" href="/maoyl-blog/assets/js/95.0454e297.js"><link rel="prefetch" href="/maoyl-blog/assets/js/96.5b2458ce.js"><link rel="prefetch" href="/maoyl-blog/assets/js/97.15ffbd38.js"><link rel="prefetch" href="/maoyl-blog/assets/js/98.37417da1.js"><link rel="prefetch" href="/maoyl-blog/assets/js/99.132a9533.js">
+    <link rel="stylesheet" href="/maoyl-blog/assets/css/0.styles.55c90ad1.css">
+  </head>
+  <body class="theme-mode-light">
+    <div id="app" data-server-rendered="true"><div class="theme-container sidebar-open have-rightmenu have-body-img"><header class="navbar blur"><div title="目录" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/maoyl-blog/" class="home-link router-link-active"><img src="/maoyl-blog/img/maoyl-logo.png" alt="Maoyl's blog" class="logo"> <span class="site-name can-hide">Maoyl's blog</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/maoyl-blog/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端" class="dropdown-title"><a href="/maoyl-blog/web/" class="link-title">前端</a> <span class="title" style="display:none;">前端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>前端基础</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/pages/8309a5b876fc95e3/" class="nav-link">HTML</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/0a83b083bdf257cb/" class="nav-link">CSS</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/979248/" class="nav-link">CSS动画</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/8143cc480faf9a11/" class="nav-link">JavaScript文章</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/9f15c1a281d8bedb/" class="nav-link">stylus</a></li></ul></li><li class="dropdown-item"><h4>学习笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/note/javascript/" class="nav-link">《JavaScript教程》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/js/" class="nav-link">《JavaScript高级程序设计》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/es6/" class="nav-link">《ES6 教程》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/design-patterns/" class="nav-link">《JavaScript设计模式》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/typescript-axios/" class="nav-link">《TypeScript 从零实现 axios》</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/51afd6/" class="nav-link">TypeScript笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/4643cd/" class="nav-link">JS设计模式总结笔记</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架" class="dropdown-title"><a href="/maoyl-blog/framework/" class="link-title">框架</a> <span class="title" style="display:none;">框架</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>前端框架</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/pages/vuejs/" class="nav-link">Vue相关</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/react/" class="nav-link">React相关</a></li></ul></li><li class="dropdown-item"><h4>前端监控</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/monitoring/profile/" class="nav-link">前端监控简介</a></li></ul></li><li class="dropdown-item"><h4>学习笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/note/vue/" class="nav-link">《Vue》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/react/" class="nav-link">《React》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/wx-miniprogram/" class="nav-link">小程序学习笔记</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="后端" class="dropdown-title"><a href="/maoyl-blog/serve/" class="link-title">后端</a> <span class="title" style="display:none;">后端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>后端基础</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/pages/117708e0af7f0bd9/" class="nav-link">Nodejs</a></li></ul></li><li class="dropdown-item"><h4>学习笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/note/DataStructure/" class="nav-link">数据结构</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="技术" class="dropdown-title"><a href="/maoyl-blog/technology/" class="link-title">技术</a> <span class="title" style="display:none;">技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/9a7ee40fc232253e/" class="nav-link">技术文档</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/4c778760be26d8b3/" class="nav-link">GitHub技巧</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/41f87d890d0a02af/" class="nav-link">博客搭建</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/21e023/" class="nav-link">网页性能</a></li><li class="dropdown-item"><h4>学习笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/note/git/" class="nav-link">《Git》学习笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/vim/" class="nav-link">《Vim》学习笔记</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="更多" class="dropdown-title"><a href="/maoyl-blog/more/" class="link-title">更多</a> <span class="title" style="display:none;">更多</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/f2a556/" class="nav-link">学习</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/aea6571b7a8bae86/" class="nav-link">面试</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/2d615df9a36a98ed/" class="nav-link">心情杂货</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/baaa02/" class="nav-link">实用技巧</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/friends/" class="nav-link">友情链接</a></li></ul></div></div><div class="nav-item"><a href="/maoyl-blog/about/" class="nav-link">关于</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="收藏" class="dropdown-title"><a href="/maoyl-blog/pages/beb6c0bd8a66cea6/" class="link-title">收藏</a> <span class="title" style="display:none;">收藏</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/beb6c0bd8a66cea6/" class="nav-link">网站</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/eee83a9211a70f9d/" class="nav-link">资源</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/12df8ace52d493f6/" class="nav-link">Vue资源</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/maoyl-blog/archives/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/maoyl-blog/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/archives/" class="nav-link">归档</a></li></ul></div></div> <a href="https://github.com/maoyln/maoyl-blog" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar-hover-trigger"></div> <aside class="sidebar" style="display:none;"><div class="blogger"><img src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/my-head.jpeg"> <div class="blogger-info"><h3>maoyln</h3> <span>日日行，不怕千万里</span></div></div> <nav class="nav-links"><div class="nav-item"><a href="/maoyl-blog/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端" class="dropdown-title"><a href="/maoyl-blog/web/" class="link-title">前端</a> <span class="title" style="display:none;">前端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>前端基础</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/pages/8309a5b876fc95e3/" class="nav-link">HTML</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/0a83b083bdf257cb/" class="nav-link">CSS</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/979248/" class="nav-link">CSS动画</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/8143cc480faf9a11/" class="nav-link">JavaScript文章</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/9f15c1a281d8bedb/" class="nav-link">stylus</a></li></ul></li><li class="dropdown-item"><h4>学习笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/note/javascript/" class="nav-link">《JavaScript教程》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/js/" class="nav-link">《JavaScript高级程序设计》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/es6/" class="nav-link">《ES6 教程》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/design-patterns/" class="nav-link">《JavaScript设计模式》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/typescript-axios/" class="nav-link">《TypeScript 从零实现 axios》</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/51afd6/" class="nav-link">TypeScript笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/4643cd/" class="nav-link">JS设计模式总结笔记</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架" class="dropdown-title"><a href="/maoyl-blog/framework/" class="link-title">框架</a> <span class="title" style="display:none;">框架</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>前端框架</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/pages/vuejs/" class="nav-link">Vue相关</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/pages/react/" class="nav-link">React相关</a></li></ul></li><li class="dropdown-item"><h4>前端监控</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/monitoring/profile/" class="nav-link">前端监控简介</a></li></ul></li><li class="dropdown-item"><h4>学习笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/note/vue/" class="nav-link">《Vue》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/react/" class="nav-link">《React》笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/wx-miniprogram/" class="nav-link">小程序学习笔记</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="后端" class="dropdown-title"><a href="/maoyl-blog/serve/" class="link-title">后端</a> <span class="title" style="display:none;">后端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>后端基础</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/pages/117708e0af7f0bd9/" class="nav-link">Nodejs</a></li></ul></li><li class="dropdown-item"><h4>学习笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/note/DataStructure/" class="nav-link">数据结构</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="技术" class="dropdown-title"><a href="/maoyl-blog/technology/" class="link-title">技术</a> <span class="title" style="display:none;">技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/9a7ee40fc232253e/" class="nav-link">技术文档</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/4c778760be26d8b3/" class="nav-link">GitHub技巧</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/41f87d890d0a02af/" class="nav-link">博客搭建</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/21e023/" class="nav-link">网页性能</a></li><li class="dropdown-item"><h4>学习笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/maoyl-blog/note/git/" class="nav-link">《Git》学习笔记</a></li><li class="dropdown-subitem"><a href="/maoyl-blog/note/vim/" class="nav-link">《Vim》学习笔记</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="更多" class="dropdown-title"><a href="/maoyl-blog/more/" class="link-title">更多</a> <span class="title" style="display:none;">更多</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/f2a556/" class="nav-link">学习</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/aea6571b7a8bae86/" class="nav-link">面试</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/2d615df9a36a98ed/" class="nav-link">心情杂货</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/baaa02/" class="nav-link">实用技巧</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/friends/" class="nav-link">友情链接</a></li></ul></div></div><div class="nav-item"><a href="/maoyl-blog/about/" class="nav-link">关于</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="收藏" class="dropdown-title"><a href="/maoyl-blog/pages/beb6c0bd8a66cea6/" class="link-title">收藏</a> <span class="title" style="display:none;">收藏</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/beb6c0bd8a66cea6/" class="nav-link">网站</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/eee83a9211a70f9d/" class="nav-link">资源</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/pages/12df8ace52d493f6/" class="nav-link">Vue资源</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/maoyl-blog/archives/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/maoyl-blog/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/maoyl-blog/archives/" class="nav-link">归档</a></li></ul></div></div> <a href="https://github.com/maoyln/maoyl-blog" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>基础</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>组件</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>过渡&amp;动画</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>可复用性&amp;组合</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>工具</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>规模化</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Vuex</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/maoyl-blog/pages/b30620/" aria-current="page" class="active sidebar-link">Vuex</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level2"><a href="/maoyl-blog/pages/b30620/#vuex使用过程演示" class="sidebar-link">Vuex使用过程演示</a></li><li class="sidebar-sub-header level2"><a href="/maoyl-blog/pages/b30620/#核心概念" class="sidebar-link">核心概念</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level3"><a href="/maoyl-blog/pages/b30620/#state" class="sidebar-link">State</a></li><li class="sidebar-sub-header level3"><a href="/maoyl-blog/pages/b30620/#getter" class="sidebar-link">Getter</a></li><li class="sidebar-sub-header level3"><a href="/maoyl-blog/pages/b30620/#mutation" class="sidebar-link">Mutation</a></li><li class="sidebar-sub-header level3"><a href="/maoyl-blog/pages/b30620/#action" class="sidebar-link">Action</a></li></ul></li><li class="sidebar-sub-header level2"><a href="/maoyl-blog/pages/b30620/#更多" class="sidebar-link">更多</a></li></ul></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>其他</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <div><main class="page"><div class="theme-vdoing-wrapper "><div class="articleInfo-wrap" data-v-06225672><div class="articleInfo" data-v-06225672><ul class="breadcrumbs" data-v-06225672><li data-v-06225672><a href="/maoyl-blog/" title="首页" class="iconfont icon-home router-link-active" data-v-06225672></a></li> <li data-v-06225672><a href="/maoyl-blog/note/vue/#《Vue》笔记" data-v-06225672>《Vue》笔记</a></li><li data-v-06225672><a href="/maoyl-blog/note/vue/#Vuex" data-v-06225672>Vuex</a></li></ul> <div class="info" data-v-06225672><div title="作者" class="author iconfont icon-touxiang" data-v-06225672><a href="https://github.com/maoyln" target="_blank" title="作者" class="beLink" data-v-06225672>maoyln</a></div> <div title="创建时间" class="date iconfont icon-riqi" data-v-06225672><a href="javascript:;" data-v-06225672>2020-08-08</a></div> <!----></div></div></div> <!----> <div class="content-wrapper"><div class="right-menu-wrapper"><div class="right-menu-margin"><div class="right-menu-title">目录</div> <div class="right-menu-content"></div></div></div> <h1><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAABGpJREFUSA3tVVtoXFUU3fvOI53UlmCaKIFmwEhsE7QK0ipFEdHEKpXaZGrp15SINsXUWvBDpBgQRKi0+KKoFeJHfZA+ED9KKoIU2gYD9UejTW4rVIzm0VSTziPzuNu1z507dibTTjL4U/DAzLn3nL3X2o91ziX6f9wMFdh6Jvbm9nNSV0msViVO6tN1Rm7NMu2OpeJ9lWBUTDxrJbYTS0hInuwciu9eLHlFxCLCZEk3MegsJmZ5K/JD6t7FkFdEvGUo1g7qJoG3MHImqRIn8/nzY1K9UPKKiJmtnUqHVE3Gbuay6vJE/N2FEmuxFjW2nUuE0yQXRRxLiTUAzs36zhZvOXJPdX850EVnnLZkB8prodQoM5JGj7Xk2mvC7JB8tG04Ef5PiXtG0UtxupRQSfTnBoCy554x18yJHI6I+G5Eru4LHmPJZEQsrvPUbMiA8G/WgMK7w7I+ez7++o2ANfbrjvaOl1tFMs+htG3IrZH9/hDX1Pr8Tc0UvH8tcX29KzAgIGcEkINyW5BF9x891hw6VYqgJHEk0huccS7vh3C6gTiODL+26huuBtbct8eZnqLML8PkxGYpuPZBqtqwkSjgc4mB5gbgig5i+y0UDK35LMxXisn9xQtK+nd26gTIHsHe/oblK/b29fUmN/8Y+9jAQrnBp56m1LcDlDp9irKTExSKduXJVWSqdBMA08pEJnEIOB3FPPMybu/oeV8zFeYN3xx576Q6RH+VmplE4ncQV5v+5rzSoyOU7PuEAg8g803PwBJ0CExno/jcMbN8tONYeOmHiuUNryvm3fRUy4tMPVLdAGkUhNWuggGrJcXPv+ouCjz0MKUHz1J2/E8IC9nqTabcxgaBYM0hPhD5Y65FsbxRQKxCQrDjDctW7PUM3HuZunFyifSAqEfuzCp48Il24luWUWZoyJCaPR82jE0+kFA643wRFVni4RYSq3ohJO2pZ7B5dO4xkDWbEpossJPLSrPjYID8rS2UHTlvyNxqIGsg674XJJ7vnh5L7PNwC4hh2sjCI96mzszOTpxLF0T7l88Yz7lAuK6OnL8gXLOnTvpzSb22YG8W7us3jSebFHeeqnXRG1vt+MoUM84LQIBmMsCTAcOauTh0T0l0neQK7m2bLMt2mGxU3HYssS0J2cdv5wljlPsrIuZLAG/2DOZIXgCYT8uMGZN+e2kSirfxZOPCsC0f24nTZzspnVn9VePS1Z5vubmAGGXG8ZFno9Hel0yfA5ZPhF7Dh972BQJ2qCpgH67lmWtBYbvk6sz02wjky2vXyz0XErP/kFB619js1BtwfOV4OPRqOQBjy3Qbk18vigUPPSD5ceHnwck7W9bhAqZdd7SuG7w4/P2F/GaJh8c7e9qgow+Q7cGBo+98WsLkuktFqiZabtXuQTu/Y5ETbR0v7tNSFnvrmu6pjdoan2KjMu8q/Hmj1EfCO2ZGfEIbIXKUlw8qaX9/b2oeSJmFksSeT/Fn0V3nSypChh4Gjh74ybO9aeZ/AN2dwciu2/MhAAAAAElFTkSuQmCC">Vuex<!----></h1>  <div class="theme-vdoing-content content__default"><h1 id="vuex"><a href="#vuex" class="header-anchor">#</a> Vuex</h1> <p>Vuex 是一个专为 Vue.js 应用程序开发的<strong>状态管理模式</strong>。</p> <h2 id="vuex使用过程演示"><a href="#vuex使用过程演示" class="header-anchor">#</a> Vuex使用过程演示</h2> <p>以<code>vue-cli3</code>新创建出来的项目为例，演示Vuex的使用过程。</p> <p>创建项目:</p> <div class="language-sh line-numbers-mode"><pre class="language-sh"><code>vue create vuex-test
+<span class="token builtin class-name">cd</span> vuex-test
+<span class="token function">npm</span> run serve
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>安装<code>vuex</code>:</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token function">npm</span> i vuex <span class="token parameter variable">-S</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>进入项目的<code>src/</code>下新建一个文件<code>store/index.js</code>，并写入：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">// store/index.js</span>
+<span class="token keyword">import</span> Vue <span class="token keyword">from</span> <span class="token string">'vue'</span>
+<span class="token keyword">import</span> Vuex <span class="token keyword">from</span> <span class="token string">'vuex'</span>
 
-<p>Vuex 是一个专为 Vue.js 应用程序开发的<strong>状态管理模式</strong>。</p>
+Vue<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>Vuex<span class="token punctuation">)</span>
 
-<h2 id="vuex使用过程演示">Vuex使用过程演示</h2>
+<span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vuex<span class="token punctuation">.</span>Store</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token comment">// 容器 （构造函数Store开头大写）</span>
+    <span class="token literal-property property">state</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token comment">// 状态</span>
+        <span class="token literal-property property">count</span><span class="token operator">:</span> <span class="token number">0</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">mutations</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token comment">// 变化（使用mutations提交改变是为了方便追踪变化记录）</span>
+        <span class="token function">increment</span> <span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            state<span class="token punctuation">.</span>count<span class="token operator">++</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> store <span class="token comment">// 导出</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><p>进入<code>main.js</code> 注入<code>store</code>，<strong>使所有<code>vue</code>组件能够使用<code>vuex</code></strong> :</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">// main.js</span>
+<span class="token keyword">import</span> Vue <span class="token keyword">from</span> <span class="token string">'vue'</span>
+<span class="token keyword">import</span> App <span class="token keyword">from</span> <span class="token string">'./App.vue'</span>
+<span class="token keyword">import</span> router <span class="token keyword">from</span> <span class="token string">'./router'</span>
+<span class="token keyword">import</span> store <span class="token keyword">from</span> <span class="token string">'./store'</span>
 
-<p>以<code class="language-plaintext highlighter-rouge">vue-cli3</code>新创建出来的项目为例，演示Vuex的使用过程。</p>
+Vue<span class="token punctuation">.</span>config<span class="token punctuation">.</span>productionTip <span class="token operator">=</span> <span class="token boolean">false</span>
 
-<p>创建项目:</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vue create vuex-test
-<span class="nb">cd </span>vuex-test
-npm run serve
-</code></pre></div></div>
-
-<p>安装<code class="language-plaintext highlighter-rouge">vuex</code>:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm i vuex <span class="nt">-S</span>
-</code></pre></div></div>
-
-<p>进入项目的<code class="language-plaintext highlighter-rouge">src/</code>下新建一个文件<code class="language-plaintext highlighter-rouge">store/index.js</code>，并写入：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// store/index.js</span>
-<span class="k">import</span> <span class="nx">Vue</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue</span><span class="dl">'</span>
-<span class="k">import</span> <span class="nx">Vuex</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vuex</span><span class="dl">'</span>
-
-<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Vuex</span><span class="p">)</span>
-
-<span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vuex</span><span class="p">.</span><span class="nx">Store</span><span class="p">({</span> <span class="c1">// 容器 （构造函数Store开头大写）</span>
-    <span class="na">state</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 状态</span>
-        <span class="na">count</span><span class="p">:</span> <span class="mi">0</span>
-    <span class="p">},</span>
-    <span class="na">mutations</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 变化（使用mutations提交改变是为了方便追踪变化记录）</span>
-        <span class="nx">increment</span> <span class="p">(</span><span class="nx">state</span><span class="p">){</span>
-            <span class="nx">state</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">})</span>
-<span class="k">export</span> <span class="k">default</span> <span class="nx">store</span> <span class="c1">// 导出</span>
-</code></pre></div></div>
-
-<p>进入<code class="language-plaintext highlighter-rouge">main.js</code> 注入<code class="language-plaintext highlighter-rouge">store</code>，<strong>使所有<code class="language-plaintext highlighter-rouge">vue</code>组件能够使用<code class="language-plaintext highlighter-rouge">vuex</code></strong> :</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// main.js</span>
-<span class="k">import</span> <span class="nx">Vue</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue</span><span class="dl">'</span>
-<span class="k">import</span> <span class="nx">App</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./App.vue</span><span class="dl">'</span>
-<span class="k">import</span> <span class="nx">router</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./router</span><span class="dl">'</span>
-<span class="k">import</span> <span class="nx">store</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./store</span><span class="dl">'</span>
-
-<span class="nx">Vue</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">productionTip</span> <span class="o">=</span> <span class="kc">false</span>
-
-<span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
-  <span class="nx">router</span><span class="p">,</span>
-  <span class="nx">store</span><span class="p">,</span>
-  <span class="na">render</span><span class="p">:</span> <span class="nx">h</span> <span class="o">=&gt;</span> <span class="nx">h</span><span class="p">(</span><span class="nx">App</span><span class="p">)</span>
-<span class="p">}).</span><span class="nx">$mount</span><span class="p">(</span><span class="dl">'</span><span class="s1">#app</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>现在我们可以从组件的方法提交一个变更：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">methods</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">increment</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">$store</span><span class="p">.</span><span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// .commit('&lt;mutations里的事件名&gt;')</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$store</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">count</span><span class="p">)</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>在组件模板中使用状态：</p>
-
-<div class="language-vue highlighter-rouge"><div class="highlight"><pre class="highlight"><code>8
+<span class="token keyword">new</span> <span class="token class-name">Vue</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  router<span class="token punctuation">,</span>
+  store<span class="token punctuation">,</span>
+  <span class="token function-variable function">render</span><span class="token operator">:</span> <span class="token parameter">h</span> <span class="token operator">=&gt;</span> <span class="token function">h</span><span class="token punctuation">(</span>App<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">$mount</span><span class="token punctuation">(</span><span class="token string">'#app'</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><p>现在我们可以从组件的方法提交一个变更：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">methods</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">increment</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>$store<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'increment'</span><span class="token punctuation">)</span> <span class="token comment">// .commit('&lt;mutations里的事件名&gt;')</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>$store<span class="token punctuation">.</span>state<span class="token punctuation">.</span>count<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>在组件模板中使用状态：</p> <div class="language-vue line-numbers-mode"><pre class="language-vue"><code>{{ count }}
 
 computed: {
 	count() {
 		return this.$store.state.count
 	}
 }
-</code></pre></div></div>
-
-<blockquote>
-  <p>state状态的改变会触发computed的重新计算</p>
-</blockquote>
-
-<h2 id="核心概念">核心概念</h2>
-
-<h3 id="state">State</h3>
-
-<p>Vuex 使用<strong>单一状态树</strong>，每个应用将仅仅包含一个 store 实例</p>
-
-<h4 id="mapstate-辅助函数"><code class="language-plaintext highlighter-rouge">mapState</code> 辅助函数</h4>
-
-<p><strong>当一个组件需要获取多个状态的时候</strong>，将这些状态都声明为计算属性会有些重复和冗余。为了解决这个问题，我们可以使用 <code class="language-plaintext highlighter-rouge">mapState</code> 辅助函数帮助我们生成计算属性，让你少按几次键：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 在单独构建的版本中辅助函数为 Vuex.mapState</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">mapState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vuex</span><span class="dl">'</span>
-
-<span class="k">export</span> <span class="k">default</span> <span class="p">{</span>
-  <span class="c1">// ...</span>
-  <span class="na">computed</span><span class="p">:</span> <span class="nx">mapState</span><span class="p">({</span>
-    <span class="c1">// 箭头函数可使代码更简练</span>
-    <span class="na">count</span><span class="p">:</span> <span class="nx">state</span> <span class="o">=&gt;</span> <span class="nx">state</span><span class="p">.</span><span class="nx">count</span><span class="p">,</span>
-
-    <span class="c1">// 传字符串参数 'count' 等同于 `state =&gt; state.count`</span>
-    <span class="na">countAlias</span><span class="p">:</span> <span class="dl">'</span><span class="s1">count</span><span class="dl">'</span><span class="p">,</span>
-
-    <span class="c1">// 为了能够使用 `this` 获取局部状态，必须使用常规函数</span>
-    <span class="nx">countPlusLocalState</span> <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">state</span><span class="p">.</span><span class="nx">count</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">localCount</span>
-    <span class="p">}</span>
-  <span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>上面mapState()参数内<strong>三个方式都是获取count的值</strong>。</p>
-
-<p>当映射的计算属性的名称与 state 的子节点名称相同时，我们也可以给 <code class="language-plaintext highlighter-rouge">mapState</code> 传一个字符串数组。</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">computed</span><span class="p">:</span> <span class="nx">mapState</span><span class="p">([</span>
-  <span class="c1">// 映射 this.count 为 store.state.count</span>
-  <span class="dl">'</span><span class="s1">count</span><span class="dl">'</span>
-<span class="p">])</span>
-</code></pre></div></div>
-
-<h4 id="对象展开运算符">对象展开运算符</h4>
-
-<p><code class="language-plaintext highlighter-rouge">mapState</code> 函数返回的是一个对象。可使用对象展开运算符将此对象混入到外部对象中</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">computed</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">localComputed</span> <span class="p">()</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">},</span> <span class="c1">// 其他的计算属性</span>
-  <span class="c1">// 使用对象展开运算符将此对象混入到外部对象中</span>
-  <span class="p">...</span><span class="nx">mapState</span><span class="p">({</span>
-    <span class="c1">// ... 这里面和上面的获取方式是一样的</span>
-  <span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h4 id="组件仍然保有局部状态">组件仍然保有局部状态</h4>
-
-<p>使用 Vuex 并不意味着你需要将<strong>所有的</strong>状态放入 Vuex。虽然将所有的状态放到 Vuex 会使状态变化更显式和易调试，但也会使代码变得冗长和不直观。如果有些状态严格属于单个组件，最好还是作为组件的局部状态。你应该根据你的应用开发需要进行权衡和确定。</p>
-
-<h3 id="getter">Getter</h3>
-
-<p>有时候我们需要从 store 中的 state 中派生出一些状态，例如对列表进行过滤并计数：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">computed</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">doneTodosCount</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$store</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">todos</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">todo</span> <span class="o">=&gt;</span> <span class="nx">todo</span><span class="p">.</span><span class="nx">done</span><span class="p">).</span><span class="nx">length</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>如果有多个组件需要用到此属性，我们要么复制这个函数，或者抽取到一个共享函数然后在多处导入它——无论哪种方式都不是很理想。</p>
-
-<p>Vuex 允许我们在 store 中定义“getter”（<strong>可以认为是 store 的计算属性</strong>）。就像计算属性一样，getter 的返回值会根据它的依赖<strong>被缓存</strong>起来，且只有当它的依赖值发生了改变才会被重新计算。</p>
-
-<p>Getter 接受 state 作为其第一个参数：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vuex</span><span class="p">.</span><span class="nx">Store</span><span class="p">({</span>
-  <span class="na">state</span><span class="p">:</span> <span class="p">{</span>
-    <span class="na">todos</span><span class="p">:</span> <span class="p">[</span>
-      <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">text</span><span class="p">:</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="na">done</span><span class="p">:</span> <span class="kc">true</span> <span class="p">},</span>
-      <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="na">text</span><span class="p">:</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">,</span> <span class="na">done</span><span class="p">:</span> <span class="kc">false</span> <span class="p">}</span>
-    <span class="p">]</span>
-  <span class="p">},</span>
-  <span class="na">getters</span><span class="p">:</span> <span class="p">{</span>
-    <span class="na">doneTodos</span><span class="p">:</span> <span class="nx">state</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">state</span><span class="p">.</span><span class="nx">todos</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">todo</span> <span class="o">=&gt;</span> <span class="nx">todo</span><span class="p">.</span><span class="nx">done</span><span class="p">)</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<h4 id="通过属性访问">通过属性访问</h4>
-
-<p>Getter 会暴露为 <code class="language-plaintext highlighter-rouge">store.getters</code> 对象，你可以以属性的形式访问这些值：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">store</span><span class="p">.</span><span class="nx">getters</span><span class="p">.</span><span class="nx">doneTodos</span> <span class="c1">// -&gt; [{ id: 1, text: '...', done: true }]</span>
-</code></pre></div></div>
-
-<p>Getter 也可以接受其他 getter 作为第二个参数：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">getters</span><span class="p">:</span> <span class="p">{</span>
-  <span class="c1">// ...</span>
-  <span class="nl">doneTodosCount</span><span class="p">:</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">getters</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">getters</span><span class="p">.</span><span class="nx">doneTodos</span><span class="p">.</span><span class="nx">length</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="nx">store</span><span class="p">.</span><span class="nx">getters</span><span class="p">.</span><span class="nx">doneTodosCount</span> <span class="c1">// -&gt; 1</span>
-</code></pre></div></div>
-
-<p>我们可以很容易地在任何组件中使用它：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">computed</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">doneTodosCount</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$store</span><span class="p">.</span><span class="nx">getters</span><span class="p">.</span><span class="nx">doneTodosCount</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>注意，getter 在通过属性访问时是作为 Vue 的响应式系统的一部分缓存其中的。</p>
-
-<h4 id="通过方法访问">通过方法访问</h4>
-
-<p>你也可以通过让 getter 返回一个函数，来<strong>实现给 getter 传参</strong>。在你对 store 里的数组进行查询时非常有用。</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">getters</span><span class="p">:</span> <span class="p">{</span>
-  <span class="c1">// ...</span>
-  <span class="nl">getTodoById</span><span class="p">:</span> <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">state</span><span class="p">.</span><span class="nx">todos</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">todo</span> <span class="o">=&gt;</span> <span class="nx">todo</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">id</span><span class="p">)</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="nx">store</span><span class="p">.</span><span class="nx">getters</span><span class="p">.</span><span class="nx">getTodoById</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1">// -&gt; { id: 2, text: '...', done: false }</span>
-</code></pre></div></div>
-
-<p>注意，getter 在通过方法访问时，每次都会去进行调用，而<strong>不会缓存结果</strong>。</p>
-
-<h4 id="mapgetters-辅助函数"><code class="language-plaintext highlighter-rouge">mapGetters</code> 辅助函数</h4>
-
-<p><code class="language-plaintext highlighter-rouge">mapGetters</code> 辅助函数仅仅是将 store 中的 getter 映射到局部计算属性：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">mapGetters</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vuex</span><span class="dl">'</span>
-
-<span class="k">export</span> <span class="k">default</span> <span class="p">{</span>
-  <span class="c1">// ...</span>
-  <span class="na">computed</span><span class="p">:</span> <span class="p">{</span>
-  <span class="c1">// 使用对象展开运算符将 getter 混入 computed 对象中</span>
-    <span class="p">...</span><span class="nx">mapGetters</span><span class="p">([</span>
-      <span class="dl">'</span><span class="s1">doneTodosCount</span><span class="dl">'</span><span class="p">,</span>
-      <span class="dl">'</span><span class="s1">anotherGetter</span><span class="dl">'</span><span class="p">,</span>
-      <span class="c1">// ...</span>
-    <span class="p">])</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>如果你想将一个 getter 属性另取一个名字，使用对象形式：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span><span class="nx">mapGetters</span><span class="p">({</span>
-  <span class="c1">// 把 `this.doneCount` 映射为 `this.$store.getters.doneTodosCount`</span>
-  <span class="na">doneCount</span><span class="p">:</span> <span class="dl">'</span><span class="s1">doneTodosCount</span><span class="dl">'</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<h3 id="mutation">Mutation</h3>
-
-<p>更改 Vuex 的 store 中的状态的<strong>唯一方法</strong>是提交 mutation。Vuex 中的 mutation 非常类似于事件：每个 mutation 都有一个字符串的 <strong>事件类型 (type)</strong> 和 一个 <strong>回调函数 (handler)</strong>。这个回调函数就是我们实际进行状态更改的地方，并且它会接受 state 作为第一个参数：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vuex</span><span class="p">.</span><span class="nx">Store</span><span class="p">({</span>
-  <span class="na">state</span><span class="p">:</span> <span class="p">{</span>
-    <span class="na">count</span><span class="p">:</span> <span class="mi">1</span>
-  <span class="p">},</span>
-  <span class="na">mutations</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nx">increment</span> <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// 变更状态</span>
-      <span class="nx">state</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<p>你不能直接调用一个 mutation handler。这个选项更像是事件注册：“当触发一个类型为 <code class="language-plaintext highlighter-rouge">increment</code> 的 mutation 时，调用此函数。”要唤醒一个 mutation handler，你需要以相应的 type 调用 <strong>store.commit</strong> 方法：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">store</span><span class="p">.</span><span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div></div>
-
-<h4 id="提交载荷payload">提交载荷（Payload）</h4>
-
-<p>你可以向 <code class="language-plaintext highlighter-rouge">store.commit</code> 传入额外的参数，即 mutation 的 <strong>载荷（payload）</strong>：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ...</span>
-<span class="nx">mutations</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">increment</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">state</span><span class="p">.</span><span class="nx">count</span> <span class="o">+=</span> <span class="nx">n</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="nx">store</span><span class="p">.</span><span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>在大多数情况下，载荷应该是一个对象，这样可以包含多个字段并且记录的 mutation 会更易读：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ...</span>
-<span class="nx">mutations</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">increment</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">payload</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">state</span><span class="p">.</span><span class="nx">count</span> <span class="o">+=</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">amount</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="nx">store</span><span class="p">.</span><span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">amount</span><span class="p">:</span> <span class="mi">10</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<h4 id="对象风格的提交方式">对象风格的提交方式</h4>
-
-<p>提交 mutation 的另一种方式是直接使用包含 <code class="language-plaintext highlighter-rouge">type</code> 属性的对象：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">store</span><span class="p">.</span><span class="nx">commit</span><span class="p">({</span>
-  <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">,</span>
-  <span class="na">amount</span><span class="p">:</span> <span class="mi">10</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<p>当使用对象风格的提交方式，整个对象都作为载荷传给 mutation 函数，因此 handler 保持不变：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mutations</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">increment</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">payload</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">state</span><span class="p">.</span><span class="nx">count</span> <span class="o">+=</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">amount</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h4 id="mutation-需遵守-vue-的响应规则">Mutation 需遵守 Vue 的响应规则</h4>
-
-<p>既然 Vuex 的 store 中的状态是响应式的，那么当我们变更状态时，监视状态的 Vue 组件也会自动更新。这也意味着 Vuex 中的 mutation 也需要与使用 Vue 一样遵守一些注意事项：</p>
-
-<ol>
-  <li>最好提前在你的 store 中初始化好所有所需属性。</li>
-  <li>当需要在对象上添加新属性时，你应该</li>
-</ol>
-
-<ul>
-  <li>
-    <p>使用 <code class="language-plaintext highlighter-rouge">Vue.set(obj, 'newProp', 123)</code>, 或者</p>
-  </li>
-  <li>
-    <p>以新对象替换老对象。例如，利用<a href="https://github.com/tc39/proposal-object-rest-spread">对象展开运算符</a>我们可以这样写：</p>
-
-    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">state</span><span class="p">.</span><span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span><span class="nx">state</span><span class="p">.</span><span class="nx">obj</span><span class="p">,</span> <span class="na">newProp</span><span class="p">:</span> <span class="mi">123</span> <span class="p">}</span>
-</code></pre></div>    </div>
-  </li>
-</ul>
-
-<h4 id="使用常量替代-mutation-事件类型">使用常量替代 Mutation 事件类型</h4>
-
-<p>使用常量替代 mutation 事件类型在各种 Flux 实现中是很常见的模式。这样可以使 linter 之类的工具发挥作用，同时把这些常量放在单独的文件中可以让你的代码合作者对整个 app 包含的 mutation 一目了然：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// mutation-types.js</span>
-<span class="k">export</span> <span class="kd">const</span> <span class="nx">SOME_MUTATION</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">SOME_MUTATION</span><span class="dl">'</span>
-<span class="c1">// store.js</span>
-<span class="k">import</span> <span class="nx">Vuex</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vuex</span><span class="dl">'</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">SOME_MUTATION</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./mutation-types</span><span class="dl">'</span>
-
-<span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vuex</span><span class="p">.</span><span class="nx">Store</span><span class="p">({</span>
-  <span class="na">state</span><span class="p">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
-  <span class="na">mutations</span><span class="p">:</span> <span class="p">{</span>
-    <span class="c1">// 我们可以使用 ES2015 风格的计算属性命名功能来使用一个常量作为函数名</span>
-    <span class="p">[</span><span class="nx">SOME_MUTATION</span><span class="p">]</span> <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// mutate state</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<p>用不用常量取决于你——在需要多人协作的大型项目中，这会很有帮助。但如果你不喜欢，你完全可以不这样做。</p>
-
-<h4 id="mutation-必须是同步函数">Mutation 必须是同步函数</h4>
-
-<p>一条重要的原则就是要记住 <strong>mutation 必须是同步函数</strong>。为什么？请参考下面的例子：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mutations</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">someMutation</span> <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">api</span><span class="p">.</span><span class="nx">callAsyncMethod</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="nx">state</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span>
-    <span class="p">})</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>现在想象，我们正在 debug 一个 app 并且观察 devtool 中的 mutation 日志。每一条 mutation 被记录，devtools 都需要捕捉到前一状态和后一状态的快照。然而，在上面的例子中 mutation 中的异步函数中的回调让这不可能完成：因为当 mutation 触发的时候，回调函数还没有被调用，devtools 不知道什么时候回调函数实际上被调用——实质上任何在回调函数中进行的状态的改变都是不可追踪的。</p>
-
-<h4 id="在组件中提交-mutation--mapmutations辅助函数">在组件中提交 Mutation  (<code class="language-plaintext highlighter-rouge">mapMutations</code>辅助函数)</h4>
-
-<p>你可以在组件中使用 <code class="language-plaintext highlighter-rouge">this.$store.commit('xxx')</code> 提交 mutation，或者使用 <code class="language-plaintext highlighter-rouge">mapMutations</code> 辅助函数将组件中的 methods 映射为 <code class="language-plaintext highlighter-rouge">store.commit</code> 调用（需要在根节点注入 <code class="language-plaintext highlighter-rouge">store</code>）。</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">mapMutations</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vuex</span><span class="dl">'</span>
-
-<span class="k">export</span> <span class="k">default</span> <span class="p">{</span>
-  <span class="c1">// ...</span>
-  <span class="na">methods</span><span class="p">:</span> <span class="p">{</span>
-    <span class="p">...</span><span class="nx">mapMutations</span><span class="p">([</span>
-      <span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// 将 `this.increment()` 映射为 `this.$store.commit('increment')`</span>
-
-      <span class="c1">// `mapMutations` 也支持载荷：</span>
-      <span class="dl">'</span><span class="s1">incrementBy</span><span class="dl">'</span> <span class="c1">// 将 `this.incrementBy(amount)` 映射为 `this.$store.commit('incrementBy', amount)`</span>
-    <span class="p">]),</span>
-    <span class="p">...</span><span class="nx">mapMutations</span><span class="p">({</span>
-      <span class="na">add</span><span class="p">:</span> <span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span> <span class="c1">// 将 `this.add()` 映射为 `this.$store.commit('increment')`</span>
-    <span class="p">})</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h4 id="下一步action">下一步：Action</h4>
-
-<p>在 mutation 中混合异步调用会导致你的程序很难调试。例如，当你调用了两个包含异步回调的 mutation 来改变状态，你怎么知道什么时候回调和哪个先回调呢？这就是为什么我们要区分这两个概念。在 Vuex 中，<strong>mutation 都是同步事务</strong>：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">store</span><span class="p">.</span><span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">)</span>
-<span class="c1">// 任何由 "increment" 导致的状态变更都应该在此刻完成。</span>
-</code></pre></div></div>
-
-<p>为了处理异步操作，让我们来看一看 <a href="https://vuex.vuejs.org/zh/guide/actions.html">Action</a>。</p>
-
-<h3 id="action">Action</h3>
-
-<p>Action 类似于 mutation，不同在于：</p>
-
-<ul>
-  <li>Action 提交的是 mutation，而不是直接变更状态。</li>
-  <li>Action 可以包含任意异步操作。</li>
-</ul>
-
-<p>让我们来注册一个简单的 action：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vuex</span><span class="p">.</span><span class="nx">Store</span><span class="p">({</span>
-  <span class="na">state</span><span class="p">:</span> <span class="p">{</span>
-    <span class="na">count</span><span class="p">:</span> <span class="mi">0</span>
-  <span class="p">},</span>
-  <span class="na">mutations</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nx">increment</span> <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">state</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span>
-    <span class="p">}</span>
-  <span class="p">},</span>
-  <span class="na">actions</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nx">increment</span> <span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">context</span><span class="p">.</span><span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">)</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<p><strong>Action 函数接受一个与 store 实例具有相同方法和属性的 context 对象</strong>，因此你可以调用 <code class="language-plaintext highlighter-rouge">context.commit</code> 提交一个 mutation，或者通过 <code class="language-plaintext highlighter-rouge">context.state</code> 和 <code class="language-plaintext highlighter-rouge">context.getters</code> 来获取 state 和 getters。当我们在之后介绍到 <a href="https://vuex.vuejs.org/zh/guide/modules.html">Modules</a> 时，你就知道 context 对象为什么不是 store 实例本身了。</p>
-
-<p>实践中，我们会经常用到 ES2015 的 <a href="https://github.com/lukehoban/es6features#destructuring">参数解构</a> 来简化代码（特别是我们需要调用 <code class="language-plaintext highlighter-rouge">commit</code> 很多次的时候）：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">actions</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">increment</span> <span class="p">({</span> <span class="nx">commit</span> <span class="p">})</span> <span class="p">{</span>
-    <span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">)</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h4 id="分发-action">分发 Action</h4>
-
-<p><strong>Action 通过 <code class="language-plaintext highlighter-rouge">store.dispatch</code> 方法触发</strong>：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">(</span><span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>乍一眼看上去感觉多此一举，我们直接分发 mutation 岂不更方便？实际上并非如此，还记得 <strong>mutation 必须同步执行</strong>这个限制么？Action 就不受约束！我们可以在 action 内部执行<strong>异步</strong>操作：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">actions</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">incrementAsync</span> <span class="p">({</span> <span class="nx">commit</span> <span class="p">})</span> <span class="p">{</span>
-    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">)</span>
-    <span class="p">},</span> <span class="mi">1000</span><span class="p">)</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>Actions 支持同样的载荷方式和对象方式进行分发：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 以载荷形式分发</span>
-<span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">(</span><span class="dl">'</span><span class="s1">incrementAsync</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">amount</span><span class="p">:</span> <span class="mi">10</span>
-<span class="p">})</span>
-
-<span class="c1">// 以对象形式分发</span>
-<span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">({</span>
-  <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">incrementAsync</span><span class="dl">'</span><span class="p">,</span>
-  <span class="na">amount</span><span class="p">:</span> <span class="mi">10</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<p>来看一个更加实际的购物车示例，涉及到<strong>调用异步 API</strong> 和<strong>分发多重 mutation</strong>：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">actions</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">checkout</span> <span class="p">({</span> <span class="nx">commit</span><span class="p">,</span> <span class="nx">state</span> <span class="p">},</span> <span class="nx">products</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// 把当前购物车的物品备份起来</span>
-    <span class="kd">const</span> <span class="nx">savedCartItems</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">state</span><span class="p">.</span><span class="nx">cart</span><span class="p">.</span><span class="nx">added</span><span class="p">]</span>
-    <span class="c1">// 发出结账请求，然后乐观地清空购物车</span>
-    <span class="nx">commit</span><span class="p">(</span><span class="nx">types</span><span class="p">.</span><span class="nx">CHECKOUT_REQUEST</span><span class="p">)</span>
-    <span class="c1">// 购物 API 接受一个成功回调和一个失败回调</span>
-    <span class="nx">shop</span><span class="p">.</span><span class="nx">buyProducts</span><span class="p">(</span>
-      <span class="nx">products</span><span class="p">,</span>
-      <span class="c1">// 成功操作</span>
-      <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">commit</span><span class="p">(</span><span class="nx">types</span><span class="p">.</span><span class="nx">CHECKOUT_SUCCESS</span><span class="p">),</span>
-      <span class="c1">// 失败操作</span>
-      <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">commit</span><span class="p">(</span><span class="nx">types</span><span class="p">.</span><span class="nx">CHECKOUT_FAILURE</span><span class="p">,</span> <span class="nx">savedCartItems</span><span class="p">)</span>
-    <span class="p">)</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>注意我们正在进行一系列的异步操作，并且通过提交 mutation 来记录 action 产生的副作用（即状态变更）。</p>
-
-<h4 id="在组件中分发-action--mapactions-辅助函数">在组件中分发 Action  （<code class="language-plaintext highlighter-rouge">mapActions</code> 辅助函数）</h4>
-
-<p>你在组件中使用 <code class="language-plaintext highlighter-rouge">this.$store.dispatch('xxx')</code> 分发 action，或者使用 <code class="language-plaintext highlighter-rouge">mapActions</code> 辅助函数将组件的 methods 映射为 <code class="language-plaintext highlighter-rouge">store.dispatch</code> 调用（需要先在根节点注入 <code class="language-plaintext highlighter-rouge">store</code>）：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">mapActions</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vuex</span><span class="dl">'</span>
-
-<span class="k">export</span> <span class="k">default</span> <span class="p">{</span>
-  <span class="c1">// ...</span>
-  <span class="na">methods</span><span class="p">:</span> <span class="p">{</span>
-    <span class="p">...</span><span class="nx">mapActions</span><span class="p">([</span>
-      <span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`</span>
-
-      <span class="c1">// `mapActions` 也支持载荷：</span>
-      <span class="dl">'</span><span class="s1">incrementBy</span><span class="dl">'</span> <span class="c1">// 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`</span>
-    <span class="p">]),</span>
-    <span class="p">...</span><span class="nx">mapActions</span><span class="p">({</span>
-      <span class="na">add</span><span class="p">:</span> <span class="dl">'</span><span class="s1">increment</span><span class="dl">'</span> <span class="c1">// 将 `this.add()` 映射为 `this.$store.dispatch('increment')`</span>
-    <span class="p">})</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h4 id="组合-action">组合 Action</h4>
-
-<p>Action 通常是异步的，那么如何知道 action 什么时候结束呢？更重要的是，我们如何才能组合多个 action，以处理更加复杂的异步流程？</p>
-
-<p>首先，你需要明白 <code class="language-plaintext highlighter-rouge">store.dispatch</code> 可以处理被触发的 action 的处理函数返回的 Promise，并且 <code class="language-plaintext highlighter-rouge">store.dispatch</code> 仍旧返回 Promise：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">actions</span><span class="p">:</span> <span class="p">{</span>
-  <span class="nx">actionA</span> <span class="p">({</span> <span class="nx">commit</span> <span class="p">})</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">someMutation</span><span class="dl">'</span><span class="p">)</span>
-        <span class="nx">resolve</span><span class="p">()</span>
-      <span class="p">},</span> <span class="mi">1000</span><span class="p">)</span>
-    <span class="p">})</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>现在你可以：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">(</span><span class="dl">'</span><span class="s1">actionA</span><span class="dl">'</span><span class="p">).</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="c1">// ...</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<p>在另外一个 action 中也可以：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">actions</span><span class="p">:</span> <span class="p">{</span>
-  <span class="c1">// ...</span>
-  <span class="nx">actionB</span> <span class="p">({</span> <span class="nx">dispatch</span><span class="p">,</span> <span class="nx">commit</span> <span class="p">})</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">dispatch</span><span class="p">(</span><span class="dl">'</span><span class="s1">actionA</span><span class="dl">'</span><span class="p">).</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">someOtherMutation</span><span class="dl">'</span><span class="p">)</span>
-    <span class="p">})</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>最后，如果我们利用 <a href="https://tc39.github.io/ecmascript-asyncawait/">async / await</a>，我们可以如下组合 action：</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 假设 getData() 和 getOtherData() 返回的是 Promise</span>
-
-<span class="nx">actions</span><span class="p">:</span> <span class="p">{</span>
-  <span class="k">async</span> <span class="nx">actionA</span> <span class="p">({</span> <span class="nx">commit</span> <span class="p">})</span> <span class="p">{</span>
-    <span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">gotData</span><span class="dl">'</span><span class="p">,</span> <span class="k">await</span> <span class="nx">getData</span><span class="p">())</span>
-  <span class="p">},</span>
-  <span class="k">async</span> <span class="nx">actionB</span> <span class="p">({</span> <span class="nx">dispatch</span><span class="p">,</span> <span class="nx">commit</span> <span class="p">})</span> <span class="p">{</span>
-    <span class="k">await</span> <span class="nx">dispatch</span><span class="p">(</span><span class="dl">'</span><span class="s1">actionA</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// 等待 actionA 完成</span>
-    <span class="nx">commit</span><span class="p">(</span><span class="dl">'</span><span class="s1">gotOtherData</span><span class="dl">'</span><span class="p">,</span> <span class="k">await</span> <span class="nx">getOtherData</span><span class="p">())</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<blockquote>
-  <p>一个 <code class="language-plaintext highlighter-rouge">store.dispatch</code> 在不同模块中可以触发多个 action 函数。在这种情况下，只有当所有触发函数完成后，返回的 Promise 才会执行。</p>
-</blockquote>
-
-<h2 id="更多">更多</h2>
-
-<p>更多内容查看官方文档：<a href="https://vuex.vuejs.org/zh/guide/modules.html">https://vuex.vuejs.org/zh/guide/modules.html</a></p>
-
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><blockquote><p>state状态的改变会触发computed的重新计算</p></blockquote> <h2 id="核心概念"><a href="#核心概念" class="header-anchor">#</a> 核心概念</h2> <h3 id="state"><a href="#state" class="header-anchor">#</a> State</h3> <p>Vuex 使用<strong>单一状态树</strong>，每个应用将仅仅包含一个 store 实例</p> <h4 id="mapstate-辅助函数"><a href="#mapstate-辅助函数" class="header-anchor">#</a> <code>mapState</code> 辅助函数</h4> <p><strong>当一个组件需要获取多个状态的时候</strong>，将这些状态都声明为计算属性会有些重复和冗余。为了解决这个问题，我们可以使用 <code>mapState</code> 辅助函数帮助我们生成计算属性，让你少按几次键：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">// 在单独构建的版本中辅助函数为 Vuex.mapState</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> mapState <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  <span class="token comment">// ...</span>
+  <span class="token literal-property property">computed</span><span class="token operator">:</span> <span class="token function">mapState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token comment">// 箭头函数可使代码更简练</span>
+    <span class="token function-variable function">count</span><span class="token operator">:</span> <span class="token parameter">state</span> <span class="token operator">=&gt;</span> state<span class="token punctuation">.</span>count<span class="token punctuation">,</span>
+
+    <span class="token comment">// 传字符串参数 'count' 等同于 `state =&gt; state.count`</span>
+    <span class="token literal-property property">countAlias</span><span class="token operator">:</span> <span class="token string">'count'</span><span class="token punctuation">,</span>
+
+    <span class="token comment">// 为了能够使用 `this` 获取局部状态，必须使用常规函数</span>
+    <span class="token function">countPlusLocalState</span> <span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> state<span class="token punctuation">.</span>count <span class="token operator">+</span> <span class="token keyword">this</span><span class="token punctuation">.</span>localCount
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><p>上面mapState()参数内<strong>三个方式都是获取count的值</strong>。</p> <p>当映射的计算属性的名称与 state 的子节点名称相同时，我们也可以给 <code>mapState</code> 传一个字符串数组。</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">computed</span><span class="token operator">:</span> <span class="token function">mapState</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+  <span class="token comment">// 映射 this.count 为 store.state.count</span>
+  <span class="token string">'count'</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><h4 id="对象展开运算符"><a href="#对象展开运算符" class="header-anchor">#</a> 对象展开运算符</h4> <p><code>mapState</code> 函数返回的是一个对象。可使用对象展开运算符将此对象混入到外部对象中</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">computed</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">localComputed</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">/* ... */</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token comment">// 其他的计算属性</span>
+  <span class="token comment">// 使用对象展开运算符将此对象混入到外部对象中</span>
+  <span class="token operator">...</span><span class="token function">mapState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token comment">// ... 这里面和上面的获取方式是一样的</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><h4 id="组件仍然保有局部状态"><a href="#组件仍然保有局部状态" class="header-anchor">#</a> 组件仍然保有局部状态</h4> <p>使用 Vuex 并不意味着你需要将<strong>所有的</strong>状态放入 Vuex。虽然将所有的状态放到 Vuex 会使状态变化更显式和易调试，但也会使代码变得冗长和不直观。如果有些状态严格属于单个组件，最好还是作为组件的局部状态。你应该根据你的应用开发需要进行权衡和确定。</p> <h3 id="getter"><a href="#getter" class="header-anchor">#</a> Getter</h3> <p>有时候我们需要从 store 中的 state 中派生出一些状态，例如对列表进行过滤并计数：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">computed</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">doneTodosCount</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>$store<span class="token punctuation">.</span>state<span class="token punctuation">.</span>todos<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">todo</span> <span class="token operator">=&gt;</span> todo<span class="token punctuation">.</span>done<span class="token punctuation">)</span><span class="token punctuation">.</span>length
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>如果有多个组件需要用到此属性，我们要么复制这个函数，或者抽取到一个共享函数然后在多处导入它——无论哪种方式都不是很理想。</p> <p>Vuex 允许我们在 store 中定义“getter”（<strong>可以认为是 store 的计算属性</strong>）。就像计算属性一样，getter 的返回值会根据它的依赖<strong>被缓存</strong>起来，且只有当它的依赖值发生了改变才会被重新计算。</p> <p>Getter 接受 state 作为其第一个参数：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vuex<span class="token punctuation">.</span>Store</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">state</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">todos</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span> <span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token literal-property property">text</span><span class="token operator">:</span> <span class="token string">'...'</span><span class="token punctuation">,</span> <span class="token literal-property property">done</span><span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span> <span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token literal-property property">text</span><span class="token operator">:</span> <span class="token string">'...'</span><span class="token punctuation">,</span> <span class="token literal-property property">done</span><span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">getters</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function-variable function">doneTodos</span><span class="token operator">:</span> <span class="token parameter">state</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> state<span class="token punctuation">.</span>todos<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">todo</span> <span class="token operator">=&gt;</span> todo<span class="token punctuation">.</span>done<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><h4 id="通过属性访问"><a href="#通过属性访问" class="header-anchor">#</a> 通过属性访问</h4> <p>Getter 会暴露为 <code>store.getters</code> 对象，你可以以属性的形式访问这些值：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code>store<span class="token punctuation">.</span>getters<span class="token punctuation">.</span>doneTodos <span class="token comment">// -&gt; [{ id: 1, text: '...', done: true }]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>Getter 也可以接受其他 getter 作为第二个参数：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">getters</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token comment">// ...</span>
+  <span class="token function-variable function">doneTodosCount</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> getters</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> getters<span class="token punctuation">.</span>doneTodos<span class="token punctuation">.</span>length
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+store<span class="token punctuation">.</span>getters<span class="token punctuation">.</span>doneTodosCount <span class="token comment">// -&gt; 1</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>我们可以很容易地在任何组件中使用它：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">computed</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">doneTodosCount</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>$store<span class="token punctuation">.</span>getters<span class="token punctuation">.</span>doneTodosCount
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>注意，getter 在通过属性访问时是作为 Vue 的响应式系统的一部分缓存其中的。</p> <h4 id="通过方法访问"><a href="#通过方法访问" class="header-anchor">#</a> 通过方法访问</h4> <p>你也可以通过让 getter 返回一个函数，来<strong>实现给 getter 传参</strong>。在你对 store 里的数组进行查询时非常有用。</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">getters</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token comment">// ...</span>
+  <span class="token function-variable function">getTodoById</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> state<span class="token punctuation">.</span>todos<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token parameter">todo</span> <span class="token operator">=&gt;</span> todo<span class="token punctuation">.</span>id <span class="token operator">===</span> id<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+store<span class="token punctuation">.</span>getters<span class="token punctuation">.</span><span class="token function">getTodoById</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment">// -&gt; { id: 2, text: '...', done: false }</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>注意，getter 在通过方法访问时，每次都会去进行调用，而<strong>不会缓存结果</strong>。</p> <h4 id="mapgetters-辅助函数"><a href="#mapgetters-辅助函数" class="header-anchor">#</a> <code>mapGetters</code> 辅助函数</h4> <p><code>mapGetters</code> 辅助函数仅仅是将 store 中的 getter 映射到局部计算属性：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> mapGetters <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  <span class="token comment">// ...</span>
+  <span class="token literal-property property">computed</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 使用对象展开运算符将 getter 混入 computed 对象中</span>
+    <span class="token operator">...</span><span class="token function">mapGetters</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+      <span class="token string">'doneTodosCount'</span><span class="token punctuation">,</span>
+      <span class="token string">'anotherGetter'</span><span class="token punctuation">,</span>
+      <span class="token comment">// ...</span>
+    <span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><p>如果你想将一个 getter 属性另取一个名字，使用对象形式：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token operator">...</span><span class="token function">mapGetters</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token comment">// 把 `this.doneCount` 映射为 `this.$store.getters.doneTodosCount`</span>
+  <span class="token literal-property property">doneCount</span><span class="token operator">:</span> <span class="token string">'doneTodosCount'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><h3 id="mutation"><a href="#mutation" class="header-anchor">#</a> Mutation</h3> <p>更改 Vuex 的 store 中的状态的<strong>唯一方法</strong>是提交 mutation。Vuex 中的 mutation 非常类似于事件：每个 mutation 都有一个字符串的 <strong>事件类型 (type)</strong> 和 一个 <strong>回调函数 (handler)</strong>。这个回调函数就是我们实际进行状态更改的地方，并且它会接受 state 作为第一个参数：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vuex<span class="token punctuation">.</span>Store</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">state</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">count</span><span class="token operator">:</span> <span class="token number">1</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">mutations</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function">increment</span> <span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 变更状态</span>
+      state<span class="token punctuation">.</span>count<span class="token operator">++</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>你不能直接调用一个 mutation handler。这个选项更像是事件注册：“当触发一个类型为 <code>increment</code> 的 mutation 时，调用此函数。”要唤醒一个 mutation handler，你需要以相应的 type 调用 <strong>store.commit</strong> 方法：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code>store<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'increment'</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h4 id="提交载荷-payload"><a href="#提交载荷-payload" class="header-anchor">#</a> 提交载荷（Payload）</h4> <p>你可以向 <code>store.commit</code> 传入额外的参数，即 mutation 的 <strong>载荷（payload）</strong>：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">// ...</span>
+<span class="token literal-property property">mutations</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">increment</span> <span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> n</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    state<span class="token punctuation">.</span>count <span class="token operator">+=</span> n
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+store<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'increment'</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>在大多数情况下，载荷应该是一个对象，这样可以包含多个字段并且记录的 mutation 会更易读：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">// ...</span>
+<span class="token literal-property property">mutations</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">increment</span> <span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> payload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    state<span class="token punctuation">.</span>count <span class="token operator">+=</span> payload<span class="token punctuation">.</span>amount
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+store<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'increment'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">amount</span><span class="token operator">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><h4 id="对象风格的提交方式"><a href="#对象风格的提交方式" class="header-anchor">#</a> 对象风格的提交方式</h4> <p>提交 mutation 的另一种方式是直接使用包含 <code>type</code> 属性的对象：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code>store<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'increment'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">amount</span><span class="token operator">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>当使用对象风格的提交方式，整个对象都作为载荷传给 mutation 函数，因此 handler 保持不变：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">mutations</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">increment</span> <span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> payload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    state<span class="token punctuation">.</span>count <span class="token operator">+=</span> payload<span class="token punctuation">.</span>amount
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><h4 id="mutation-需遵守-vue-的响应规则"><a href="#mutation-需遵守-vue-的响应规则" class="header-anchor">#</a> Mutation 需遵守 Vue 的响应规则</h4> <p>既然 Vuex 的 store 中的状态是响应式的，那么当我们变更状态时，监视状态的 Vue 组件也会自动更新。这也意味着 Vuex 中的 mutation 也需要与使用 Vue 一样遵守一些注意事项：</p> <ol><li>最好提前在你的 store 中初始化好所有所需属性。</li> <li>当需要在对象上添加新属性时，你应该</li></ol> <ul><li><p>使用 <code>Vue.set(obj, 'newProp', 123)</code>, 或者</p></li> <li><p>以新对象替换老对象。例如，利用<a href="https://github.com/tc39/proposal-object-rest-spread" target="_blank" rel="noopener noreferrer">对象展开运算符<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>我们可以这样写：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code>state<span class="token punctuation">.</span>obj <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token operator">...</span>state<span class="token punctuation">.</span>obj<span class="token punctuation">,</span> <span class="token literal-property property">newProp</span><span class="token operator">:</span> <span class="token number">123</span> <span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div></li></ul> <h4 id="使用常量替代-mutation-事件类型"><a href="#使用常量替代-mutation-事件类型" class="header-anchor">#</a> 使用常量替代 Mutation 事件类型</h4> <p>使用常量替代 mutation 事件类型在各种 Flux 实现中是很常见的模式。这样可以使 linter 之类的工具发挥作用，同时把这些常量放在单独的文件中可以让你的代码合作者对整个 app 包含的 mutation 一目了然：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">// mutation-types.js</span>
+<span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token constant">SOME_MUTATION</span> <span class="token operator">=</span> <span class="token string">'SOME_MUTATION'</span>
+<span class="token comment">// store.js</span>
+<span class="token keyword">import</span> Vuex <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> <span class="token constant">SOME_MUTATION</span> <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./mutation-types'</span>
+
+<span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vuex<span class="token punctuation">.</span>Store</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">state</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token operator">...</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">mutations</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 我们可以使用 ES2015 风格的计算属性命名功能来使用一个常量作为函数名</span>
+    <span class="token punctuation">[</span><span class="token constant">SOME_MUTATION</span><span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// mutate state</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br></div></div><p>用不用常量取决于你——在需要多人协作的大型项目中，这会很有帮助。但如果你不喜欢，你完全可以不这样做。</p> <h4 id="mutation-必须是同步函数"><a href="#mutation-必须是同步函数" class="header-anchor">#</a> Mutation 必须是同步函数</h4> <p>一条重要的原则就是要记住 <strong>mutation 必须是同步函数</strong>。为什么？请参考下面的例子：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">mutations</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">someMutation</span> <span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    api<span class="token punctuation">.</span><span class="token function">callAsyncMethod</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      state<span class="token punctuation">.</span>count<span class="token operator">++</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>现在想象，我们正在 debug 一个 app 并且观察 devtool 中的 mutation 日志。每一条 mutation 被记录，devtools 都需要捕捉到前一状态和后一状态的快照。然而，在上面的例子中 mutation 中的异步函数中的回调让这不可能完成：因为当 mutation 触发的时候，回调函数还没有被调用，devtools 不知道什么时候回调函数实际上被调用——实质上任何在回调函数中进行的状态的改变都是不可追踪的。</p> <h4 id="在组件中提交-mutation-mapmutations辅助函数"><a href="#在组件中提交-mutation-mapmutations辅助函数" class="header-anchor">#</a> 在组件中提交 Mutation  (<code>mapMutations</code>辅助函数)</h4> <p>你可以在组件中使用 <code>this.$store.commit('xxx')</code> 提交 mutation，或者使用 <code>mapMutations</code> 辅助函数将组件中的 methods 映射为 <code>store.commit</code> 调用（需要在根节点注入 <code>store</code>）。</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> mapMutations <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  <span class="token comment">// ...</span>
+  <span class="token literal-property property">methods</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span><span class="token function">mapMutations</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+      <span class="token string">'increment'</span><span class="token punctuation">,</span> <span class="token comment">// 将 `this.increment()` 映射为 `this.$store.commit('increment')`</span>
+
+      <span class="token comment">// `mapMutations` 也支持载荷：</span>
+      <span class="token string">'incrementBy'</span> <span class="token comment">// 将 `this.incrementBy(amount)` 映射为 `this.$store.commit('incrementBy', amount)`</span>
+    <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token operator">...</span><span class="token function">mapMutations</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">add</span><span class="token operator">:</span> <span class="token string">'increment'</span> <span class="token comment">// 将 `this.add()` 映射为 `this.$store.commit('increment')`</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><h4 id="下一步-action"><a href="#下一步-action" class="header-anchor">#</a> 下一步：Action</h4> <p>在 mutation 中混合异步调用会导致你的程序很难调试。例如，当你调用了两个包含异步回调的 mutation 来改变状态，你怎么知道什么时候回调和哪个先回调呢？这就是为什么我们要区分这两个概念。在 Vuex 中，<strong>mutation 都是同步事务</strong>：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code>store<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'increment'</span><span class="token punctuation">)</span>
+<span class="token comment">// 任何由 &quot;increment&quot; 导致的状态变更都应该在此刻完成。</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>为了处理异步操作，让我们来看一看 <a href="https://vuex.vuejs.org/zh/guide/actions.html" target="_blank" rel="noopener noreferrer">Action<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>。</p> <h3 id="action"><a href="#action" class="header-anchor">#</a> Action</h3> <p>Action 类似于 mutation，不同在于：</p> <ul><li>Action 提交的是 mutation，而不是直接变更状态。</li> <li>Action 可以包含任意异步操作。</li></ul> <p>让我们来注册一个简单的 action：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vuex<span class="token punctuation">.</span>Store</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">state</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">count</span><span class="token operator">:</span> <span class="token number">0</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">mutations</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function">increment</span> <span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      state<span class="token punctuation">.</span>count<span class="token operator">++</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">actions</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function">increment</span> <span class="token punctuation">(</span><span class="token parameter">context</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      context<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'increment'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br></div></div><p><strong>Action 函数接受一个与 store 实例具有相同方法和属性的 context 对象</strong>，因此你可以调用 <code>context.commit</code> 提交一个 mutation，或者通过 <code>context.state</code> 和 <code>context.getters</code> 来获取 state 和 getters。当我们在之后介绍到 <a href="https://vuex.vuejs.org/zh/guide/modules.html" target="_blank" rel="noopener noreferrer">Modules<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 时，你就知道 context 对象为什么不是 store 实例本身了。</p> <p>实践中，我们会经常用到 ES2015 的 <a href="https://github.com/lukehoban/es6features#destructuring" target="_blank" rel="noopener noreferrer">参数解构<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 来简化代码（特别是我们需要调用 <code>commit</code> 很多次的时候）：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">actions</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">increment</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'increment'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><h4 id="分发-action"><a href="#分发-action" class="header-anchor">#</a> 分发 Action</h4> <p><strong>Action 通过 <code>store.dispatch</code> 方法触发</strong>：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code>store<span class="token punctuation">.</span><span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token string">'increment'</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>乍一眼看上去感觉多此一举，我们直接分发 mutation 岂不更方便？实际上并非如此，还记得 <strong>mutation 必须同步执行</strong>这个限制么？Action 就不受约束！我们可以在 action 内部执行<strong>异步</strong>操作：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">actions</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">incrementAsync</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'increment'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>Actions 支持同样的载荷方式和对象方式进行分发：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">// 以载荷形式分发</span>
+store<span class="token punctuation">.</span><span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token string">'incrementAsync'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">amount</span><span class="token operator">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 以对象形式分发</span>
+store<span class="token punctuation">.</span><span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'incrementAsync'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">amount</span><span class="token operator">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>来看一个更加实际的购物车示例，涉及到<strong>调用异步 API</strong> 和<strong>分发多重 mutation</strong>：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">actions</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">checkout</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit<span class="token punctuation">,</span> state <span class="token punctuation">}</span><span class="token punctuation">,</span> products</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 把当前购物车的物品备份起来</span>
+    <span class="token keyword">const</span> savedCartItems <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">...</span>state<span class="token punctuation">.</span>cart<span class="token punctuation">.</span>added<span class="token punctuation">]</span>
+    <span class="token comment">// 发出结账请求，然后乐观地清空购物车</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span>types<span class="token punctuation">.</span><span class="token constant">CHECKOUT_REQUEST</span><span class="token punctuation">)</span>
+    <span class="token comment">// 购物 API 接受一个成功回调和一个失败回调</span>
+    shop<span class="token punctuation">.</span><span class="token function">buyProducts</span><span class="token punctuation">(</span>
+      products<span class="token punctuation">,</span>
+      <span class="token comment">// 成功操作</span>
+      <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">commit</span><span class="token punctuation">(</span>types<span class="token punctuation">.</span><span class="token constant">CHECKOUT_SUCCESS</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token comment">// 失败操作</span>
+      <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">commit</span><span class="token punctuation">(</span>types<span class="token punctuation">.</span><span class="token constant">CHECKOUT_FAILURE</span><span class="token punctuation">,</span> savedCartItems<span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><p>注意我们正在进行一系列的异步操作，并且通过提交 mutation 来记录 action 产生的副作用（即状态变更）。</p> <h4 id="在组件中分发-action-mapactions-辅助函数"><a href="#在组件中分发-action-mapactions-辅助函数" class="header-anchor">#</a> 在组件中分发 Action  （<code>mapActions</code> 辅助函数）</h4> <p>你在组件中使用 <code>this.$store.dispatch('xxx')</code> 分发 action，或者使用 <code>mapActions</code> 辅助函数将组件的 methods 映射为 <code>store.dispatch</code> 调用（需要先在根节点注入 <code>store</code>）：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> mapActions <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  <span class="token comment">// ...</span>
+  <span class="token literal-property property">methods</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span><span class="token function">mapActions</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+      <span class="token string">'increment'</span><span class="token punctuation">,</span> <span class="token comment">// 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`</span>
+
+      <span class="token comment">// `mapActions` 也支持载荷：</span>
+      <span class="token string">'incrementBy'</span> <span class="token comment">// 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`</span>
+    <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token operator">...</span><span class="token function">mapActions</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">add</span><span class="token operator">:</span> <span class="token string">'increment'</span> <span class="token comment">// 将 `this.add()` 映射为 `this.$store.dispatch('increment')`</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><h4 id="组合-action"><a href="#组合-action" class="header-anchor">#</a> 组合 Action</h4> <p>Action 通常是异步的，那么如何知道 action 什么时候结束呢？更重要的是，我们如何才能组合多个 action，以处理更加复杂的异步流程？</p> <p>首先，你需要明白 <code>store.dispatch</code> 可以处理被触发的 action 的处理函数返回的 Promise，并且 <code>store.dispatch</code> 仍旧返回 Promise：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">actions</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">actionA</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'someMutation'</span><span class="token punctuation">)</span>
+        <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>现在你可以：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code>store<span class="token punctuation">.</span><span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token string">'actionA'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// ...</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>在另外一个 action 中也可以：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token literal-property property">actions</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token comment">// ...</span>
+  <span class="token function">actionB</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> dispatch<span class="token punctuation">,</span> commit <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token string">'actionA'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'someOtherMutation'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>最后，如果我们利用 <a href="https://tc39.github.io/ecmascript-asyncawait/" target="_blank" rel="noopener noreferrer">async / await<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>，我们可以如下组合 action：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">// 假设 getData() 和 getOtherData() 返回的是 Promise</span>
+
+<span class="token literal-property property">actions</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token keyword">async</span> <span class="token function">actionA</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'gotData'</span><span class="token punctuation">,</span> <span class="token keyword">await</span> <span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token keyword">async</span> <span class="token function">actionB</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> dispatch<span class="token punctuation">,</span> commit <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">await</span> <span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token string">'actionA'</span><span class="token punctuation">)</span> <span class="token comment">// 等待 actionA 完成</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'gotOtherData'</span><span class="token punctuation">,</span> <span class="token keyword">await</span> <span class="token function">getOtherData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><blockquote><p>一个 <code>store.dispatch</code> 在不同模块中可以触发多个 action 函数。在这种情况下，只有当所有触发函数完成后，返回的 Promise 才会执行。</p></blockquote> <h2 id="更多"><a href="#更多" class="header-anchor">#</a> 更多</h2> <p>更多内容查看官方文档：<a href="https://vuex.vuejs.org/zh/guide/modules.html" target="_blank" rel="noopener noreferrer">https://vuex.vuejs.org/zh/guide/modules.html<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p></div></div>  <div class="page-edit"><div class="edit-link"><a href="https://github.com/maoyln/maoyl-blog/edit/master/docs/《Vue》笔记/10.Vuex/01.Vuex.md" target="_blank" rel="noopener noreferrer">编辑</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">2024/06/21, 11:02:48</span></div></div> <div class="page-nav-wapper"><div class="page-nav-centre-wrap"><a href="/maoyl-blog/pages/38ecac9a9b92f037/" class="page-nav-centre page-nav-centre-prev"><div class="tooltip">路由懒加载</div></a> <a href="/maoyl-blog/pages/fb08e252dfd8fdfd/" class="page-nav-centre page-nav-centre-next"><div class="tooltip">Vue中的防抖函数封装和使用</div></a></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/maoyl-blog/pages/38ecac9a9b92f037/" class="prev">路由懒加载</a></span> <span class="next"><a href="/maoyl-blog/pages/fb08e252dfd8fdfd/">Vue中的防抖函数封装和使用</a>→
+      </span></p></div></div></div> <div class="article-list"><div class="article-title"><a href="/maoyl-blog/archives/" class="iconfont icon-bi">最近更新</a></div> <div class="article-wrapper"><dl><dd>01</dd> <dt><a href="/maoyl-blog/pages/81c059/"><div>
+            浏览器语言播放
+            <!----></div></a> <span class="date">11-08</span></dt></dl><dl><dd>02</dd> <dt><a href="/maoyl-blog/pages/b459cd/"><div>
+            iframe跨域问题
+            <!----></div></a> <span class="date">11-01</span></dt></dl><dl><dd>03</dd> <dt><a href="/maoyl-blog/pages/1e9706/"><div>
+            css生成随机颜色
+            <!----></div></a> <span class="date">09-22</span></dt></dl> <dl><dd></dd> <dt><a href="/maoyl-blog/archives/" class="more">更多文章&gt;</a></dt></dl></div></div></main></div> <div class="footer"><div class="icons"><a href="mailto:maoyl_yx@163.com" title="发邮件" target="_blank" class="iconfont icon-youjian"></a><a href="https://github.com/maoyln" title="GitHub" target="_blank" class="iconfont icon-github"></a><a href="https://music.163.com/#/discover/toplist" title="听音乐" target="_blank" class="iconfont icon-erji"></a></div> 
+  Theme by
+  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing" target="_blank" title="本站主题">Vdoing</a> 
+    | Copyright © 2019-2024
+    <span>备案号：<a href="https://beian.miit.gov.cn/" target="_blank">京ICP备19058102号-1</a></span></div> <div class="buttons"><div title="返回顶部" class="button blur go-to-top iconfont icon-fanhuidingbu" style="display:none;"></div> <div title="去评论" class="button blur go-to-comment iconfont icon-pinglun" style="display:none;"></div> <div title="主题模式" class="button blur theme-mode-but iconfont icon-zhuti"><ul class="select-box" style="display:none;"><li class="iconfont icon-zidong">
+          跟随系统
+        </li><li class="iconfont icon-rijianmoshi">
+          浅色模式
+        </li><li class="iconfont icon-yejianmoshi">
+          深色模式
+        </li><li class="iconfont icon-yuedu">
+          阅读模式
+        </li></ul></div></div> <div class="body-bg" style="background:url() center center / cover no-repeat;opacity:0.5;"></div> <!----> <!----></div><div class="global-ui"><div></div></div></div>
+    <script src="/maoyl-blog/assets/js/app.e3e7351e.js" defer></script><script src="/maoyl-blog/assets/js/2.3d567811.js" defer></script><script src="/maoyl-blog/assets/js/289.b742075f.js" defer></script>
+  </body>
+</html>
