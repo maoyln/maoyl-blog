@@ -1,0 +1,57 @@
+<h1 id="prop-验证-与-非-prop-的-attribute">Prop 验证 与 非 Prop 的 Attribute</h1>
+
+<h2 id="prop-验证">Prop 验证</h2>
+
+<p><a href="https://cn.vuejs.org/v2/guide/components-props.html#Prop-验证">API</a></p>
+
+<p>子组件对父组件传递来的参数进行校验</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="dl">'</span><span class="s1">my-component</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">props</span><span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// 基础的类型检查 (`null` 和 `undefined` 会通过任何类型验证)</span>
+    <span class="na">propA</span><span class="p">:</span> <span class="nb">Number</span><span class="p">,</span>
+    <span class="c1">// 多个可能的类型</span>
+    <span class="na">propB</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">,</span> <span class="nb">Number</span><span class="p">],</span>
+    <span class="c1">// 必填的字符串</span>
+    <span class="na">propC</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+      <span class="na">required</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">},</span>
+    <span class="c1">// 带有默认值的数字</span>
+    <span class="na">propD</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="nb">Number</span><span class="p">,</span>
+      <span class="na">default</span><span class="p">:</span> <span class="mi">100</span>
+    <span class="p">},</span>
+    <span class="c1">// 带有默认值的对象</span>
+    <span class="na">propE</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="nb">Object</span><span class="p">,</span>
+      <span class="c1">// 对象或数组默认值必须从一个工厂函数获取</span>
+      <span class="na">default</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span> <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span> <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="c1">// 自定义验证函数</span>
+    <span class="na">propF</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">validator</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 这个值必须匹配下列字符串中的一个</span>
+        <span class="k">return</span> <span class="p">[</span><span class="dl">'</span><span class="s1">success</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">warning</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">danger</span><span class="dl">'</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h2 id="非-prop-的-attribute">非 Prop 的 Attribute</h2>
+
+<p><a href="https://cn.vuejs.org/v2/guide/components-props.html#非-Prop-的-Attribute">API</a></p>
+
+<p>当子组件没有定义对应的Prop来接收父组件传来的值时，这个值将会出现在组件根元素的<code class="language-plaintext highlighter-rouge">Attribute</code>上面。</p>
+
+<h3 id="用处">用处</h3>
+
+<p>例如，想象一下你通过一个 Bootstrap 插件使用了一个第三方的 <code class="language-plaintext highlighter-rouge">&lt;bootstrap-date-input&gt;</code> 组件，这个插件需要在其 <code class="language-plaintext highlighter-rouge">&lt;input&gt;</code> 上用到一个 <code class="language-plaintext highlighter-rouge">data-date-picker</code> attribute。我们可以将这个 attribute 添加到你的组件实例上：</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;bootstrap-date-input</span> <span class="na">data-date-picker=</span><span class="s">"activated"</span><span class="nt">&gt;&lt;/bootstrap-date-input&gt;</span>
+</code></pre></div></div>
+
+<p>然后这个 <code class="language-plaintext highlighter-rouge">data-date-picker="activated"</code> attribute 就会自动添加到 <code class="language-plaintext highlighter-rouge">&lt;bootstrap-date-input&gt;</code>组件的根元素上。</p>

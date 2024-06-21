@@ -1,0 +1,135 @@
+<h1 id="处理请求-body-数据">处理请求 body 数据</h1>
+
+<h2 id="需求分析">需求分析</h2>
+
+<p>我们通过执行 <code class="language-plaintext highlighter-rouge">XMLHttpRequest</code> 对象实例的 <code class="language-plaintext highlighter-rouge">send</code> 方法来发送请求，并通过该方法的参数设置请求 <code class="language-plaintext highlighter-rouge">body</code> 数据，我们可以去 <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send">mdn</a> 查阅该方法支持的参数类型。</p>
+
+<p>我们发现 <code class="language-plaintext highlighter-rouge">send</code> 方法的参数支持 <code class="language-plaintext highlighter-rouge">Document</code> 和 <code class="language-plaintext highlighter-rouge">BodyInit</code> 类型，<code class="language-plaintext highlighter-rouge">BodyInit</code> 包括了 <code class="language-plaintext highlighter-rouge">Blob</code>, <code class="language-plaintext highlighter-rouge">BufferSource</code>, <code class="language-plaintext highlighter-rouge">FormData</code>, <code class="language-plaintext highlighter-rouge">URLSearchParams</code>, <code class="language-plaintext highlighter-rouge">ReadableStream</code>、<code class="language-plaintext highlighter-rouge">USVString</code>，当没有数据的时候，我们还可以传入 <code class="language-plaintext highlighter-rouge">null</code>。</p>
+
+<p>但是我们最常用的场景还是传一个普通对象给服务端，例如：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>这个时候 <code class="language-plaintext highlighter-rouge">data</code>是不能直接传给 <code class="language-plaintext highlighter-rouge">send</code> 函数的，我们需要把它转换成 JSON 字符串。</p>
+
+<h2 id="transformrequest-函数实现">transformRequest 函数实现</h2>
+
+<p>根据需求分析，我们要实现一个工具函数，对 request 中的 <code class="language-plaintext highlighter-rouge">data</code> 做一层转换。我们在 <code class="language-plaintext highlighter-rouge">helpers</code> 目录新建 <code class="language-plaintext highlighter-rouge">data.ts</code> 文件。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/data.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">isPlainObject</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./util</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">transformRequest</span> <span class="p">(</span><span class="nx">data</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="kr">any</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isPlainObject</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">data</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/util.js</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">isPlainObject</span> <span class="p">(</span><span class="nx">val</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nx">val</span> <span class="k">is</span> <span class="nb">Object</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">[object Object]</span><span class="dl">'</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这里为什么要使用 <code class="language-plaintext highlighter-rouge">isPlainObject</code> 函数判断，而不用之前的 <code class="language-plaintext highlighter-rouge">isObject</code> 函数呢，因为 <code class="language-plaintext highlighter-rouge">isObject</code> 的判断方式，对于 <code class="language-plaintext highlighter-rouge">FormData</code>、<code class="language-plaintext highlighter-rouge">ArrayBuffer</code> 这些类型，<code class="language-plaintext highlighter-rouge">isObject</code> 判断也为 <code class="language-plaintext highlighter-rouge">true</code>，但是这些类型的数据我们是不需要做处理的，而 <code class="language-plaintext highlighter-rouge">isPlainObject</code> 的判断方式，只有我们定义的普通 <code class="language-plaintext highlighter-rouge">JSON</code> 对象才能满足。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/url.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">isDate</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="p">{</span>
+  <span class="nx">val</span> <span class="o">=</span> <span class="nx">val</span><span class="p">.</span><span class="nx">toISOString</span><span class="p">()</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">isPlainObject</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="p">{</span>
+  <span class="nx">val</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>对于上节课我们对请求参数值的判断，我们也应该用 <code class="language-plaintext highlighter-rouge">isPlainObject</code> 才更加合理。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/util.js</code></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// export function isObject (val: any): val is Object {</span>
+<span class="c1">//   return val !== null &amp;&amp; typeof val === 'object'</span>
+<span class="c1">// }</span>
+</code></pre></div></div>
+
+<p>既然现在 <code class="language-plaintext highlighter-rouge">isObject</code> 方法不再使用，我们先将其注释。</p>
+
+<h2 id="实现请求-body-处理逻辑">实现请求 body 处理逻辑</h2>
+
+<p><code class="language-plaintext highlighter-rouge">index.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">transformRequest</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./helpers/data</span><span class="dl">'</span>
+
+<span class="s2">```typescript
+function processConfig (config: AxiosRequestConfig): void {
+  config.url = transformURL(config)
+  config.data = transformRequestData(config)
+}
+
+function transformRequestData (config: AxiosRequestConfig): any {
+  return transformRequest(config.data)
+}
+</span></code></pre></div></div>
+
+<p>我们定义了 <code class="language-plaintext highlighter-rouge">transformRequestData</code> 函数，去转换请求 <code class="language-plaintext highlighter-rouge">body</code> 的数据，内部调用了我们刚刚实现的的 <code class="language-plaintext highlighter-rouge">transformRequest</code> 方法。</p>
+
+<p>然后我们在 <code class="language-plaintext highlighter-rouge">processConfig</code> 内部添加了这段逻辑，在处理完 url 后接着对 <code class="language-plaintext highlighter-rouge">config</code> 中的 <code class="language-plaintext highlighter-rouge">data</code> 做处理。</p>
+
+<h2 id="编写-demo">编写 demo</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="kd">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Int32Array</span><span class="p">([</span><span class="mi">21</span><span class="p">,</span> <span class="mi">31</span><span class="p">])</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/buffer</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="nx">arr</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>我们在 <code class="language-plaintext highlighter-rouge">examples/base/app.ts</code> 添加 2 段代码，第一个 post 请求的 <code class="language-plaintext highlighter-rouge">data</code> 是一个普通对象，第二个请求的 <code class="language-plaintext highlighter-rouge">data</code> 是一个 <code class="language-plaintext highlighter-rouge">Int32Array</code> 类型的数据，它是可以直接传给 <code class="language-plaintext highlighter-rouge">XMLHttpRequest</code> 对象的 <code class="language-plaintext highlighter-rouge">send</code> 方法的。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/base/buffer</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">msg</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">msg</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">chunk</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+  <span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">end</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">buf</span> <span class="o">=</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">buf</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">())</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>我们接着在 <code class="language-plaintext highlighter-rouge">examples/server.js</code> 中添加 2 个路由，分别针对这俩种请求，返回请求传入的数据。</p>
+
+<p>然后我们打开浏览器运行 demo，看一下结果，我们发现 <code class="language-plaintext highlighter-rouge">/base/buffer</code> 的请求是可以拿到数据，但是 <code class="language-plaintext highlighter-rouge">base/post</code> 请求的 response 里却返回的是一个空对象，这是什么原因呢？</p>
+
+<p>实际上是因为我们虽然执行 <code class="language-plaintext highlighter-rouge">send</code> 方法的时候把普通对象 <code class="language-plaintext highlighter-rouge">data</code> 转换成一个 <code class="language-plaintext highlighter-rouge">JSON</code> 字符串，但是我们请求<code class="language-plaintext highlighter-rouge">header</code> 的 <code class="language-plaintext highlighter-rouge">Content-Type</code> 是 <code class="language-plaintext highlighter-rouge">text/plain;charset=UTF-8</code>，导致了服务端接受到请求并不能正确解析请求 <code class="language-plaintext highlighter-rouge">body</code> 的数据。</p>
+
+<p>知道这个问题后，下面一节课我们来实现对请求 <code class="language-plaintext highlighter-rouge">header</code> 的处理。</p>

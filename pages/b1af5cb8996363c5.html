@@ -1,0 +1,60 @@
+<h1 id="es5面向对象">ES5面向对象</h1>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//面向对象封装</span>
+<span class="kd">function</span> <span class="nx">Student</span><span class="p">(</span><span class="nx">props</span><span class="p">){</span> <span class="c1">// 构造函数 （构造函数内定于属性。尊从首字母大写的约定）</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">props</span><span class="p">.</span><span class="nx">name</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">匿名</span><span class="dl">'</span><span class="p">;</span>  <span class="c1">// 默认‘匿名’</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">grade</span> <span class="o">=</span> <span class="nx">props</span><span class="p">.</span><span class="nx">grade</span> <span class="o">||</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">Student</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">hello</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span> <span class="c1">// 在构造函数的原型上定义方法</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">你好,</span><span class="dl">'</span><span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span><span class="dl">'</span><span class="s1">同学，你在</span><span class="dl">'</span><span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">grade</span><span class="o">+</span><span class="dl">'</span><span class="s1">年级</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">//使用</span>
+<span class="kd">function</span> <span class="nx">createStudent</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 对于new构造函数的封装，其优点：一是不需要new来调用，二是参数灵活</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Student</span><span class="p">(</span><span class="nx">props</span> <span class="o">||</span> <span class="p">{})</span> <span class="c1">// 通过new创建构造函数，并传入参数/属性</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">niming</span> <span class="o">=</span> <span class="nx">createStudent</span><span class="p">();</span> 
+<span class="nx">niming</span><span class="p">.</span><span class="nx">hello</span><span class="p">();</span>
+
+<span class="kd">var</span> <span class="nx">xiaoming</span> <span class="o">=</span> <span class="nx">createStudent</span><span class="p">({</span>
+  <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">小明</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">grade</span><span class="p">:</span><span class="mi">2</span>
+<span class="p">});</span>
+<span class="nx">xiaoming</span><span class="p">.</span><span class="nx">hello</span><span class="p">();</span>
+
+
+<span class="c1">//继承</span>
+<span class="kd">function</span> <span class="nx">inherits</span><span class="p">(</span><span class="nx">Child</span><span class="p">,</span> <span class="nx">Parent</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 继承的封装方法 inherits(子类, 父类) </span>
+    <span class="kd">var</span> <span class="nx">F</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{};</span> <span class="c1">// 定义空方法F</span>
+    <span class="nx">F</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">Parent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span> <span class="c1">//F原型指向父类原型</span>
+    <span class="nx">Child</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">F</span><span class="p">();</span> <span class="c1">// 子类原型指向 new F() 方法</span>
+    <span class="nx">Child</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="kd">constructor</span> <span class="o">=</span> <span class="nx">Child</span><span class="p">;</span> <span class="c1">// 修正子类原型上的构造函数为子类本身函数</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">PrimaryStudent</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//定义子类 构造函数</span>
+    <span class="nx">Student</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">props</span><span class="p">);</span> <span class="c1">// 修正this指向</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">props</span><span class="p">.</span><span class="nx">age</span> <span class="o">||</span> <span class="mi">8</span><span class="p">;</span> <span class="c1">//新增子类属性</span>
+<span class="p">}</span>
+
+<span class="nx">inherits</span><span class="p">(</span><span class="nx">PrimaryStudent</span><span class="p">,</span> <span class="nx">Student</span><span class="p">);</span><span class="c1">//调用继承封装方法实现继承</span>
+
+<span class="nx">PrimaryStudent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getAge</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span> <span class="c1">//对子类添加方法</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span><span class="dl">'</span><span class="s1">同学，你今年</span><span class="dl">'</span><span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">+</span><span class="dl">'</span><span class="s1">岁</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">//使用继承后的</span>
+<span class="kd">function</span> <span class="nx">createPrimaryStudent</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 对于new构造函数的封装，其优点：一是不需要再new来调用，二是参数灵活</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">PrimaryStudent</span><span class="p">(</span><span class="nx">props</span> <span class="o">||</span> <span class="p">{})</span> <span class="c1">// 通过new创建构造函数，并传入参数/属性</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">xiaohong</span> <span class="o">=</span> <span class="nx">createPrimaryStudent</span><span class="p">({</span>
+  <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">小红</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">grade</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
+  <span class="na">age</span><span class="p">:</span><span class="mi">10</span>
+<span class="p">});</span>
+<span class="nx">xiaohong</span><span class="p">.</span><span class="nx">hello</span><span class="p">();</span>
+<span class="nx">xiaohong</span><span class="p">.</span><span class="nx">getAge</span><span class="p">();</span>
+</code></pre></div></div>

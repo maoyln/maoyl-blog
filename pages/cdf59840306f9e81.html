@@ -1,0 +1,153 @@
+<h1 id="mergeconfig-模块单元测试">mergeConfig 模块单元测试</h1>
+
+<p>合并配置是 <code class="language-plaintext highlighter-rouge">ts-axios</code> 核心流程中非常重要的一个环节，我们需要为它的各种情况去编写测试。</p>
+
+<h2 id="测试代码编写">测试代码编写</h2>
+
+<p><code class="language-plaintext highlighter-rouge">test/mergeConfig.spec.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../src/index</span><span class="dl">'</span>
+<span class="k">import</span> <span class="nx">mergeConfig</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../src/core/mergeConfig</span><span class="dl">'</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">mergeConfig</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">defaults</span> <span class="o">=</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">defaults</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should accept undefined for second argument</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">mergeConfig</span><span class="p">(</span><span class="nx">defaults</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">defaults</span><span class="p">)</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should accept an object for second argument</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">mergeConfig</span><span class="p">(</span><span class="nx">defaults</span><span class="p">,</span> <span class="p">{})).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">defaults</span><span class="p">)</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should not leave references</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">merged</span> <span class="o">=</span> <span class="nx">mergeConfig</span><span class="p">(</span><span class="nx">defaults</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">merged</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">defaults</span><span class="p">)</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">merged</span><span class="p">.</span><span class="nx">headers</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">headers</span><span class="p">)</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should allow setting request options</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">__sample url__</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">params</span><span class="p">:</span> <span class="dl">'</span><span class="s1">__sample params__</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="na">foo</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">const</span> <span class="nx">merged</span> <span class="o">=</span> <span class="nx">mergeConfig</span><span class="p">(</span><span class="nx">defaults</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">merged</span><span class="p">.</span><span class="nx">url</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">url</span><span class="p">)</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">merged</span><span class="p">.</span><span class="nx">params</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">params</span><span class="p">)</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">merged</span><span class="p">.</span><span class="nx">data</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should not inherit request options</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">localDefaults</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">__sample url__</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">params</span><span class="p">:</span> <span class="dl">'</span><span class="s1">__sample params__</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="na">foo</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">const</span> <span class="nx">merged</span> <span class="o">=</span> <span class="nx">mergeConfig</span><span class="p">(</span><span class="nx">localDefaults</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">merged</span><span class="p">.</span><span class="nx">url</span><span class="p">).</span><span class="nx">toBeUndefined</span><span class="p">()</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">merged</span><span class="p">.</span><span class="nx">params</span><span class="p">).</span><span class="nx">toBeUndefined</span><span class="p">()</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">merged</span><span class="p">.</span><span class="nx">data</span><span class="p">).</span><span class="nx">toBeUndefined</span><span class="p">()</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return default headers if pass config2 with undefined</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span>
+      <span class="nx">mergeConfig</span><span class="p">(</span>
+        <span class="p">{</span>
+          <span class="na">headers</span><span class="p">:</span> <span class="dl">'</span><span class="s1">x-mock-header</span><span class="dl">'</span>
+        <span class="p">},</span>
+        <span class="kc">undefined</span>
+      <span class="p">)</span>
+    <span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
+      <span class="na">headers</span><span class="p">:</span> <span class="dl">'</span><span class="s1">x-mock-header</span><span class="dl">'</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should merge auth, headers with defaults</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span>
+      <span class="nx">mergeConfig</span><span class="p">(</span>
+        <span class="p">{</span>
+          <span class="na">auth</span><span class="p">:</span> <span class="kc">undefined</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="na">auth</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">)</span>
+    <span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
+      <span class="na">auth</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+    <span class="nx">expect</span><span class="p">(</span>
+      <span class="nx">mergeConfig</span><span class="p">(</span>
+        <span class="p">{</span>
+          <span class="na">auth</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="na">auth</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">baz</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">foobar</span><span class="dl">'</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">)</span>
+    <span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
+      <span class="na">auth</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">baz</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">foobar</span><span class="dl">'</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should overwrite auth, headers with a non-object value</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span>
+      <span class="nx">mergeConfig</span><span class="p">(</span>
+        <span class="p">{</span>
+          <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">common</span><span class="p">:</span> <span class="p">{</span>
+              <span class="na">Accept</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json, text/plain, */*</span><span class="dl">'</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="na">headers</span><span class="p">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+      <span class="p">)</span>
+    <span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
+      <span class="na">headers</span><span class="p">:</span> <span class="kc">null</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should allow setting other options</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">merged</span> <span class="o">=</span> <span class="nx">mergeConfig</span><span class="p">(</span><span class="nx">defaults</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">timeout</span><span class="p">:</span> <span class="mi">123</span>
+    <span class="p">})</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">merged</span><span class="p">.</span><span class="nx">timeout</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>运行测试后我们发现 <code class="language-plaintext highlighter-rouge">mergeConfig.ts</code> 文件的分支覆盖率并未达到 100%，提示是 23 行，打开文件后发现最后一个 <code class="language-plaintext highlighter-rouge">else</code> 逻辑并未走到，也就是 <code class="language-plaintext highlighter-rouge">val1</code> 为 <code class="language-plaintext highlighter-rouge">undefined</code> 的情况。但实际上即使 <code class="language-plaintext highlighter-rouge">val1</code> 为 <code class="language-plaintext highlighter-rouge">undefined</code>，我们也是返回 <code class="language-plaintext highlighter-rouge">undefined</code>，也就是返回 <code class="language-plaintext highlighter-rouge">val1</code>，所以这块代码的逻辑可以优化。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">deepMergeStrat</span><span class="p">(</span><span class="nx">val1</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">val2</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="kr">any</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isPlainObject</span><span class="p">(</span><span class="nx">val2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">deepMerge</span><span class="p">(</span><span class="nx">val1</span><span class="p">,</span> <span class="nx">val2</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">val2</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">undefined</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">val2</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">isPlainObject</span><span class="p">(</span><span class="nx">val1</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">deepMerge</span><span class="p">(</span><span class="nx">val1</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">val1</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>2 个分支可以合并到一个分支，这样我们再次跑测试，分支覆盖率就可以达到 100% 了。</p>
+
+<p>至此我们完成了 <code class="language-plaintext highlighter-rouge">ts-axios</code> 库对 <code class="language-plaintext highlighter-rouge">mergeConfig</code> 模块的测试，下一节课我们来测试取消模块相关代码。</p>

@@ -1,0 +1,99 @@
+<h1 id="自定义合法状态码">自定义合法状态码</h1>
+
+<h2 id="需求分析">需求分析</h2>
+
+<p>之前 <code class="language-plaintext highlighter-rouge">ts-axios</code> 在处理响应结果的时候，认为 HTTP <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/status">status</a> 在 200 和 300 之间是一个合法值，在这个区间之外则创建一个错误。有些时候我们想自定义这个规则，比如认为 304 也是一个合法的状态码，所以我们希望 <code class="language-plaintext highlighter-rouge">ts-axios</code> 能提供一个配置，允许我们自定义合法状态码规则。如下：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/304</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">validateStatus</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">status</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="o">&amp;&amp;</span> <span class="nx">status</span> <span class="o">&lt;</span> <span class="mi">400</span>
+  <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">:</span> <span class="nx">AxiosError</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>通过在请求配置中配置一个 <code class="language-plaintext highlighter-rouge">validateStatus</code> 函数，它可以根据参数 <code class="language-plaintext highlighter-rouge">status</code> 来自定义合法状态码的规则。</p>
+
+<h2 id="代码实现">代码实现</h2>
+
+<p>首先修改一下类型定义。</p>
+
+<p><code class="language-plaintext highlighter-rouge">types/index.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AxiosRequestConfig</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="nl">validateStatus</span><span class="p">?:</span> <span class="p">(</span><span class="nx">status</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">boolean</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>然后我们来修改默认配置规则。</p>
+
+<p><code class="language-plaintext highlighter-rouge">defaults.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">validateStatus</span><span class="p">(</span><span class="nx">status</span><span class="p">:</span> <span class="kr">number</span><span class="p">):</span> <span class="nx">boolean</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">status</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="o">&amp;&amp;</span> <span class="nx">status</span> <span class="o">&lt;</span> <span class="mi">300</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>添加默认合法状态码的校验规则。然后再请求后对响应数据的处理逻辑。</p>
+
+<p><code class="language-plaintext highlighter-rouge">core/xhr.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span>
+  <span class="cm">/*...*/</span>
+  <span class="nx">validateStatus</span>
+<span class="p">}</span> <span class="o">=</span> <span class="nx">config</span>
+
+<span class="kd">function</span> <span class="nx">handleResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">:</span> <span class="nx">AxiosResponse</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">validateStatus</span> <span class="o">||</span> <span class="nx">validateStatus</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">resolve</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">reject</span><span class="p">(</span>
+      <span class="nx">createError</span><span class="p">(</span>
+        <span class="s2">`Request failed with status code </span><span class="p">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+        <span class="nx">config</span><span class="p">,</span>
+        <span class="kc">null</span><span class="p">,</span>
+        <span class="nx">request</span><span class="p">,</span>
+        <span class="nx">response</span>
+      <span class="p">)</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>如果没有配置 <code class="language-plaintext highlighter-rouge">validateStatus</code> 以及 <code class="language-plaintext highlighter-rouge">validateStatus</code> 函数返回的值为 true 的时候，都认为是合法的，正常 <code class="language-plaintext highlighter-rouge">resolve(response)</code>，否则都创建一个错误。</p>
+
+<h2 id="demo-编写">demo 编写</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/304</span><span class="dl">'</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">:</span> <span class="nx">AxiosError</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/304</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">validateStatus</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">status</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="o">&amp;&amp;</span> <span class="nx">status</span> <span class="o">&lt;</span> <span class="mi">400</span>
+  <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">:</span> <span class="nx">AxiosError</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">server.js</code> 中我们编写了这个路由接口</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nx">router</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/more/304</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">304</span><span class="p">)</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">()</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>接口返回 304 状态码，对于默认的请求我们会输出一条错误信息。第二个请求中我们配置了自定义合法状态码规则，区间在 200 和 400 之间，这样就不会报错，而是可以正常输出响应对象。</p>
+
+<p>至此 <code class="language-plaintext highlighter-rouge">ts-axios</code> 实现了自定义合法状态码功能，用户可以配置 <code class="language-plaintext highlighter-rouge">validateStatus</code> 自定义合法状态码规则。之前有同学会质疑 <code class="language-plaintext highlighter-rouge">ts-axios</code> 对于请求 <code class="language-plaintext highlighter-rouge">url</code> 参数的序列化处理规则，下一节课我们来实现自定义参数序列化规则功能。</p>

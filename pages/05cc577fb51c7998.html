@@ -1,0 +1,75 @@
+<h1 id="flex布局案例-输入框布局">flex布局案例-输入框布局</h1>
+
+<blockquote>
+  <p>可用<kbd>F12</kbd>开发者工具查看元素及样式，可打开codepen在线编辑代码。</p>
+</blockquote>
+
+<p>::: demo [vanilla]</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"InputAddOn"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"InputAddOn-item"</span><span class="nt">&gt;</span>icon<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">"InputAddOn-field"</span> <span class="na">placeholder=</span><span class="s">"input宽度自适应"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"InputAddOn-item"</span><span class="nt">&gt;</span>提交<span class="nt">&lt;/button&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;br/&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"Media"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"Media-figure"</span><span class="nt">&gt;</span>左侧固定<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"Media-body"</span><span class="nt">&gt;</span>右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应右侧自适应<span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+<span class="nt">&lt;style&gt;</span>
+  <span class="nc">.InputAddOn</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.InputAddOn-field</span> <span class="p">{</span>
+    <span class="nl">flex</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.Media</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+    <span class="nl">align-items</span><span class="p">:</span> <span class="n">flex-start</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.Media-figure</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+    <span class="nl">height</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="m">#eee</span><span class="p">;</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">1em</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.Media-body</span> <span class="p">{</span>
+    <span class="nl">flex</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c">/* 基础样式 */</span>
+  <span class="nt">input</span><span class="nd">:-webkit-autofill</span><span class="o">,</span>
+  <span class="nt">select</span><span class="nd">:-webkit-autofill</span> <span class="p">{</span>
+    <span class="nl">-webkit-box-shadow</span><span class="p">:</span> <span class="m">0</span> <span class="m">0</span> <span class="m">0px</span> <span class="m">1000px</span> <span class="no">white</span> <span class="nb">inset</span> <span class="cp">!important</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nt">input</span> <span class="p">{</span>
+    <span class="nl">outline-color</span><span class="p">:</span> <span class="nb">invert</span><span class="p">;</span>
+    <span class="nl">outline-style</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+    <span class="nl">outline-width</span><span class="p">:</span> <span class="m">0px</span><span class="p">;</span>
+    <span class="nl">text-shadow</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+    <span class="nl">-webkit-appearance</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+    <span class="nl">-webkit-user-select</span><span class="p">:</span> <span class="nb">text</span><span class="p">;</span>
+    <span class="nl">outline-color</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+    <span class="nl">box-shadow</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.InputAddOn-item</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+    <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+    <span class="nl">line-height</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="m">#ccc</span><span class="p">;</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="m">#eee</span>
+  <span class="p">}</span>
+  <span class="nc">.InputAddOn-field</span> <span class="p">{</span>
+    <span class="nl">height</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+    <span class="nl">padding</span><span class="p">:</span> <span class="m">1px</span> <span class="m">6px</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="m">#ccc</span><span class="p">;</span>
+    <span class="nl">border-left</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+    <span class="nl">border-right</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="nt">&lt;/style&gt;</span>
+</code></pre></div></div>
+<p>:::</p>
+
+<blockquote>
+  <p>参考：<a href="http://www.ruanyifeng.com/blog/2015/07/flex-examples.html">http://www.ruanyifeng.com/blog/2015/07/flex-examples.html</a></p>
+</blockquote>
