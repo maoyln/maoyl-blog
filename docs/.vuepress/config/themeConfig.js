@@ -24,7 +24,7 @@ module.exports = {
   bodyBgImg: [
     `https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/16745656-92f9.jpeg`,
     `https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/81317316813173.jpeg`,
-    `https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/e54589e7c44a801219c7729e.jpeg`,
+    `https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/autumn-scenery.jpg`,
     `https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/agaeSxWGu.jpeg`,
     `https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/b72f0c4deadf702767.jpeg`,
     `https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/105114553Nssps.jpeg`,
