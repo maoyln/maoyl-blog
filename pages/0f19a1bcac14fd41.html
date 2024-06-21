@@ -1,0 +1,28 @@
+<h1 id="子组件派发事件和值给父组件">子组件派发事件和值给父组件</h1>
+
+<p><a href="https://cn.vuejs.org/v2/guide/components.html#监听子组件事件">API</a></p>
+
+<p>子组件通过<code class="language-plaintext highlighter-rouge">$emit</code>派发事件和值给父组件（值可以有多个）</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="p">.</span><span class="nx">$emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">fnX</span><span class="dl">'</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+</code></pre></div></div>
+<!-- more -->
+<p>父组件通过<code class="language-plaintext highlighter-rouge">v-on</code>绑定子组件派发的事件，并触发一个新的事件，新的事件内可以接收传来的值</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">ComponentName</span> <span class="p">@</span><span class="nd">fnX</span><span class="o">=</span><span class="dl">"</span><span class="s2">fnY</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/ComponentName</span><span class="err">&gt;
+</span>
+
+<span class="nx">methods</span><span class="p">:</span> <span class="p">{</span>
+	<span class="nx">fnY</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="父子组件间传递数据-demo">父子组件间传递数据 demo</h2>
+
+<p class="codepen" data-height="400" data-theme-id="light" data-default-tab="js,result" data-user="xugaoyi" data-slug-hash="mdJVqgg" style="height: 400px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="mdJVqgg">
+  <span>See the Pen <a href="https://codepen.io/xugaoyi/pen/mdJVqgg">
+  mdJVqgg</a> by xugaoyi (<a href="https://codepen.io/xugaoyi">@xugaoyi</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async="" src="https://static.codepen.io/assets/embed/ei.js"></script>
+

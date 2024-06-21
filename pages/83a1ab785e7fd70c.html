@@ -1,0 +1,84 @@
+<h1 id="使用组件的细节点">使用组件的细节点</h1>
+
+<h2 id="解析-dom-模板时的注意事项">解析 DOM 模板时的注意事项</h2>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"root"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;table&gt;</span>
+        <span class="nt">&lt;tbody&gt;</span>
+            <span class="nt">&lt;row&gt;&lt;/row&gt;</span>
+            <span class="nt">&lt;row&gt;&lt;/row&gt;</span>
+            <span class="nt">&lt;row&gt;&lt;/row&gt;</span>
+        <span class="nt">&lt;/tbody&gt;</span>
+    <span class="nt">&lt;/table&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+    <span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="dl">'</span><span class="s1">row</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;tr&gt;&lt;td&gt;this is a row&lt;/td&gt;&lt;/tr&gt;</span><span class="dl">'</span>
+    <span class="p">})</span>
+    <span class="kd">var</span> <span class="nx">vm</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+        <span class="na">el</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#root</span><span class="dl">'</span>
+    <span class="p">})</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p>上面代码中，<code class="language-plaintext highlighter-rouge">row</code> 组件在渲染页面时，并不会把<code class="language-plaintext highlighter-rouge">tr</code>节点渲染到<code class="language-plaintext highlighter-rouge">tbody</code>里面，而是被提升到了和<code class="language-plaintext highlighter-rouge">table</code>同一个级别的地方。原因是在html编码规范中，<code class="language-plaintext highlighter-rouge">tbody</code>里面只能放<code class="language-plaintext highlighter-rouge">tr</code>，正确的做法是使用<code class="language-plaintext highlighter-rouge">tr</code>标签添加<code class="language-plaintext highlighter-rouge">is</code>属性等于组件名称<code class="language-plaintext highlighter-rouge">row</code> :</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;tbody&gt;</span>
+    <span class="nt">&lt;tr</span> <span class="na">is=</span><span class="s">"row"</span><span class="nt">&gt;&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr</span> <span class="na">is=</span><span class="s">"row"</span><span class="nt">&gt;&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr</span> <span class="na">is=</span><span class="s">"row"</span><span class="nt">&gt;&lt;/tr&gt;</span>
+<span class="nt">&lt;/tbody&gt;</span>
+</code></pre></div></div>
+
+<p>同样，<code class="language-plaintext highlighter-rouge">ul&gt;li</code>、<code class="language-plaintext highlighter-rouge">ol&gt;li</code>、<code class="language-plaintext highlighter-rouge">select &gt; option</code> 标签也要注意这样的问题。</p>
+
+<p>需要注意的是<strong>如果我们从以下来源使用模板的话，这条限制是不存在的</strong>：</p>
+
+<ul>
+  <li>字符串 (例如：<code class="language-plaintext highlighter-rouge">template: '...'</code>)</li>
+  <li><a href="https://cn.vuejs.org/v2/guide/single-file-components.html">单文件组件 (<code class="language-plaintext highlighter-rouge">.vue</code>)</a></li>
+  <li><a href="https://cn.vuejs.org/v2/guide/components-edge-cases.html#X-Templates"><code class="language-plaintext highlighter-rouge">&lt;script type="text/x-template"&gt;</code></a></li>
+</ul>
+
+<h2 id="子组件内的data要使用函数返回">子组件内的data要使用函数返回</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="dl">'</span><span class="s1">row</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">data</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">this is content</span><span class="dl">'</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;</span><span class="dl">'</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>之所以这样设计是因为子组件有可能会被调用多次，而每次调用时的data数据都应该是独立的。因此需要通过一个函数来实现，每个实例可以维护一份被返回对象的独立的拷贝。</p>
+
+<p>这样才不会出现每个子组件数据相互影响的情况。</p>
+
+<h2 id="通过-ref-引用操作dom">通过 ref 引用操作DOM</h2>
+<p><a href="https://cn.vuejs.org/v2/api/#ref">ref</a></p>
+
+<p>虽然并不推荐我们在使用vue的时候操作DOM，但是某些情况下我们必须要操作DOM来实现一些功能，因此可以通过ref引用的形式来获取到DOM节点。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- `vm.$refs.p` 指向DOM元素节点 --&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">ref=</span><span class="s">"p"</span><span class="nt">&gt;</span>hello<span class="nt">&lt;/p&gt;</span>
+
+<span class="c">&lt;!-- `vm.$refs.child` 指向组件实例 --&gt;</span>
+<span class="nt">&lt;child-component</span> <span class="na">ref=</span><span class="s">"child"</span><span class="nt">&gt;&lt;/child-component&gt;</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">ref</code> 被用来给元素或子组件注册引用信息。引用信息将会注册在父组件的 <code class="language-plaintext highlighter-rouge">$refs</code> 对象上。如果在普通的 DOM 元素上使用，引用指向的就是 DOM 元素；如果用在子组件上，引用就指向<strong>组件实例</strong>。</p>
+
+<p><strong>组件实例对象 VueComponent</strong></p>
+<blockquote>
+  <p>打开控制台，点击demo中的按钮可查看组件实例</p>
+</blockquote>
+
+<p class="codepen" data-height="460" data-theme-id="light" data-default-tab="js,result" data-user="xugaoyi" data-slug-hash="VwLeMoM" style="height: 460px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 20px solid; margin: 1em 0; padding: 1em;" data-pen-title="VwLeMoM">
+  <span>See the Pen <a href="https://codepen.io/xugaoyi/pen/VwLeMoM">
+  VwLeMoM</a> by xugaoyi (<a href="https://codepen.io/xugaoyi">@xugaoyi</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async="" src="https://static.codepen.io/assets/embed/ei.js"></script>
+

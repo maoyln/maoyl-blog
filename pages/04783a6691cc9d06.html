@@ -1,0 +1,153 @@
+<h1 id="列表渲染之数组对象更新检测">列表渲染之数组、对象更新检测</h1>
+
+<p><a href="https://cn.vuejs.org/v2/guide/list.html#数组更新检测">数组更新检测API</a> <a href="https://cn.vuejs.org/v2/guide/list.html#对象变更检测注意事项">对象更新检测API</a></p>
+
+<h2 id="数组更新检测">数组更新检测</h2>
+
+<h4 id="变异方法-mutation-method">变异方法 (mutation method)</h4>
+
+<p>Vue 将被侦听的数组的变异方法进行了包裹，所以它们也将会触发视图更新。这些被包裹过的方法包括：
+<!-- more --></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">push()</code>末尾添加</li>
+  <li><code class="language-plaintext highlighter-rouge">pop()</code>末尾删除</li>
+  <li><code class="language-plaintext highlighter-rouge">shift()</code> 首位删除</li>
+  <li><code class="language-plaintext highlighter-rouge">unshift() </code> 首位添加</li>
+  <li><code class="language-plaintext highlighter-rouge">splice()</code> 拼合</li>
+  <li><code class="language-plaintext highlighter-rouge">sort()</code> 排序</li>
+  <li><code class="language-plaintext highlighter-rouge">reverse()</code> 反转</li>
+</ul>
+
+<p><a href="https://maoyl.netlify.com/pages/74d2ab3fbfeaaa68/#_3、实例方法">数组实例方法</a></p>
+
+<h4 id="替换数组">替换数组</h4>
+
+<p>变异方法，顾名思义，会改变调用了这些方法的原始数组。相比之下，也有非变异 (non-mutating method) 方法，例如 <code class="language-plaintext highlighter-rouge">filter()</code>、<code class="language-plaintext highlighter-rouge">concat()</code> 和 <code class="language-plaintext highlighter-rouge">slice()</code> 。它们不会改变原始数组，而<strong>总是返回一个新数组</strong>。当使用非变异方法时，可以用新数组替换旧数组：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">example1</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">example1</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">item</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/Foo/</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>你可能认为这将导致 Vue 丢弃现有 DOM 并重新渲染整个列表。幸运的是，事实并非如此。Vue 为了使得 DOM 元素得到最大范围的重用而实现了一些智能的启发式方法，所以用一个含有相同元素的数组去替换原来的数组是非常高效的操作。</p>
+
+<h4 id="注意事项">注意事项</h4>
+
+<p><strong>由于 JavaScript 的限制，Vue 不能检测以下数组的变动</strong></p>
+
+<ol>
+  <li>当你利用索引直接设置一个数组项时，例如：<code class="language-plaintext highlighter-rouge">vm.items[indexOfItem] = newValue</code></li>
+  <li>当你修改数组的长度时，例如：<code class="language-plaintext highlighter-rouge">vm.items.length = newLength</code></li>
+</ol>
+
+<p>为了解决第一类问题，以下两种方式都可以实现和 <code class="language-plaintext highlighter-rouge">vm.items[indexOfItem] = newValue</code> 相同的效果，同时也将在响应式系统内触发状态更新：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Vue.set</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">vm</span><span class="p">.</span><span class="nx">items</span><span class="p">,</span> <span class="nx">indexOfItem</span><span class="p">,</span> <span class="nx">newValue</span><span class="p">)</span>
+<span class="c1">// Array.prototype.splice</span>
+<span class="nx">vm</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">indexOfItem</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">newValue</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>你也可以使用 <a href="https://cn.vuejs.org/v2/api/#vm-set"><code class="language-plaintext highlighter-rouge">vm.$set</code></a> 实例方法，该方法是全局方法 <code class="language-plaintext highlighter-rouge">Vue.set</code> 的一个别名：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">vm</span><span class="p">.</span><span class="nx">$set</span><span class="p">(</span><span class="nx">vm</span><span class="p">.</span><span class="nx">items</span><span class="p">,</span> <span class="nx">indexOfItem</span><span class="p">,</span> <span class="nx">newValue</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>为了解决第二类问题，你可以使用 <code class="language-plaintext highlighter-rouge">splice</code>：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">vm</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">newLength</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="对象变更检测注意事项">对象变更检测注意事项</h2>
+
+<blockquote>
+  <p>列表循环对象示例</p>
+
+  <div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">v-for=</span><span class="s">"(item, key, index) in obj"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div>  </div>
+</blockquote>
+
+<p>还是由于 JavaScript 的限制，<strong>Vue 不能检测对象属性的添加或删除</strong>：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">vm</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+<span class="c1">// `vm.a` 现在是响应式的</span>
+
+<span class="nx">vm</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="c1">// `vm.b` 不是响应式的</span>
+</code></pre></div></div>
+
+<p>对于已经创建的实例，Vue 不允许动态添加根级别的响应式属性。</p>
+
+<p>但是，可以使用 <code class="language-plaintext highlighter-rouge">Vue.set(object, propertyName, value)</code> 方法向嵌套对象添加响应式属性。例如，对于：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">vm</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">userProfile</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Anika</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>你可以添加一个新的 <code class="language-plaintext highlighter-rouge">age</code> 属性到嵌套的 <code class="language-plaintext highlighter-rouge">userProfile</code> 对象：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Vue</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">vm</span><span class="p">.</span><span class="nx">userProfile</span><span class="p">,</span> <span class="dl">'</span><span class="s1">age</span><span class="dl">'</span><span class="p">,</span> <span class="mi">27</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>你还可以使用 <code class="language-plaintext highlighter-rouge">vm.$set</code> 实例方法，它只是全局 <code class="language-plaintext highlighter-rouge">Vue.set</code> 的别名：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">vm</span><span class="p">.</span><span class="nx">$set</span><span class="p">(</span><span class="nx">vm</span><span class="p">.</span><span class="nx">userProfile</span><span class="p">,</span> <span class="dl">'</span><span class="s1">age</span><span class="dl">'</span><span class="p">,</span> <span class="mi">27</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>有时你可能需要为已有对象赋值多个新属性，比如使用 <code class="language-plaintext highlighter-rouge">Object.assign()</code> 或 <code class="language-plaintext highlighter-rouge">_.extend()</code>。在这种情况下，你应该用两个对象的属性创建一个新的对象。所以，如果你想添加新的响应式属性，不要像这样：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">vm</span><span class="p">.</span><span class="nx">userProfile</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">age</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span>
+  <span class="na">favoriteColor</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Vue Green</span><span class="dl">'</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>你应该这样做：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">vm</span><span class="p">.</span><span class="nx">userProfile</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">vm</span><span class="p">.</span><span class="nx">userProfile</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">age</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span>
+  <span class="na">favoriteColor</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Vue Green</span><span class="dl">'</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h2 id="总结">总结</h2>
+
+<p>一、使数组更新具有响应式可使用的办法：</p>
+
+<ol>
+  <li>使用变异方法 （push、pop、unshift、shift、splice、sort、reverse）</li>
+  <li>替换数组引用  （对不改变原数组的方法可使用替换数组）</li>
+  <li>使用Vue.set()方法</li>
+</ol>
+
+<p>二、使对象属性的添加或删除具有响应式可使用的办法：</p>
+
+<ol>
+  <li>替换对象引用</li>
+  <li>使用Vue.set()方法</li>
+</ol>
+
+<p>三、Vue.set() 语法：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 向数组更新数据</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">vm</span><span class="p">.</span><span class="nx">items</span><span class="p">,</span> <span class="nx">indexOfItem</span><span class="p">,</span> <span class="nx">newValue</span><span class="p">)</span>
+<span class="nx">即</span> <span class="nx">Vue</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">原数组</span><span class="p">,</span> <span class="nx">索引</span><span class="p">,</span> <span class="nx">新数据</span><span class="p">)</span>
+
+<span class="c1">// 向对象更新数据</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">propertyName</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+<span class="nx">即</span> <span class="nx">Vue</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">原对象</span><span class="p">,</span> <span class="nx">属性名</span><span class="p">,</span> <span class="nx">值</span><span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>vm.$set() 实例方法是 Vue.set() 全局方法的别名</p>
+</blockquote>

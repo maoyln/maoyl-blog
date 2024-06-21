@@ -1,0 +1,162 @@
+<h1 id="错误信息增强">错误信息增强</h1>
+
+<h2 id="需求分析">需求分析</h2>
+
+<p>上一节课我们已经捕获了几类 AJAX 的错误，但是对于错误信息提供的非常有限，我们希望对外提供的信息不仅仅包含错误文本信息，还包括了请求对象配置 <code class="language-plaintext highlighter-rouge">config</code>，错误代码 <code class="language-plaintext highlighter-rouge">code</code>，<code class="language-plaintext highlighter-rouge">XMLHttpRequest</code> 对象实例 <code class="language-plaintext highlighter-rouge">request</code>以及自定义响应对象 <code class="language-plaintext highlighter-rouge">response</code>。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/error/timeout</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">timeout</span><span class="p">:</span> <span class="mi">2000</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">:</span> <span class="nx">AxiosError</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">request</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>这样对于应用方来说，他们就可以捕获到这些错误的详细信息，做进一步的处理。</p>
+
+<p>那么接下来，我们就来对错误信息做增强。</p>
+
+<h2 id="创建-axioserror-类">创建 AxiosError 类</h2>
+
+<p>我们先来定义 <code class="language-plaintext highlighter-rouge">AxiosError</code> 类型接口，用于外部使用。</p>
+
+<p><code class="language-plaintext highlighter-rouge">types/index.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AxiosError</span> <span class="kd">extends</span> <span class="nb">Error</span> <span class="p">{</span>
+  <span class="nl">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span>
+  <span class="nx">code</span><span class="p">?:</span> <span class="kr">string</span>
+  <span class="nx">request</span><span class="p">?:</span> <span class="kr">any</span>
+  <span class="nx">response</span><span class="p">?:</span> <span class="nx">AxiosResponse</span>
+  <span class="nx">isAxiosError</span><span class="p">:</span> <span class="nx">boolean</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>接着我们创建 <code class="language-plaintext highlighter-rouge">error.ts</code> 文件，然后实现 <code class="language-plaintext highlighter-rouge">AxiosError</code> 类，它是继承于 <code class="language-plaintext highlighter-rouge">Error</code> 类。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/error.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">AxiosRequestConfig</span><span class="p">,</span> <span class="nx">AxiosResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">AxiosError</span> <span class="kd">extends</span> <span class="nb">Error</span> <span class="p">{</span>
+  <span class="nl">isAxiosError</span><span class="p">:</span> <span class="nx">boolean</span>
+  <span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span>
+  <span class="nx">code</span><span class="p">?:</span> <span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span>
+  <span class="nx">request</span><span class="p">?:</span> <span class="kr">any</span>
+  <span class="nx">response</span><span class="p">?:</span> <span class="nx">AxiosResponse</span>
+
+  <span class="kd">constructor</span><span class="p">(</span>
+    <span class="nx">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">,</span>
+    <span class="nx">code</span><span class="p">?:</span> <span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nx">request</span><span class="p">?:</span> <span class="kr">any</span><span class="p">,</span>
+    <span class="nx">response</span><span class="p">?:</span> <span class="nx">AxiosResponse</span>
+  <span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="nx">config</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">code</span> <span class="o">=</span> <span class="nx">code</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">request</span> <span class="o">=</span> <span class="nx">request</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">response</span> <span class="o">=</span> <span class="nx">response</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">isAxiosError</span> <span class="o">=</span> <span class="kc">true</span>
+
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">setPrototypeOf</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">AxiosError</span><span class="p">.</span><span class="nx">prototype</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">createError</span><span class="p">(</span>
+  <span class="nx">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+  <span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">,</span>
+  <span class="nx">code</span><span class="p">?:</span> <span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nx">request</span><span class="p">?:</span> <span class="kr">any</span><span class="p">,</span>
+  <span class="nx">response</span><span class="p">?:</span> <span class="nx">AxiosResponse</span>
+<span class="p">):</span> <span class="nx">AxiosError</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">error</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AxiosError</span><span class="p">(</span><span class="nx">message</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">code</span><span class="p">,</span> <span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="nx">error</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">AxiosError</code> 继承于 <code class="language-plaintext highlighter-rouge">Error</code> 类，添加了一些自己的属性：<code class="language-plaintext highlighter-rouge">config</code>、<code class="language-plaintext highlighter-rouge">code</code>、<code class="language-plaintext highlighter-rouge">request</code>、<code class="language-plaintext highlighter-rouge">response</code>、<code class="language-plaintext highlighter-rouge">isAxiosError</code> 等属性。这里要注意一点，我们使用了 <code class="language-plaintext highlighter-rouge">Object.setPrototypeOf(this, AxiosError.prototype)</code>，这段代码的目的是为了解决 TypeScript 继承一些内置对象的时候的坑，<a href="https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work">参考</a>。</p>
+
+<p>另外，为了方便使用，我们对外暴露了一个 <code class="language-plaintext highlighter-rouge">createError</code> 的工厂方法。</p>
+
+<h2 id="createerror-方法应用">createError 方法应用</h2>
+
+<p>修改关于错误对象创建部分的逻辑，如下：</p>
+
+<p><code class="language-plaintext highlighter-rouge">xhr.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createError</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./helpers/error</span><span class="dl">'</span>
+
+<span class="nx">request</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">handleError</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">reject</span><span class="p">(</span><span class="nx">createError</span><span class="p">(</span>
+    <span class="dl">'</span><span class="s1">Network Error</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">config</span><span class="p">,</span>
+    <span class="kc">null</span><span class="p">,</span>
+    <span class="nx">request</span>
+  <span class="p">))</span>
+<span class="p">}</span>
+
+<span class="nx">request</span><span class="p">.</span><span class="nx">ontimeout</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">handleTimeout</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">reject</span><span class="p">(</span><span class="nx">createError</span><span class="p">(</span>
+    <span class="s2">`Timeout of </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">timeout</span><span class="p">}</span><span class="s2"> ms exceeded`</span><span class="p">,</span>
+    <span class="nx">config</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">ECONNABORTED</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">request</span>
+  <span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">handleResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">:</span> <span class="nx">AxiosResponse</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">status</span> <span class="o">&lt;</span> <span class="mi">300</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">resolve</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">reject</span><span class="p">(</span><span class="nx">createError</span><span class="p">(</span>
+      <span class="s2">`Request failed with status code </span><span class="p">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="nx">config</span><span class="p">,</span>
+      <span class="kc">null</span><span class="p">,</span>
+      <span class="nx">request</span><span class="p">,</span>
+      <span class="nx">response</span>
+    <span class="p">))</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="导出类型定义">导出类型定义</h2>
+
+<p>在 demo 中，TypeScript 并不能把 <code class="language-plaintext highlighter-rouge">e</code> 参数推断为 <code class="language-plaintext highlighter-rouge">AxiosError</code> 类型，于是我们需要手动指明类型，为了让外部应用能引入 <code class="language-plaintext highlighter-rouge">AxiosError</code> 类型，我们也需要把它们导出。</p>
+
+<p>我们创建 <code class="language-plaintext highlighter-rouge">axios.ts</code> 文件，把之前的 <code class="language-plaintext highlighter-rouge">index.ts</code> 的代码拷贝过去，然后修改 <code class="language-plaintext highlighter-rouge">index.ts</code> 的代码。</p>
+
+<p><code class="language-plaintext highlighter-rouge">index.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./axios</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="o">*</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./types</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">axios</span>
+</code></pre></div></div>
+
+<p>这样我们在 demo 中就可以引入 <code class="language-plaintext highlighter-rouge">AxiosError</code> 类型了。</p>
+
+<p><code class="language-plaintext highlighter-rouge">examples/error/app.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">axios</span><span class="p">,</span> <span class="p">{</span> <span class="nx">AxiosError</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../src/index</span><span class="dl">'</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/error/timeout</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">timeout</span><span class="p">:</span> <span class="mi">2000</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">:</span> <span class="nx">AxiosError</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>至此，我们关于 <code class="language-plaintext highlighter-rouge">ts-axios</code> 的异常处理逻辑就告一段落。下面的章节，我们会对 <code class="language-plaintext highlighter-rouge">ts-axios</code> 的接口做扩展，让它提供更多好用和方便的 API。</p>

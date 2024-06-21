@@ -1,0 +1,24 @@
+<h1 id="nodejs递归读取所有文件">nodejs递归读取所有文件</h1>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">fs</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">path</span><span class="dl">'</span><span class="p">);</span>
+ 
+<span class="kd">function</span> <span class="nx">readFileList</span><span class="p">(</span><span class="nx">dir</span><span class="p">,</span> <span class="nx">filesList</span> <span class="o">=</span> <span class="p">[])</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">files</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readdirSync</span><span class="p">(</span><span class="nx">dir</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">files</span><span class="p">);</span>
+    <span class="nx">files</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">item</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">fullPath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">dir</span><span class="p">,</span> <span class="nx">item</span><span class="p">);</span>
+        <span class="kd">const</span> <span class="nx">stat</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">statSync</span><span class="p">(</span><span class="nx">fullPath</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">stat</span><span class="p">.</span><span class="nx">isDirectory</span><span class="p">())</span> <span class="p">{</span>      
+            <span class="nx">readFileList</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">dir</span><span class="p">,</span> <span class="nx">item</span><span class="p">),</span> <span class="nx">filesList</span><span class="p">);</span>  <span class="c1">//递归读取文件</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>                
+            <span class="nx">filesList</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">fullPath</span><span class="p">);</span>                     
+        <span class="p">}</span>        
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">filesList</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kd">var</span> <span class="nx">filesList</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="nx">readFileList</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span><span class="nx">filesList</span><span class="p">);</span>
+</code></pre></div></div>
+
