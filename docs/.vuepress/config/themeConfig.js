@@ -56,7 +56,7 @@ module.exports = {
   },
   blogger: {
     // 博主信息，显示在首页侧边栏
-    avatar: '/maoyl-blog/img/my-head.jpeg',
+    avatar: 'https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/my-head.jpeg',
     name: 'maoyln',
     slogan: '日日行，不怕千万里',
   },
