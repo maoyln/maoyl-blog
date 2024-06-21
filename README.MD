@@ -1,9 +1,9 @@
 <p align="center"><a href="https://maoyl.netlify.app/" target="_blank" rel="noopener noreferrer"><img width="180" src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20200409124835.png" alt="logo"></a></p>
 
-<h2 align="center">maoyl-bolg</h2>
+<h2 align="center">maoyl-blog</h2>
 
 * [文档 (国内源)](https://maoyl.netlify.app/)
-* [文档 (github源)](https://github.com/maoyln/maoyl-bolg)
+* [文档 (github源)](https://github.com/maoyln/maoyl-blog)
 * [效果：Maoyl's blog](https://maoyl.netlify.app/)
 
 
@@ -13,7 +13,7 @@
 3. 博客功能提供一种知识的`碎片化`形态，并支持个性化博客配置。
 4. `简洁高效`，以 Markdown 为中心的项目结构。内置自动化工具，以更少的配置完成更多的事。配合多维索引快速定位每个知识点。
 
-[**更新日志**](https://github.com/maoyln/maoyl-bolg/releases)
+[**更新日志**](https://github.com/maoyln/maoyl-blog/releases)
 
 ## 这个主题可以做什么？
 * 案例1：[知识库兼博客站](https://maoyl.netlify.app/)
@@ -23,10 +23,10 @@
 
 ```bash
 # clone the project
-git clone https://github.com/maoyln/maoyl-bolg.git
+git clone https://github.com/maoyln/maoyl-blog.git
 
 # enter the project directory
-cd maoyl-bolg
+cd maoyl-blog
 
 # install dependency
 npm install # or yarn install
@@ -65,7 +65,7 @@ npm run dev # or yarn dev
 ## 致谢
 :heart:感谢支持这个项目的朋友
 
-:heart:感谢为这个项目贡献代码的朋友 → [Contributors](https://github.com/maoyln/maoyl-bolg/graphs/contributors)
+:heart:感谢为这个项目贡献代码的朋友 → [Contributors](https://github.com/maoyln/maoyl-blog/graphs/contributors)
 
 ## 博客交流群
 Q号：245253560

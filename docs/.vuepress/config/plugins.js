@@ -85,7 +85,7 @@ module.exports = [
       options: {
         clientID: 'c414adb95bd9af417102',
         clientSecret: '3eb7942411f4ed2b4d53cd623324f248e38e9a70',
-        repo: 'maoyl-bolg', // GitHub 仓库
+        repo: 'maoyl-blog', // GitHub 仓库
         owner: 'maoyln', // GitHub仓库所有者
         admin: ['maoyln'], // 对仓库有写权限的人
         // distractionFreeMode: true,
