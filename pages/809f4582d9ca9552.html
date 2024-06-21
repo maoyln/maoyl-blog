@@ -1,0 +1,37 @@
+<h1 id="兄弟组件传值">兄弟组件传值</h1>
+
+<p>子组件1中把值传到父组件,父组件获取值传入子组件2</p>
+
+<p>父组件：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">子组件1</span> <span class="p">@</span><span class="nx">方法名x</span><span class="o">=</span><span class="dl">"</span><span class="s2">方法名y</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/子组件1</span><span class="err">&gt;
+</span>
+<span class="o">&lt;</span><span class="nx">子组件2</span> <span class="p">:</span><span class="nx">值名称x</span><span class="o">=</span><span class="dl">"</span><span class="s2">值x</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/子组件2 </span><span class="err">&gt;
+</span>
+<span class="nx">data</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="p">{</span>
+	 <span class="na">值x</span><span class="p">:</span> <span class="dl">''</span>
+	<span class="p">}</span>
+<span class="p">},</span>
+<span class="nx">methods</span><span class="p">:</span> <span class="p">{</span>
+	<span class="nx">方法名y</span><span class="p">(</span><span class="nx">值</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">值x</span> <span class="o">=</span> <span class="nx">值</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>子组件1：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="p">.</span><span class="nx">$emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">方法名x</span><span class="dl">'</span><span class="p">,</span> <span class="nx">值</span><span class="p">)</span> <span class="c1">// 传出值</span>
+</code></pre></div></div>
+
+<p>子组件2：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">props</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">值名称x</span><span class="p">:</span> <span class="p">{</span> <span class="c1">// 接收父组件传入值</span>
+        <span class="na">type</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+        <span class="na">default</span><span class="p">:</span> <span class="dl">''</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>

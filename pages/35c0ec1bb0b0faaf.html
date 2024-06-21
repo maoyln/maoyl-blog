@@ -1,0 +1,159 @@
+<h1 id="处理请求-header">处理请求 header</h1>
+
+<h2 id="需求分析">需求分析</h2>
+
+<p>我们上节课遗留了一个问题：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>我们做了请求数据的处理，把 <code class="language-plaintext highlighter-rouge">data</code> 转换成了 JSON 字符串，但是数据发送到服务端的时候，服务端并不能正常解析我们发送的数据，因为我们并没有给请求 <code class="language-plaintext highlighter-rouge">header</code> 设置正确的 <code class="language-plaintext highlighter-rouge">Content-Type </code>。</p>
+
+<p>所以首先我们要支持发送请求的时候，可以支持配置 <code class="language-plaintext highlighter-rouge">headers</code> 属性，如下：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">'</span><span class="s1">content-type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json;charset=utf-8</span><span class="dl">'</span>
+  <span class="p">},</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>并且在当我们传入的 <code class="language-plaintext highlighter-rouge">data</code> 为普通对象的时候，<code class="language-plaintext highlighter-rouge">headers</code> 如果没有配置 <code class="language-plaintext highlighter-rouge">Content-Type</code> 属性，需要自动设置请求 <code class="language-plaintext highlighter-rouge">header</code> 的 <code class="language-plaintext highlighter-rouge">Content-Type</code> 字段为：<code class="language-plaintext highlighter-rouge">application/json;charset=utf-8</code>。</p>
+
+<h2 id="processheaders-函数实现">processHeaders 函数实现</h2>
+
+<p>根据需求分析，我们要实现一个工具函数，对 request 中的 <code class="language-plaintext highlighter-rouge">headers</code> 做一层加工。我们在 <code class="language-plaintext highlighter-rouge">helpers</code> 目录新建 <code class="language-plaintext highlighter-rouge">headers.ts</code> 文件。</p>
+
+<p><code class="language-plaintext highlighter-rouge">helpers/headers.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">isPlainObject</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./util</span><span class="dl">'</span>
+
+<span class="kd">function</span> <span class="nx">normalizeHeaderName</span> <span class="p">(</span><span class="nx">headers</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">normalizedName</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">headers</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span>
+  <span class="p">}</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">headers</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">name</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">name</span> <span class="o">!==</span> <span class="nx">normalizedName</span> <span class="o">&amp;&amp;</span> <span class="nx">name</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">()</span> <span class="o">===</span> <span class="nx">normalizedName</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">())</span> <span class="p">{</span>
+      <span class="nx">headers</span><span class="p">[</span><span class="nx">normalizedName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">headers</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+      <span class="k">delete</span> <span class="nx">headers</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">processHeaders</span> <span class="p">(</span><span class="nx">headers</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="kr">any</span> <span class="p">{</span>
+  <span class="nx">normalizeHeaderName</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isPlainObject</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">headers</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">])</span> <span class="p">{</span>
+      <span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">]</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">application/json;charset=utf-8</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">headers</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这里有个需要注意的点，因为请求 <code class="language-plaintext highlighter-rouge">header</code> 属性是大小写不敏感的，比如我们之前的例子传入 <code class="language-plaintext highlighter-rouge">header</code> 的属性名 <code class="language-plaintext highlighter-rouge">content-type</code> 就是全小写的，所以我们先要把一些 <code class="language-plaintext highlighter-rouge">header</code> 属性名规范化。</p>
+
+<h2 id="实现请求-header-处理逻辑">实现请求 header 处理逻辑</h2>
+
+<p>在这之前，我们先修改一下 <code class="language-plaintext highlighter-rouge">AxiosRequestConfig</code> 接口类型的定义，添加 <code class="language-plaintext highlighter-rouge">headers</code> 这个可选属性：</p>
+
+<p><code class="language-plaintext highlighter-rouge">types/index.ts</code></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AxiosRequestConfig</span> <span class="p">{</span>
+  <span class="nl">url</span><span class="p">:</span> <span class="kr">string</span>
+  <span class="nx">method</span><span class="p">?:</span> <span class="nx">Method</span>
+  <span class="nx">data</span><span class="p">?:</span> <span class="kr">any</span>
+  <span class="nx">params</span><span class="p">?:</span> <span class="kr">any</span>
+  <span class="nx">headers</span><span class="p">?:</span> <span class="kr">any</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">index.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">processConfig</span> <span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="nx">config</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">transformURL</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span>
+  <span class="nx">config</span><span class="p">.</span><span class="nx">headers</span> <span class="o">=</span> <span class="nx">transformHeaders</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span>
+  <span class="nx">config</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">transformRequestData</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">transformHeaders</span> <span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">headers</span> <span class="o">=</span> <span class="p">{},</span> <span class="nx">data</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">config</span>
+  <span class="k">return</span> <span class="nx">processHeaders</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>因为我们处理 <code class="language-plaintext highlighter-rouge">header</code> 的时候依赖了 <code class="language-plaintext highlighter-rouge">data</code>，所以要在处理请求 <code class="language-plaintext highlighter-rouge">body</code> 数据之前处理请求 <code class="language-plaintext highlighter-rouge">header</code>。</p>
+
+<p><code class="language-plaintext highlighter-rouge">xhr.ts</code>：</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">xhr</span> <span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AxiosRequestConfig</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">,</span> <span class="nx">headers</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">config</span>
+
+  <span class="kd">const</span> <span class="nx">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">()</span>
+
+  <span class="nx">request</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">method</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">(),</span> <span class="nx">url</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">headers</span><span class="p">).</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">name</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">name</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">content-type</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">delete</span> <span class="nx">headers</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">request</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">headers</span><span class="p">[</span><span class="nx">name</span><span class="p">])</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+
+  <span class="nx">request</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这里要额外判断一个逻辑，当我们传入的 <code class="language-plaintext highlighter-rouge">data</code> 为空的时候，请求 <code class="language-plaintext highlighter-rouge">header</code> 配置 <code class="language-plaintext highlighter-rouge">Content-Type</code> 是没有意义的，于是我们把它删除。</p>
+
+<h2 id="demo-编写">demo 编写</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">'</span><span class="s1">content-type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json;</span><span class="dl">'</span>
+  <span class="p">},</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="kd">const</span> <span class="nx">paramsString</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">q=URLUtils.searchParams&amp;topic=api</span><span class="dl">'</span>
+<span class="kd">const</span> <span class="nx">searchParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URLSearchParams</span><span class="p">(</span><span class="nx">paramsString</span><span class="p">)</span>
+
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/base/post</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="nx">searchParams</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>通过 demo 我们可以看到，当我们请求的数据是普通对象并且没有配置 <code class="language-plaintext highlighter-rouge">headers</code> 的时候，会自动为其添加 <code class="language-plaintext highlighter-rouge">Content-Type:application/json;charset=utf-8</code>；同时我们发现当 data 是某些类型如 <code class="language-plaintext highlighter-rouge">URLSearchParams</code> 的时候，浏览器会自动为请求 <code class="language-plaintext highlighter-rouge">header</code>加上合适的 <code class="language-plaintext highlighter-rouge">Content-Type</code>。</p>
+
+<p>至此我们对于请求的处理逻辑暂时告一段落。目前我们的请求从网络层面是可以收到服务端的响应的，下一节课我们就从代码层面来处理服务端响应，并且让调用方可以拿到从服务端返回的数据。</p>

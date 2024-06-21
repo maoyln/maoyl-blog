@@ -1,0 +1,162 @@
+<h1 id="mixin混入">Mixin混入</h1>
+
+<h2 id="基础">基础</h2>
+
+<p>混入 (mixin) 提供了一种非常灵活的方式，来分发 Vue 组件中的可复用功能。一个混入对象可以包含任意组件选项。当组件使用混入对象时，所有混入对象的选项将被“混合”进入该组件本身的选项。
+<!-- more --></p>
+<blockquote>
+  <p>组件选项：指的是组件对象中的 <code class="language-plaintext highlighter-rouge">data</code>、<code class="language-plaintext highlighter-rouge">created</code>、<code class="language-plaintext highlighter-rouge">methods</code> 等等选项。</p>
+
+  <p>可通过 <code class="language-plaintext highlighter-rouge">this.$options</code> 查看选项</p>
+</blockquote>
+
+<p>例子：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 定义一个混入对象</span>
+<span class="kd">var</span> <span class="nx">myMixin</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">created</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">hello</span><span class="p">()</span>
+  <span class="p">},</span>
+  <span class="na">methods</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">hello</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">hello from mixin!</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 定义一个使用混入对象的组件</span>
+<span class="kd">var</span> <span class="nx">Component</span> <span class="o">=</span> <span class="nx">Vue</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">mixins</span><span class="p">:</span> <span class="p">[</span><span class="nx">myMixin</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="kd">var</span> <span class="nx">component</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Component</span><span class="p">()</span> <span class="c1">// =&gt; "hello from mixin!"</span>
+</code></pre></div></div>
+
+<p><strong>通俗讲，就是把组件的部分代码抽离出来，再”混合”进入组件。当多个组件有相同的选项代码时，可以把相同的选项代码抽离到一个文件，再混入到每个组件，从而达到共享部分代码的目的。</strong></p>
+
+<h2 id="选项合并">选项合并</h2>
+
+<p>当组件和混入对象含有同名选项时，这些选项将以恰当的方式进行“合并”。</p>
+
+<p>比如，数据对象在内部会进行递归合并，并<strong>在发生冲突时以组件数据优先</strong>。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">mixin</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">data</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">foo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">abc</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+  <span class="na">mixins</span><span class="p">:</span> <span class="p">[</span><span class="nx">mixin</span><span class="p">],</span>
+  <span class="na">data</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">goodbye</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">def</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="na">created</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$data</span><span class="p">)</span>
+    <span class="c1">// =&gt; { message: "goodbye", foo: "abc", bar: "def" }</span>
+    <span class="c1">// message同名，组件数据优先，而foo被混入</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p><strong>同名钩子函数将合并为一个数组，因此都将被调用</strong>。另外，混入对象的钩子将在组件自身钩子<strong>之前</strong>调用。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">mixin</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">created</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">混入对象的钩子被调用</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+  <span class="na">mixins</span><span class="p">:</span> <span class="p">[</span><span class="nx">mixin</span><span class="p">],</span>
+  <span class="na">created</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">组件钩子被调用</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="c1">// =&gt; "混入对象的钩子被调用"</span>
+<span class="c1">// =&gt; "组件钩子被调用"</span>
+</code></pre></div></div>
+
+<p>值为对象的选项，例如 <code class="language-plaintext highlighter-rouge">methods</code>、<code class="language-plaintext highlighter-rouge">components</code> 和 <code class="language-plaintext highlighter-rouge">directives</code>，将被合并为同一个对象。两个对象键名冲突时，取组件对象的键值对。</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">mixin</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">methods</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">foo</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">},</span>
+    <span class="na">conflicting</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">from mixin</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">vm</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+  <span class="na">mixins</span><span class="p">:</span> <span class="p">[</span><span class="nx">mixin</span><span class="p">],</span>
+  <span class="na">methods</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">bar</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">bar</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">},</span>
+    <span class="na">conflicting</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">from self</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">vm</span><span class="p">.</span><span class="nx">foo</span><span class="p">()</span> <span class="c1">// =&gt; "foo"</span>
+<span class="nx">vm</span><span class="p">.</span><span class="nx">bar</span><span class="p">()</span> <span class="c1">// =&gt; "bar"</span>
+<span class="nx">vm</span><span class="p">.</span><span class="nx">conflicting</span><span class="p">()</span> <span class="c1">// =&gt; "from self"</span>
+</code></pre></div></div>
+
+<p>注意：<code class="language-plaintext highlighter-rouge">Vue.extend()</code> 也使用同样的策略进行合并。</p>
+
+<h2 id="某项目中使用的mixin示例">某项目中使用的Mixin示例</h2>
+
+<p>抽离各组件相同的代码：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// mixin.js</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">playlistMixin</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">computed</span><span class="p">:</span> <span class="p">{</span>
+    <span class="p">...</span><span class="nx">mapGetters</span><span class="p">([</span>
+      <span class="dl">'</span><span class="s1">playlist</span><span class="dl">'</span>
+    <span class="p">])</span>
+  <span class="p">},</span>
+  <span class="nx">mounted</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">handlePlaylist</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">playlist</span><span class="p">)</span>
+  <span class="p">},</span>
+  <span class="nx">activated</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">handlePlaylist</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">playlist</span><span class="p">)</span>
+  <span class="p">},</span>
+  <span class="na">watch</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nx">playlist</span><span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">handlePlaylist</span><span class="p">(</span><span class="nx">newVal</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="na">methods</span><span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// 根据选项合并策略，此方法和组件中的方法同名时，则被覆盖。如组件中没有相同名称方法时则会使用此方法，从而抛出错误。</span>
+    <span class="nx">handlePlaylist</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">component must implement handlePlaylist method</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>混入到组件：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 使用，可在多个组件中共用mixin的代码</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">playlistMixin</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/common/js/mixin</span><span class="dl">'</span> <span class="c1">// 共享代码的引入</span>
+<span class="k">export</span> <span class="k">default</span> <span class="p">{</span>
+    <span class="na">mixins</span><span class="p">:</span> <span class="p">[</span><span class="nx">playlistMixin</span><span class="p">],</span>
+    <span class="na">methods</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">handlePlaylist</span><span class="p">(</span><span class="nx">playlist</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 此方法可针对不同组件做不同处理</span>
+            <span class="p">...</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>

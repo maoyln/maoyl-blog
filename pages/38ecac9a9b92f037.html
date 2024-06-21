@@ -1,0 +1,27 @@
+<h1 id="路由懒加载">路由懒加载</h1>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 路由同步加载</span>
+<span class="c1">// import Recommend from '@/components/recommend/recommend'</span>
+<span class="c1">// import Singer from '@/components/singer/singer'</span>
+<span class="c1">// import Rank from '@/components/rank/rank'</span>
+<span class="c1">// import Search from '@/components/search/search'</span>
+<span class="c1">// import SingerDetail from '@/components/singer-detail/singer-detail'</span>
+<span class="c1">// import Disc from '@/components/disc/disc'</span>
+<span class="c1">// import TopList from '@/components/top-list/top-list'</span>
+<span class="c1">// import UserCenter from '@/components/user-center/user-center'</span>
+
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Router</span><span class="p">)</span>
+
+<span class="c1">// 路由懒加载</span>
+<span class="kd">const</span> <span class="nx">Recommend</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">@/components/recommend/recommend</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">Singer</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">@/components/singer/singer</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">Rank</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">@/components/rank/rank</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">Search</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">@/components/search/search</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">SingerDetail</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">@/components/singer-detail/singer-detail</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">Disc</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">@/components/disc/disc</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">TopList</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">@/components/top-list/top-list</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">UserCenter</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">@/components/user-center/user-center</span><span class="dl">'</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>使用路由懒加载可使app.js文件变小，进入不同路由在分别加载该路由的js。</p>
