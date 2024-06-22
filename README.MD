@@ -2,6 +2,7 @@
 
 <h2 align="center">maoyl-blog</h2>
 
+* [文档 (github)](https://maoyln.github.io/maoyl-blog/)
 * [文档 (国内源)](https://maoyl.netlify.app/)
 * [文档 (github源)](https://github.com/maoyln/maoyl-blog)
 * [效果：Maoyl's blog](https://maoyl.netlify.app/)
