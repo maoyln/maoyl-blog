@@ -1,4 +1,4 @@
-<p align="center"><a href="https://maoyl.netlify.app/" target="_blank" rel="noopener noreferrer"><img width="180" src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20200409124835.png" alt="logo"></a></p>
+<p align="center"><a href="https://maoyln.github.io/maoyl-blog/" target="_blank" rel="noopener noreferrer"><img width="180" src="https://cdn.jsdelivr.net/gh/maoyln/maoyl-img/blog/20200409124835.png" alt="logo"></a></p>
 
 <h2 align="center">maoyl-blog</h2>
 
