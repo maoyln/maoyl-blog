@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  theme-vdoing-blog:
+    specifier: 'link:'
+    version: 'link:'
   vuepress-plugin-comment:
     specifier: ^0.7.3
     version: 0.7.3(react-dom@15.7.0)(react@15.7.0)
@@ -1508,7 +1511,7 @@ packages:
     dev: true
 
   /@types/superagent@4.1.15:
-    resolution: {integrity: sha512-iiXaOL2wSbnSY4qg0mFPWJHL9iwyEsoNYwaHF2w58/fsVAQJlj+KUfFAFZu+nzbz+b7dUprJEAc+O9vhHHhQTA==}
+    resolution: {integrity: sha512-iiXaOL2wSbnSY4qg0mFPWJHL9iwyEsoNYwaHF2w58/fsVAQJlj+KUfFAFZu+nzbz+b7dUprJEAc+O9vhHHhQTA==, tarball: https://registry.npm.taobao.org/@types/superagent/-/superagent-4.1.15.tgz}
     deprecated: '[WARNING] Use 4.1.14 instead of 4.1.15, reason: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/58445'
     dependencies:
       '@types/cookiejar': 2.1.2

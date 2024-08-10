@@ -26,6 +26,7 @@
     "yamljs": "^0.3.0"
   },
   "dependencies": {
+    "theme-vdoing-blog": "link:",
     "vuepress-plugin-comment": "^0.7.3"
   }
 }
