@@ -17,6 +17,12 @@ module.exports = [
         ],
       },
       {
+        text: '性能优化',
+        items: [
+          { text: '《性能优化》笔记', link: '/node/performance-optimization/' },
+        ],
+      },
+      {
         text: '学习笔记',
         items: [
           { text: '《JavaScript教程》笔记', link: '/note/javascript/' },
