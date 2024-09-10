@@ -4,5 +4,5 @@
 set -e
 
 # 百度链接推送
-curl -H 'Content-Type:text/plain' --data-binary @urls.txt "http://data.zz.baidu.com/urls?site=https://maoyl.netlify.app/&token=l6eeyUi4FhZrDXlf"
+curl -H 'Content-Type:text/plain' --data-binary @urls.txt "http://data.zz.baidu.com/urls?site=https://maoyln.github.io/maoyl-blog/&token=l6eeyUi4FhZrDXlf"
 rm -rf urls.txt # 灭迹
