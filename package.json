@@ -26,7 +26,7 @@
     "yamljs": "^0.3.0"
   },
   "dependencies": {
-    "theme-vdoing-blog": "link:",
+    "theme-vdoing-blog": "file:../maoyl-blog",
     "vuepress-plugin-comment": "^0.7.3"
   }
 }
