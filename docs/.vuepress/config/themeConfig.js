@@ -55,7 +55,7 @@ module.exports = {
   },
   author: {
     // 文章默认的作者信息，可在md文件中单独配置此信息 String | {name: String, link: String}
-    name: 'maoyln', // 必需
+    name: 'maoyln', // 必需,默认名称
     link: 'https://github.com/maoyln', // 可选的
   },
   blogger: {
