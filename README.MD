@@ -59,14 +59,10 @@ npm run dev # or yarn dev
 1. *Star* 并 分享这个项目 :rocket:
 2. 保留主题 footer(页脚) 的主题链接 :D
 3. 轻轻点击一次页面广告 ✨
-4. 通过以下二维码 一次性捐款。 我多半会买一杯 ~~咖啡~~ 茶。:tea:
-
-谢谢！ :heart:
+4. 欢迎关注 ~~咖啡~~ 茶。:tea:
 
 ## 致谢
 :heart:感谢支持这个项目的朋友
-
-:heart:感谢为这个项目贡献代码的朋友 → [Contributors](https://github.com/maoyln/maoyl-blog/graphs/contributors)
 
 ## 博客交流群
 Q号：245253560
